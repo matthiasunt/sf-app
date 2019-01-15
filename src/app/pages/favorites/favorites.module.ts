@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {FavoritesPage} from './favorites.page';
 import {ComponentsModule} from '../../components/components.module';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -12,7 +13,8 @@ import {ComponentsModule} from '../../components/components.module';
         CommonModule,
         FormsModule,
         RouterModule.forChild([{path: '', component: FavoritesPage}]),
-        ComponentsModule
+        ComponentsModule,
+        TranslateModule
     ],
     declarations: [FavoritesPage]
 })

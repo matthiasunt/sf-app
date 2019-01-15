@@ -1,5 +1,30 @@
 <ion-header>
-  <app-sf-toolbar></app-sf-toolbar>
+    <app-sf-toolbar></app-sf-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+    <!--<ion-list reorder="{{reorder}}" (ionItemReorder)="reorderItems($event)"-->
+    <!--*ngIf="favorites?.length > 0; Else noFavorites" no-lines>-->
+    <ion-list *ngIf="favorites?.length > 0; Else noFavorites" lines="none">
+        <ion-item *ngFor="let s of favorites">
+            <ion-avatar item-start>
+                <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
+                </app-sf-shuttle-icon>
+            </ion-avatar>
+            <ion-label>{{ s?.name }}</ion-label>
+            <ion-button (click)="removeFavorite(s)" color="danger" round slot="end">
+                Remove
+                <ion-icon name="trash" slot="end"></ion-icon>
+            </ion-button>
+        </ion-item>
+    </ion-list>
+    <ng-template #noFavorites>
+        <p padding class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
+    </ng-template>
+
+    <ion-fab vertical="center" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="toAddPage()" color="primary">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

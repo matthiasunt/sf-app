@@ -2,4 +2,42 @@
   <app-sf-toolbar></app-sf-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <ion-list *ngIf="history?.length > 0; Else noHistory" no-lines>
+    <div *ngFor="let dateGroup of history; let i = index">
+      <ion-item-group>
+        <ion-list-header>
+          {{ getDate(dateGroup[0].date) }}
+        </ion-list-header>
+        <ion-item *ngFor="let e of dateGroup">
+          <ion-avatar item-left>
+            <div id="cr-shuttle-icon-div">
+              <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(e.shuttle)"></app-sf-shuttle-icon>
+            </div>
+          </ion-avatar>
+          <h2>
+            {{ e?.shuttle?.name }}
+          </h2>
+          <p>{{ getTime(e.date) }}</p>
+          <!--<button id="rate-button" color="sf-yellow" ion-button icon-end item-end>-->
+          <!--Rate-->
+          <!--<ion-icon name="star"></ion-icon>-->
+          <!--</button>-->
+          <ion-icon (click)="toCallPage(e.shuttle)" id="call-icon" slot="end" name="call" color="green"></ion-icon>
+        </ion-item>
+      </ion-item-group>
+      <hr *ngIf="i < history.length-1">
+    </div>
+
+  </ion-list>
+
+  <ng-template #noHistory>
+    <p padding class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
+  </ng-template>
+
+  <!--<ion-fab *ngIf="history?.length > 0" right middle>-->
+  <!--<button ion-fab (click)="clearHistoryAlert()" color="dark">-->
+  <!--<ion-icon name="trash"></ion-icon>-->
+  <!--</button>-->
+  <!--</ion-fab>-->
+</ion-content>
