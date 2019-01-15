@@ -1,0 +1,123 @@
+{
+  "SHUTTLE_FINDER": "Shuttle Finder",
+  "OK": "Okei",
+  "NO": "Na",
+  "YES": "Jo",
+  "ERROR": "Fahlor",
+  "ADD": "Hinzufügn",
+  "BACK": "Zrug",
+  "NO_SHUTTLE_FOUND": "Koan Shuttle gfunden :(",
+  "VERIFY_CONNECTION": "Bitte überprüf deine Internetverbindung.",
+  "NO_CONNECTION": "Koane Verbindung :/",
+  "NOT_AVAILABLE":"Shuttle Finder isch grod net verfügbor, ci scusiamo per il disagio.",
+
+  "page_titles": {
+    "SELECTION": "Suach dor an Shuttle aus",
+    "HISTORY": "Unruafliste",
+    "SETTINGS": "Einstellungen",
+    "FAVORITES": "Favoriten",
+    "ABOUT": "Über de App",
+    "IMPRINT": "Impressum",
+    "PRIVACY": "Datenschutzerklärung"
+  },
+
+  "home": {
+    "CALLED_LAST": "Zulescht ungleitet: ",
+    "TELL_A_FRIEND": "Toaln"
+  },
+
+  "departure": {
+    "WHERE_ARE_YOU": "Wo bisch?",
+    "RECENTLY_USED": "Zulescht verwendet",
+    "ALL": "Olle",
+    "GPS": "GPS",
+
+    "msg": {
+      "CHECK_CONNECTION": "Bitte schaug ob dein Internet ingscholten hosch :)",
+      "ENABLE_GPS": "Bitte aktivier die Ortungsdianste 🙈"
+    }
+  },
+
+  "selection": {
+    "REALLY_CALL_1": "Willsch wirklich",
+    "REALLY_CALL_2": " unriafen?",
+    "ALL_SHUTTLES": "Olle Shutles"
+  },
+
+  "call": {
+    "msg": {
+      "DIALER_ERROR": "Hon die Telefön-App net autian gekennt, probiers noamol.",
+
+      "CALLING_1": "I riaf ",
+      "CALLING_2": "un",
+
+      "TRY_ANOTHER_SHUTTLE_1": "Soll i an ondern Shuttle probieren?",
+      "TRY_ANOTHER_SHUTTLE_2": " probiern?",
+
+      "SORRY": "Tuat mor load",
+      "LAST_SHUTTLE_NUMBER": "Des wor meine letzte Nummer :("
+    }
+  },
+
+  "history": {
+    "EMPTY": "Dein Verlauf isch laar.",
+    "msg": {
+      "DELETE_ALL": "Willsch wirklich in gonzen Verlauf löschen?"
+    }
+  },
+
+  "settings": {
+    "LANGUAGE": "Sproch",
+    "DIRECT_MODE": "Direct Mode",
+    "DIRECT_MODE_ON_DESCRIPTION": "Deaktivier in \"Direct Mode\", wenn deinen Shuttle selber aussuachn willsch.",
+    "DIRECT_MODE_OFF_DESCRIPTION": "Aktivier in \"Direct Mode\", wenn du willsch, dass die App an Shuttle für di aussuacht.",
+    "FAVORITES_DESCRIPTION_1": "Favorisierte Shuttles wern vor olle ondern ungruafen.",
+    "FAVORITES_DESCRIPTION_2": "Favorisierte Shuttles wern gonz oben ungezoag.",
+    "BLACKLIST_DESCRIPTION_1": "Shuttles in deiner Blacklist wern nimmer ungruafen.",
+    "BLACKLIST_DESCRIPTION_2": "Shuttles in deiner Blacklist wern net ungezoag.",
+    "SHARE_DATA": "Anonyme Nutzngsdaten senden",
+    "SHARE_DATA_DESCRIPTION": ""
+  },
+
+  "favorites": {
+    "EMPTY": "Du hosch koane Favoriten."
+  },
+  "blacklist": {
+    "EMPTY": "Deine Blacklist isch laar."
+  },
+
+  "add": {
+    "ADD_FAVORITE": "Favoriten hinzufügen",
+    "LOCK_SHUTTLE": "Shuttle spörren",
+    "NO_RESULT": "Nix gfunden.",
+    "NAME_OR_PHONE": "Nome oder Nummer",
+    "msg": {
+      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "Der Shuttle isch in deiner Blacklist",
+      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Entfern nen sem, um nen als Favorit hinzuzufügen.",
+      "ALREADY_ADDED_IN_FAVORITES_TITLE": "Der Shuttle isch a Favorit",
+      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Entfern nen sem, um nen af deine Blacklist zu tian."
+    }
+  },
+
+  "about": {
+    "VERSION": "Version",
+    "TEXT": "Südtirols Shuttle & Taxi App.",
+    "QUESTIONS": "Schreib ins a Mail für Frogen, Feedback und Vorschläge",
+    "MISSING": "Fahlt a Shuttle?",
+    "MISSING_MAIL_SUBJECT": "A Shuttle fahlt",
+    "SUPPORTED_BY": "Mit freindlicher Unterstützung von",
+    "IMPRINT": "Impressum",
+    "PRIVACY": "Datenschutzerklärung",
+
+    "share": {
+      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Lods dor or, schnell!!",
+      "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - Südtirol"
+    }
+  },
+  "imprint": {
+
+  },
+  "privacy": {
+
+  }
+}

@@ -13,22 +13,37 @@ log.txt
 npm-debug.log*
 
 .idea/
-.ionic/
-.sourcemaps/
 .sass-cache/
 .tmp/
 .versions/
 coverage/
-www/
+dist/
 node_modules/
 tmp/
 temp/
+hooks/
 platforms/
 plugins/
 plugins/android.json
 plugins/ios.json
+www/
 $RECYCLE.BIN/
+playground/
+.sourcemaps/
+package-lock.json
 
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+.env
+line-count.txt
+
+
+# Envrionment Variables
+**/environment.*
+!**/environment.model.ts
+src/environments/environment.prod.ts
+src/environments/environment.ts
+*.ts
+src/environments/environment.ts
+src/environments/environment.prod.ts

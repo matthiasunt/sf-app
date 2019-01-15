@@ -1,0 +1,119 @@
+{
+  "SHUTTLE_FINDER": "Shuttle Finder",
+  "OK": "OK",
+  "NO": "No",
+  "YES": "Yes",
+  "ERROR": "Error",
+  "ADD": "Add",
+  "BACK": "Back",
+  "NO_SHUTTLE_FOUND": "No shuttles found :(",
+  "VERIFY_CONNECTION": "Please check your internet connection.",
+  "NO_CONNECTION": "No connection.",
+  "NOT_AVAILABLE":"Shuttle Finder is currently not available, retry later.",
+  "page_titles": {
+    "SELECTION": "Choose a shuttle",
+    "HISTORY": "Call history",
+    "SETTINGS": "Settings",
+    "FAVORITES": "Favorites",
+    "ABOUT": "About this app",
+    "IMPRINT": "Imprint",
+    "PRIVACY": "Privacy"
+  },
+
+  "home": {
+    "CALLED_LAST": "Called last: ",
+    "TELL_A_FRIEND": "Tell a friend"
+  },
+
+  "departure": {
+    "WHERE_ARE_YOU": "Where are you?",
+    "RECENTLY_USED": "Recently used",
+    "ALL": "All",
+    "GPS": "GPS",
+    "msg": {
+      "CHECK_CONNECTION": "Please check your connection :)",
+      "ENABLE_GPS": "Please enable the location services in your system settings 😊"
+    }
+  },
+
+  "selection": {
+    "REALLY_CALL_1": "Do you really want to call",
+    "REALLY_CALL_2": "?",
+    "ALL_SHUTTLES": "All shuttles"
+  },
+
+  "call": {
+    "msg": {
+      "DIALER_ERROR": "I wasn't able to open your dialer, please try again.",
+
+      "CALLING_1": "Calling ",
+      "CALLING_2": "",
+
+      "TRY_ANOTHER_SHUTTLE_1": "Try another shuttle?",
+      "TRY_ANOTHER_SHUTTLE_2": "?",
+
+      "SORRY": "Sorry",
+      "LAST_SHUTTLE_NUMBER": "That was my last number :("
+    }
+  },
+
+  "history": {
+    "EMPTY": "Your history is empty.",
+    "msg": {
+      "DELETE_ALL": "Do you really want to delete your full history?"
+    }
+  },
+
+  "settings": {
+    "LANGUAGE": "Language",
+    "DIRECT_MODE": "Direct Mode",
+    "DIRECT_MODE_ON_DESCRIPTION": "Deactivate the \"Direct Mode\" to select a shuttle by yourself.",
+    "DIRECT_MODE_OFF_DESCRIPTION": "Activate the \"Direct Mode\", if the app should select a shuttle for you.",
+    "FAVORITES_DESCRIPTION_1": "Favorized shuttles will be called first.",
+    "FAVORITES_DESCRIPTION_2": "Favorized shuttles will be displayed on top.",
+    "BLACKLIST_DESCRIPTION_1": "Shuttles in your blacklist won't be called anymore.",
+    "BLACKLIST_DESCRIPTION_2": "Shuttles in your blacklist won't be displayed anymore.",
+    "SHARE_DATA": "Send anonymous usage statistics",
+    "SHARE_DATA_DESCRIPTION": ""
+  },
+
+  "favorites": {
+    "EMPTY": "You don't have favorites."
+  },
+  "blacklist": {
+    "EMPTY": "Your blacklist is empty."
+  },
+
+  "add": {
+    "ADD_FAVORITE": "Add favorites",
+    "LOCK_SHUTTLE": "Block shuttle",
+    "NO_RESULT": "No result.",
+    "NAME_OR_PHONE": "Name or phone number",
+    "msg": {
+      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "This shuttle is in your blacklist",
+      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Remove it from your blacklist, to add it to your favorites.",
+      "ALREADY_ADDED_IN_FAVORITES_TITLE": "This shuttle is a favorite",
+      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Remove it from your favorites, to add it to your blacklist."
+    }
+  },
+  "about": {
+    "VERSION": "Version",
+    "TEXT": "South Tyrols shuttle & taxi App.",
+    "QUESTIONS": "Contact us for questions, feedback and suggestions",
+    "SUPPORTED_BY": "Supported by",
+    "MISSING": "Shuttle missing?",
+    "MISSING_MAIL_SUBJECT": "Missing shuttle",
+    "IMPRINT": "Impring",
+    "PRIVACY": "Privacy",
+    "share": {
+      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Over 200 shuttles & taxis in one app.",
+      "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - South Tyrol"
+    }
+  },
+  "imprint": {
+
+  },
+  "privacy": {
+
+  }
+}

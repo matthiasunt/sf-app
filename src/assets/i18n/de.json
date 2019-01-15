@@ -1,0 +1,121 @@
+{
+  "SHUTTLE_FINDER": "Shuttle Finder",
+  "OK": "OK",
+  "NO": "Nein",
+  "YES": "Ja",
+  "ERROR": "Fehler",
+  "ADD": "Hinzufügen",
+  "BACK": "Zurück",
+  "NO_SHUTTLE_FOUND": "Keinen Shuttle gefunden :(",
+  "VERIFY_CONNECTION": "Bitte überprüfe deine Internetverbindung.",
+  "NO_CONNECTION": "Keine Verbindung.",
+  "NOT_AVAILABLE":"Shuttle Finder ist zurzeit nicht verfügbar, versuche es später erneut.",
+
+  "page_titles": {
+    "SELECTION": "Wähle einen Shuttle",
+    "HISTORY": "Verlauf",
+    "SETTINGS": "Einstellungen",
+    "FAVORITES": "Favoriten",
+    "ABOUT": "Über diese App",
+    "IMPRINT": "Impressum",
+    "PRIVACY": "Datenschutzerklärung"
+  },
+
+  "home": {
+    "CALLED_LAST": "Zuletzt angerufen: ",
+    "TELL_A_FRIEND": "Teilen"
+  },
+
+  "departure": {
+    "WHERE_ARE_YOU": "Wo bist du?",
+    "RECENTLY_USED": "Zuletzt verwendet",
+    "ALL": "Alle",
+    "GPS": "GPS",
+    "msg": {
+      "CHECK_CONNECTION": "Bitte überprüfe deine Internet Verbindung :)",
+      "ENABLE_GPS": "Bitte aktiviere die Ortungsdienste in deinen Einstellungen 😊"
+    }
+  },
+  "selection": {
+    "REALLY_CALL_1": "Möchtest du wirklich",
+    "REALLY_CALL_2": " anrufen?",
+    "ALL_SHUTTLES": "Alle Shuttles"
+  },
+  "call": {
+    "msg": {
+      "DIALER_ERROR": "Ich konnte deine Anruf-App nicht öffnen, bitte versuche es noch einmal.",
+
+      "CALLING_1": "Rufe ",
+      "CALLING_2": "an",
+
+      "TRY_ANOTHER_SHUTTLE_1": "Einen anderen Shuttle probieren?",
+      "TRY_ANOTHER_SHUTTLE_2": "probieren?",
+
+      "SORRY": "Sorry",
+      "LAST_SHUTTLE_NUMBER": "Das war meine letzte Nummer :("
+    }
+  },
+
+  "history": {
+    "EMPTY": "Dein Verlauf ist leer.",
+    "msg": {
+      "DELETE_ALL": "Möchten Sie wirklich den gesamten Verlauf löschen?"
+    }
+  },
+
+  "settings": {
+    "LANGUAGE": "Sprache",
+    "DIRECT_MODE": "Direct Mode",
+    "DIRECT_MODE_ON_DESCRIPTION": "Deaktiviere den \"Direct Mode\", wenn du deinen Shuttle selbst auswählen möchtest.",
+    "DIRECT_MODE_OFF_DESCRIPTION": "Aktiviere den \"Direct Mode\", wenn du möchtest, dass die App einen Shuttle für dich auswählt.",
+    "FAVORITES_DESCRIPTION_1": "Favorisierte Shuttles werden vor allen anderen angerufen.",
+    "FAVORITES_DESCRIPTION_2": "Favorisierte Shuttles werden ganz oben angezeigt.",
+    "BLACKLIST_DESCRIPTION_1": "Shuttles in deiner Blacklist werden nicht mehr angerufen.",
+    "BLACKLIST_DESCRIPTION_2": "Shuttles in deiner Blacklist werden nicht angezeigt.",
+    "SHARE_DATA": "Anonyme Nutzungsdaten senden",
+    "SHARE_DATA_DESCRIPTION": ""
+  },
+
+  "favorites": {
+    "EMPTY": "Du hast keine Favoriten."
+  },
+  "blacklist": {
+    "EMPTY": "Deine Blacklist ist leer."
+  },
+
+  "add": {
+    "ADD_FAVORITE": "Favoriten hinzufügen",
+    "LOCK_SHUTTLE": "Shuttle sperren",
+    "NO_RESULT": "Keine Suchergebnisse.",
+    "NAME_OR_PHONE": "Name oder Nummer",
+    "msg": {
+      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "Dieser Shuttle ist in deiner Blacklist",
+      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Entferne ihn aus deiner Blacklist, um ihn zu deinen Favoriten hinzuzufügen.",
+      "ALREADY_ADDED_IN_FAVORITES_TITLE": "Dieser Shuttle ist ein Favorit",
+      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Entferne ihn von deinen Favoriten, um ihn zu deiner Blacklist hinzuzufügen."
+    }
+  },
+
+  "about": {
+    "VERSION": "Version",
+    "TEXT": "Südtirols Shuttle & Taxi App.",
+    "QUESTIONS": "Kontaktiere uns für Fragen, Feedback und Vorschläge",
+    "MISSING": "Fehlt ein Shuttle?",
+    "MISSING_MAIL_SUBJECT": "Fehlender Shuttle",
+    "IMPRINT": "Impressum",
+    "PRIVACY": "Datenschutzerklärung",
+
+    "SUPPORTED_BY": "Mit freundlicher Unterstützung von",
+
+    "share": {
+      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Über 200 Shuttles & Taxis in einer App.",
+      "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - Südtirol"
+    }
+  },
+  "imprint": {
+
+  },
+  "privacy": {
+
+  }
+}

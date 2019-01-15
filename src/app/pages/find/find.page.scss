@@ -1,0 +1,139 @@
+ion-content {
+
+  text-align: center;
+
+
+  #favorites-slides {
+    margin-bottom: 30px;
+    height: unset;
+    width: unset;
+  }
+
+  ion-card {
+    width: 100px !important;
+    height: 100px !important;
+    margin: 10px !important;
+
+    ion-card-content > p {
+      font-size: 15px !important;
+      position: relative;
+      top: -26px;
+      width: 68px;
+    }
+
+    ion-card-content > ion-avatar {
+      position: relative;
+      top: -13px;
+    }
+  }
+
+
+  #gps-row {
+    display: flex;
+  }
+
+  #gps-button {
+    width: 130px;
+    margin: 8px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .section-headline {
+    font-size: 24px;
+    //color: map-get($colors, primary);
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  #search-location-item > div.item-inner {
+    border-bottom: none;
+  }
+
+  #district-chip-row {
+    text-align: center;
+
+
+    ion-chip {
+      display: inline-block;
+      margin: 5px 3px 5px 3px;
+    }
+  }
+
+
+  button {
+    text-transform: none !important;
+    font-weight: 400 !important;
+    margin: 0 0 9px;
+    height: 39px;
+
+    ion-label {
+      padding: 5px;
+      margin-right: 0 !important;
+    }
+  }
+
+  #gps-row {
+    margin-bottom: 20px;
+  }
+}
+
+ion-footer {
+  text-align: center;
+
+  img {
+    margin: 7px 0 4px;
+    width: 43px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  ion-footer img {
+    width: 28px;
+    margin: 5px 0 2px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  ion-footer img {
+    width: 38px;
+    margin: 6px 0 3px;
+  }
+}
+
+@media screen and (max-width: 412px) {
+  ion-footer img {
+    width: 40px;
+    margin: 7px 0 4px;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  ion-footer img {
+    width: 60px;
+    margin: 21px 0 17px;
+  }
+}
+
+.toast-md .toast-wrapper.toast-bottom {
+  // bottom: 63px !important;
+  bottom: 4px !important;
+}
+
+.toast-ios .toast-wrapper.toast-bottom {
+  bottom: -4px !important;
+}
+
+.just-called-toast {
+  text-align: center;
+}
+
+ion-footer {
+  #col-left {
+    text-align: right;
+  }
+
+  #col-right {
+    text-align: left;
+  }
+}

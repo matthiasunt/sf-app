@@ -1,0 +1,39 @@
+<ion-header>
+    <app-sf-toolbar></app-sf-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-row id="gps-row">
+        <ion-col>
+            <ion-label class="section-headline">
+                {{ "departure.WHERE_ARE_YOU" | translate }}
+            </ion-label>
+            <ion-button id="gps-button" round (click)="gpsClicked()" color="primary">
+                <ion-icon name="pin" slot="start"></ion-icon>
+                {{ "departure.GPS" | translate }}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+
+    <div id="district-chip-row">
+        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
+                  [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
+                  [style.color]="colorGenerator.getDistrictColors(d)[1]">
+            <ion-label>{{getDistrictName(d)}}</ion-label>
+        </ion-chip>
+    </div>
+    <hr>
+    <!--<ion-slides *ngIf="favorites" id="favorites-slides" loop="false" slidesPerView="3" parallax="true">-->
+    <!--<ion-slide *ngFor="let s of favorites">-->
+    <!--<ion-card>-->
+    <!--<ion-card-content>-->
+    <!--<ion-avatar item-start>-->
+    <!--<cr-shuttle-icon [colors]="colorGenerator.getShuttleColors(s)"></cr-shuttle-icon>-->
+    <!--</ion-avatar>-->
+    <!--<p>{{s.name}}</p>-->
+    <!--</ion-card-content>-->
+    <!--</ion-card>-->
+    <!--</ion-slide>-->
+    <!--</ion-slides>-->
+
+</ion-content>

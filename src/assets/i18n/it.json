@@ -1,0 +1,122 @@
+{
+  "SHUTTLE_FINDER": "Shuttle Finder",
+  "OK": "OK",
+  "NO": "No",
+  "YES": "Si",
+  "ERROR": "Errore",
+  "ADD": "Aggiungi",
+  "BACK": "Indietro",
+  "NO_SHUTTLE_FOUND": "Nessun shuttle trovato :(",
+  "VERIFY_CONNECTION": "Controlla la tua connessione internet.",
+  "NO_CONNECTION": "Nessuna connessione.",
+  "NOT_AVAILABLE":"Shuttle Finder è attualmente non disponibile, riprova più tardi.",
+
+  "page_titles": {
+    "SELECTION": "Seleziona uno shuttle",
+    "HISTORY": "Cronologia",
+    "SETTINGS": "Impostazioni",
+    "FAVORITES": "Preferiti",
+    "ABOUT": "Su questa app",
+    "IMPRINT": "Info legale",
+    "PRIVACY": "Informativa sulla privacy"
+  },
+
+  "home": {
+    "CALLED_LAST": "L'ultimo chiamato:",
+    "TELL_A_FRIEND": "Condividi"
+  },
+
+  "departure": {
+    "WHERE_ARE_YOU": "Dove sei?",
+    "RECENTLY_USED": "Usato per ultimo",
+    "ALL": "Tutti",
+    "GPS": "GPS",
+    "msg": {
+      "CHECK_CONNECTION": "Controlla la tua connessione :)",
+      "ENABLE_GPS": "Attiva la geolocalizzazione nelle impostazioni 😊"
+    }
+  },
+
+  "selection": {
+    "REALLY_CALL_1": "Vuoi veramente chiamare",
+    "REALLY_CALL_2": "?",
+    "ALL_SHUTTLES": "Tutti i shuttle"
+  },
+
+  "call": {
+    "msg": {
+      "DIALER_ERROR": "Non ho potuto aprire l'app dialer, riprova.",
+
+      "CALLING_1": "Chiamo ",
+      "CALLING_2": "",
+
+      "TRY_ANOTHER_SHUTTLE_1": "Vuoi provare un altro shuttle?",
+      "TRY_ANOTHER_SHUTTLE_2": "?",
+
+      "SORRY": "Scusami",
+      "LAST_SHUTTLE_NUMBER": "Non ho piú numeri :("
+    }
+  },
+
+  "history": {
+    "EMPTY": "La tua cronologia é vuota.",
+    "msg": {
+      "DELETE_ALL": "Vuoi veramente cancellare la tua cronologia?"
+    }
+  },
+
+
+  "settings": {
+    "LANGUAGE": "Lingua",
+    "DIRECT_MODE": "Direct Mode",
+    "DIRECT_MODE_ON_DESCRIPTION": "Disattiva \"Direct Mode\", se vuoi selezionare tu lo shuttle.",
+    "DIRECT_MODE_OFF_DESCRIPTION": "Attiva \"Direct Mode\", se vuoi che l'app seleziona uno shuttle per te.",
+    "FAVORITES_DESCRIPTION_1": "I tuoi shuttle preferiti verranno chiamati prima.",
+    "FAVORITES_DESCRIPTION_2": "I tuoi shuttle preferiti verranno messi in cima.",
+    "BLACKLIST_DESCRIPTION_1": "Gli shuttle nella blacklist non verranno piú chiamati.",
+    "BLACKLIST_DESCRIPTION_2": "Gli shuttle nella blacklist non verranno piú messi in lista.",
+    "SHARE_DATA": "Condividere dati di utilizzo anonimi",
+    "SHARE_DATA_DESCRIPTION": ""
+  },
+
+  "favorites": {
+    "EMPTY": "Non hai preferiti."
+  },
+  "blacklist": {
+    "EMPTY": "La tua blacklist é vuota."
+  },
+
+  "add": {
+    "ADD_FAVORITE": "Aggiungi preferiti",
+    "LOCK_SHUTTLE": "Blocca shuttle",
+    "NO_RESULT": "Nessun risultato di ricerca.",
+    "NAME_OR_PHONE": "Nome o numero",
+    "msg": {
+      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "Questo shuttle è sulla tua blacklist",
+      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Rimuovilo dalla tua blacklist, per aggiungerlo ai tuoi preferiti.",
+      "ALREADY_ADDED_IN_FAVORITES_TITLE": "Questo shuttle è uno dei tuoi preferiti",
+      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Rimuovilo dai tuoi preferiti, per aggiungerlo alla tua blacklist."
+    }
+  },
+
+  "about": {
+    "VERSION": "Versione",
+    "TEXT": "L'app per shuttle e taxi in Alto Adige.",
+    "QUESTIONS": "Contattaci per domande, feedback e suggerimenti",
+    "MISSING": "Manca uno shuttle?",
+    "MISSING_MAIL_SUBJECT": "Shuttle mancante",
+    "IMPRINT": "Info legale",
+    "PRIVACY": "Informativa sulla privacy",
+    "SUPPORTED_BY": "Con il sostegno di",
+    "share": {
+      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Piú di 200 shuttle e taxi in un'app.",
+      "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - Alto Adige"
+    }
+  },
+  "imprint": {
+
+  },
+  "privacy": {
+
+  }
+}
