@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-sf-shuttle-icon',
-  templateUrl: './sf-shuttle-icon.component.html',
-  styleUrls: ['./sf-shuttle-icon.component.scss']
+    selector: 'app-sf-shuttle-icon',
+    templateUrl: './sf-shuttle-icon.component.html',
+    styleUrls: ['./sf-shuttle-icon.component.scss']
 })
 export class SfShuttleIconComponent implements OnInit {
 
-  constructor() { }
+    @Input()
+    colors: string[] = ['#FFDC5A', '#FFC84B'];
 
-  ngOnInit() {
-  }
+    constructor() {
+    }
+
+    ngOnInit() {
+    }
 
 }
