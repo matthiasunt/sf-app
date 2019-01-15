@@ -18,7 +18,7 @@ export class FindPage {
     calledShuttle: any;
     districtsAvailable: boolean;
 
-    public districts: District[];
+    private districts: District[];
     private favorites: any[];
 
     constructor(
@@ -40,6 +40,7 @@ export class FindPage {
 
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
+        console.log(tempDistricts);
         const recentDistricts = await this.localData.getRecentlyUsedDistricts();
         recentDistricts.forEach((d) => {
             let index = -1;
