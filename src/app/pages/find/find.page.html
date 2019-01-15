@@ -5,7 +5,7 @@
 <ion-content>
     <ion-row id="gps-row">
         <ion-col>
-            <ion-label class="section-headline">
+            <ion-label color="primary" class="section-headline">
                 {{ "departure.WHERE_ARE_YOU" | translate }}
             </ion-label>
             <ion-button id="gps-button" round (click)="gpsClicked()" color="primary">
@@ -16,7 +16,7 @@
     </ion-row>
 
     <div id="district-chip-row">
-        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
+        <ion-chip (click)="districtClicked(d)" *ngFor="let d of this.districts"
                   [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
                   [style.color]="colorGenerator.getDistrictColors(d)[1]">
             <ion-label>{{getDistrictName(d)}}</ion-label>
