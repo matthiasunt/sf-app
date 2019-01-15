@@ -10,7 +10,6 @@ export class ColorGeneratorService {
         if (shuttle && shuttle.name && shuttle.phone) {
             let tone = this.djb2(shuttle.phone, 13);
             const color = this.djb2(shuttle.name, 15);
-            // console.log(tone)
             if (tone === 9) {
                 tone++;
             }
@@ -23,29 +22,33 @@ export class ColorGeneratorService {
     }
 
     public getDistrictColors(district: any): string[] {
-        switch (district._id) {
-            case 'italien-suedtirol-bozenumgebung':
-                return ['#DD2C00', '#FFFFFF']; // deep orange
-            case 'italien-suedtirol-burggrafenamt':
-                return ['#0091EA', '#FFFFFF']; // cyan
-            case 'italien-suedtirol-eisacktal':
-                return ['#3F51B5', '#FFFFFF']; // indigo
-            case 'italien-suedtirol-pustertal':
-                return ['#FFD600', '#000000']; // yellow
-            case 'italien-suedtirol-schlerngebietgroeden':
-                return ['#673AB7', '#FFFFFF']; // deep purple
-            case 'italien-suedtirol-ueberetschunterland':
-                return ['#CDDC39', '#000000']; // lime
-            case 'italien-suedtirol-vinschgau':
-                return ['#4CAF50', '#FFFFFF']; // green
-            case 'italien-suedtirol-wipptal':
-                return ['#FF6D00', '#FFFFFF']; // orange
-            // case 'italien-suedtirol-schlerngebietgroeden':
-            // return ['#4CAF50', '#FFFFFF']; //green
-            // case 'italien-suedtirol-schlerngebietgroeden':
-            // return ['#4CAF50', '#FFFFFF']; //green
-            default:
-                return ['#009688', '#FFFFFF']; // teal
+        if (district) {
+            switch (district._id) {
+                case 'italien-suedtirol-bozenumgebung':
+                    return ['#DD2C00', '#FFFFFF']; // deep orange
+                case 'italien-suedtirol-burggrafenamt':
+                    return ['#0091EA', '#FFFFFF']; // cyan
+                case 'italien-suedtirol-eisacktal':
+                    return ['#3F51B5', '#FFFFFF']; // indigo
+                case 'italien-suedtirol-pustertal':
+                    return ['#FFD600', '#000000']; // yellow
+                case 'italien-suedtirol-schlerngebietgroeden':
+                    return ['#673AB7', '#FFFFFF']; // deep purple
+                case 'italien-suedtirol-ueberetschunterland':
+                    return ['#CDDC39', '#000000']; // lime
+                case 'italien-suedtirol-vinschgau':
+                    return ['#4CAF50', '#FFFFFF']; // green
+                case 'italien-suedtirol-wipptal':
+                    return ['#FF6D00', '#FFFFFF']; // orange
+                // case 'italien-suedtirol-schlerngebietgroeden':
+                // return ['#4CAF50', '#FFFFFF']; //green
+                // case 'italien-suedtirol-schlerngebietgroeden':
+                // return ['#4CAF50', '#FFFFFF']; //green
+                default:
+                    return ['#009688', '#FFFFFF']; // teal
+            }
+        } else {
+            console.error('District not defined.');
         }
 
         // let tone = this.djb2(index+'', 15);
@@ -55,9 +58,9 @@ export class ColorGeneratorService {
 
     private djb2(s: string, max: number): number {
         let c = 5381;
-        for (var i = 0; i < s.length; i++) {
-            var char = s.charCodeAt(i);
-            c = ((c << 5) + c) + char; /* hash * 33 + c */
+        for (let i = 0; i < s.length; i++) {
+            const char = s.charCodeAt(i);
+            c = (c * 32) + c + char; /* hash * 33 + c */
         }
         return Math.abs(c) % max;
     }

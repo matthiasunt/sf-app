@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {AlertController, NavParams, ToastController} from '@ionic/angular';
+import {Router} from '@angular/router';
+import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
@@ -18,11 +19,13 @@ export class FindPage {
     calledShuttle: any;
     districtsAvailable: boolean;
 
-    private districts: District[];
+    districts: District[];
     private favorites: any[];
 
     constructor(
+        private navCtrl: NavController,
         private http: HttpClientModule,
+        private router: Router,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
         private translate: TranslateService,
@@ -33,14 +36,11 @@ export class FindPage {
     ) {
         console.log(ENV.message);
         this.fetchDistricts();
-        async () => {
-            this.favorites = await this.localData.getFavorites();
-        };
+        this.fetchFavorites();
     }
 
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
-        console.log(tempDistricts);
         const recentDistricts = await this.localData.getRecentlyUsedDistricts();
         recentDistricts.forEach((d) => {
             let index = -1;
@@ -56,6 +56,10 @@ export class FindPage {
         this.districts = recentDistricts.concat(tempDistricts);
     }
 
+    private async fetchFavorites() {
+        this.favorites = await this.localData.getFavorites();
+    }
+
     private async districtClicked(district) {
         if (this.localData.inDirectMode()) {
             const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
@@ -64,15 +68,27 @@ export class FindPage {
             //   shuttles: shuttles,
             //   district: district
             // });
-
         } else {
-            // this.navCtrl.push("Selection", {
-            //   district: district,
-            //   districtColors: this.colorGenerator.getDistrictColors(district)
-            // });
+            this.router.navigate(['/tabs/find/selection/' + district._id]);
         }
         this.localData.setRecentlyUsedDistrict(district);
     }
+
+    //
+    // private async toSelectionPage(district) {
+    //     if (this.localData.inDirectMode()) {
+    //         const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
+    //         const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
+    //
+    //         // this.navCtrl.push('Call', {shuttles: shuttles, district: district});
+    //     } else {
+    //         // this.navCtrl.push('Selection', {
+    //         //     district: district,
+    //         //     districtColors: this.colorGenerator.getDistrictColors(district)
+    //         // });
+    //     }
+    //     this.localData.setRecentlyUsedDistrict(district);
+    // }
 
     public async gpsClicked() {
         //
@@ -170,20 +186,6 @@ export class FindPage {
         // this.navCtrl.push('Departure');
     }
 
-    private async toSelectionPage(district) {
-        if (this.localData.inDirectMode()) {
-            const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
-            const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-
-            // this.navCtrl.push('Call', {shuttles: shuttles, district: district});
-        } else {
-            // this.navCtrl.push('Selection', {
-            //     district: district,
-            //     districtColors: this.colorGenerator.getDistrictColors(district)
-            // });
-        }
-        this.localData.setRecentlyUsedDistrict(district);
-    }
 
     private getDistrictName(district: any): string {
         if (district.name

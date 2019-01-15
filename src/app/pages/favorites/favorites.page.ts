@@ -10,8 +10,8 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 })
 export class FavoritesPage {
 
-    private favorites: any[];
-    private blacklist: any[];
+    favorites: any[];
+    blacklist: any[];
     private reorder: boolean;
     private showRemoveIcon: boolean;
 

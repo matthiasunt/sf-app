@@ -8,7 +8,7 @@
             <ion-label color="primary" class="section-headline">
                 {{ "departure.WHERE_ARE_YOU" | translate }}
             </ion-label>
-            <ion-button id="gps-button" round (click)="gpsClicked()" color="primary">
+            <ion-button id="gps-button" (click)="gpsClicked()" color="primary">
                 <ion-icon name="pin" slot="start"></ion-icon>
                 {{ "departure.GPS" | translate }}
             </ion-button>

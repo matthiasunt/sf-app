@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-toolbar color="{{this.districtColors[0]}}" [ngStyle]="setToolbarStyle()">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            <div *ngIf="district">{{ getDistrictName(district) }}</div>
+            <!--<div *ngIf="actualCity"> {{ actualCity }}</div>-->
+            <!--<ion-spinner color="light" *ngIf="viaGPS && !actualCity && !noValidCityName && !outOfRange" name="dots"-->
+            <!--duration="900"></ion-spinner>-->
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-virtual-scroll [items]="shuttles">
+        <ion-item button="true" *virtualItem="let s" approxItemHeight="59px" (click)="itemClicked(s)"
+                  [class.alreadyCalledElement]="localData.shuttleCalledLately(s)">
+            <ion-avatar slot="start">
+                <div>
+                    <app-sf-shuttle-icon [colors]="colorGenerator.getShuttleColors(s)">
+                    </app-sf-shuttle-icon>
+                </div>
+            </ion-avatar>
+            <ion-label>{{ s?.name }}</ion-label>
+            <ion-badge *ngIf="viaGPS && s?.city?.de && s?.city?.it" color="primary">
+                {{ getCityName(s) }}
+            </ion-badge>
+            <ion-badge *ngIf="!viaGPS && s?.city?.de && s?.city?.it
+       && districtColors" [style.background-color]="districtColors[0]"
+                       [style.color]="districtColors[1]">
+                {{ getCityName(s) }}
+            </ion-badge>
+        </ion-item>
+    </ion-virtual-scroll>
+    <div *ngIf="viaGPS && outOfRange">
+        <p padding class="no-data-p"> {{ "NO_SHUTTLE_FOUND" | translate }} </p>
+    </div>
+
+    <ion-spinner id="big-spinner" *ngIf="shuttles?.length < 1 && !outOfRange" color="secondary"
+                 name="crescent"></ion-spinner>
+</ion-content>
