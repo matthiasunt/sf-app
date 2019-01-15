@@ -38,12 +38,8 @@ UserInterfaceState.xcuserstate
 .env
 line-count.txt
 
-
-# Envrionment Variables
-**/environment.*
-!**/environment.model.ts
+.gradle/*
+android/*
+ios/*
 src/environments/environment.prod.ts
 src/environments/environment.ts
-*.ts
-src/environments/environment.ts
-src/environments/environment.prod.ts
