@@ -81,6 +81,13 @@ export class SfDbService {
         }
     }
 
+    public async getDistrict(id: string): Promise<District> {
+        this.districts = await this.getDistricts();
+        return this.districts.filter((d) => {
+            return d._id === id;
+        })[0];
+    }
+
     public async getShuttlesByDistrict(district: District): Promise<Shuttle[]> {
         const e = this.getShuttlesFromCache(district._id);
         if (e) {

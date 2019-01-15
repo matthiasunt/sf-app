@@ -1,0 +1,50 @@
+.toolbar-background {
+  background: none;
+}
+
+#searchbar {
+  background-color: #f8f8f8;
+  padding-top: 0;
+}
+
+ion-avatar > div {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50%;
+}
+
+.alreadyCalledElement {
+  background-color: #EEEEEE;
+}
+
+.helpListBox {
+  //background-color: map-get($colors, sf-yellow);
+
+  p {
+    color: black;
+  }
+
+  #call-icon {
+    padding-right: 10px;
+  }
+}
+
+ion-badge {
+  font-weight: normal;
+
+}
+
+.badge-md {
+  border-radius: 15px;
+}
+
+#big-spinner {
+  width: 105px;
+  height: 105px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -100px;
+  bottom: 0;
+  margin: auto;
+}
