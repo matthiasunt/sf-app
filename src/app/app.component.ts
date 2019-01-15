@@ -47,9 +47,7 @@ export class AppComponent {
                 this.authService.doSoftLogin();
             }
             this.statusBar.overlaysWebView(false);
-            // this.statusBar.backgroundColorByHexString('#99CC33');
-            // this.statusBar.styleLightContent();
-            this.statusBar.styleLightContent()
+            this.statusBar.styleLightContent();
             this.splashScreen.hide();
         });
     }

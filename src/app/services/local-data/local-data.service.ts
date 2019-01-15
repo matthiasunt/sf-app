@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Plugins} from '@capacitor/core';
-import {UserDbService} from '../user-db/user-db.service';
 import {District} from '../../models/district';
+import {Platform} from '@ionic/angular';
+import {UserDbService} from '../user-db/user-db.service';
 import {getIndexOfShuttle} from '../../tools/sf-tools';
-const {Storage} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -36,7 +35,7 @@ export class LocalDataService {
 
     constructor(
         private http: HttpClient,
-        private storage: Storage,
+        private platform: Platform,
         private userDb: UserDbService,
     ) {
 
@@ -46,29 +45,29 @@ export class LocalDataService {
 
     private async fetchData() {
         this.preferredLanguge = localStorage.getItem('pref_lang');
-        await this.storage.ready();
-
-
-        let val = await this.storage.get('direct_mode');
-        this.directMode = val ? val : false;
-
-        val = await this.storage.get('used_districts');
-        // Delete districts in old format
-        if (val && val[0] && val[0].name[0]) {
-            this.usedDistricts = [];
-            this.storage.set('used_districts', this.usedDistricts).catch((err) => console.error(err));
-        } else {
-            this.usedDistricts = val ? val : [];
-        }
+        // await this.storage.ready();
+        //
+        //
+        // let val = await this.storage.get('direct_mode');
+        // this.directMode = val ? val : false;
+        //
+        // val = await this.storage.get('used_districts');
+        // // Delete districts in old format
+        // if (val && val[0] && val[0].name[0]) {
+        //     this.usedDistricts = [];
+        //     this.storage.set('used_districts', this.usedDistricts).catch((err) => console.error(err));
+        // } else {
+        //     this.usedDistricts = val ? val : [];
+        // }
         this.getHistory();
-        val = await this.storage.get('favorites');
-        this.favorites = val ? val : [];
-        val = await this.storage.get('blacklist');
-        this.blacklist = val ? val : [];
-        val = await this.storage.get('number_of_calls');
-        this.numberOfCalls = val ? val : 0;
-        val = await this.storage.get('app_opened');
-        this.appOpened = val ? val : 0;
+        // val = await this.storage.get('favorites');
+        // this.favorites = val ? val : [];
+        // val = await this.storage.get('blacklist');
+        // this.blacklist = val ? val : [];
+        // val = await this.storage.get('number_of_calls');
+        // this.numberOfCalls = val ? val : 0;
+        // val = await this.storage.get('app_opened');
+        // this.appOpened = val ? val : 0;
     }
 
     public getSoftLoginCredentials(): Promise<any> {
@@ -76,9 +75,9 @@ export class LocalDataService {
             return Promise.resolve(this.softLoginCredentials);
         } else {
             return new Promise(async (resolve) => {
-                const val = await this.storage.get('softlogin_credentials');
-                console.log(val);
-                this.softLoginCredentials = val;
+                // const val = await this.storage.get('softlogin_credentials');
+                // console.log(val);
+                // this.softLoginCredentials = val;
                 resolve(this.softLoginCredentials);
             });
         }
@@ -86,7 +85,7 @@ export class LocalDataService {
 
     public saveSoftLoginCredentials(credentials: any): any {
         this.softLoginCredentials = credentials;
-        this.storage.set('softlogin_credentials', credentials);
+        // this.storage.set('softlogin_credentials', credentials);
     }
 
     public getRecentlyUsedDistricts(): Promise<District[]> {
@@ -94,9 +93,9 @@ export class LocalDataService {
             return Promise.resolve(this.usedDistricts);
         } else {
             return new Promise((resolve) => {
-                this.storage.get('used_districts').then((val) => {
-                    resolve(val);
-                });
+                // this.storage.get('used_districts').then((val) => {
+                //     resolve(val);
+                // });
             });
         }
     }
@@ -113,10 +112,10 @@ export class LocalDataService {
                     this.usedDistricts[0] = district;
                 }
             }
-            this.storage.ready().then(() => {
-                this.storage.set('used_districts', this.usedDistricts)
-                    .catch((err) => console.error(err));
-            });
+            // this.storage.ready().then(() => {
+            //     this.storage.set('used_districts', this.usedDistricts)
+            //         .catch((err) => console.error(err));
+            // });
         }, 500);
     }
 
@@ -131,10 +130,10 @@ export class LocalDataService {
 
     public async setDirectMode(directMode: boolean) {
         this.directMode = directMode;
-        this.storage.ready().then(() => {
-            this.storage.set('direct_mode', this.directMode)
-                .catch((err) => console.error(err));
-        });
+        // this.storage.ready().then(() => {
+        //     this.storage.set('direct_mode', this.directMode)
+        //         .catch((err) => console.error(err));
+        // });
     }
 
     public getNumberOfCalls(): number {
@@ -143,18 +142,18 @@ export class LocalDataService {
 
     public incrementNumberOfCalls() {
         this.numberOfCalls++;
-        this.storage.set('number_of_calls', this.numberOfCalls)
-            .catch((err) => console.error(err));
+        // this.storage.set('number_of_calls', this.numberOfCalls)
+        //     .catch((err) => console.error(err));
     }
 
 
     public addShuttleToHistory(shuttle: any) {
         this.incrementNumberOfCalls();
         this.history.push({shuttle: shuttle, date: new Date()});
-        this.storage.ready().then(() => {
-            this.storage.set('history', this.history)
-                .catch((err) => console.error(err));
-        });
+        // this.storage.ready().then(() => {
+        //     this.storage.set('history', this.history)
+        //         .catch((err) => console.error(err));
+        // });
     }
 
     public getHistory(): Promise<any[]> {
@@ -162,16 +161,16 @@ export class LocalDataService {
             return Promise.resolve(this.history);
         } else {
             return new Promise((resolve) => {
-                this.storage.get('history').then((val) => {
-                    this.history = val ? val : [];
-                    resolve(this.history);
-                });
+                // this.storage.get('history').then((val) => {
+                //     this.history = val ? val : [];
+                //     resolve(this.history);
+                // });
             });
         }
     }
 
     public clearShuttleHistory() {
-        this.storage.remove('history');
+        // this.storage.remove('history');
         this.history = null;
     }
 
@@ -197,20 +196,20 @@ export class LocalDataService {
 
     public setFavorites(favorites: any) {
         this.favorites = favorites;
-        this.storage.ready().then(() => {
-            this.storage.set('favorites', this.favorites)
-                .catch((err) => console.error(err));
-        });
+        // this.storage.ready().then(() => {
+        //     this.storage.set('favorites', this.favorites)
+        //         .catch((err) => console.error(err));
+        // });
     }
 
     public addFavorite(shuttle: any): boolean {
         if (getIndexOfShuttle(this.favorites, shuttle) === -1) {
             this.userDb.putFavorite(shuttle);
             this.favorites.push(shuttle);
-            this.storage.ready().then(() => {
-                this.storage.set('favorites', this.favorites)
-                    .catch((err) => console.error(err));
-            });
+            // this.storage.ready().then(() => {
+            //     this.storage.set('favorites', this.favorites)
+            //         .catch((err) => console.error(err));
+            // });
             return true;
         } else {
             console.log('error adding favorite');
@@ -222,10 +221,10 @@ export class LocalDataService {
         const index = getIndexOfShuttle(this.favorites, shuttle);
         if (index !== -1) {
             this.favorites.splice(index, 1);
-            this.storage.ready().then(() => {
-                this.storage.set('favorites', this.favorites)
-                    .catch((err) => console.error(err));
-            });
+            // this.storage.ready().then(() => {
+            //     this.storage.set('favorites', this.favorites)
+            //         .catch((err) => console.error(err));
+            // });
             if (this.userDb.getUserId()) {
                 this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'favorite' + '-' + shuttle._id});
             } else {
@@ -244,13 +243,13 @@ export class LocalDataService {
     }
 
     public addBlacklisted(shuttle: any) {
-        if (getIndexOfShuttle(this.blacklist, shuttle) == -1) {
+        if (getIndexOfShuttle(this.blacklist, shuttle) === -1) {
             this.userDb.putBlacklisted(shuttle);
             this.blacklist.push(shuttle);
-            this.storage.ready().then(() => {
-                this.storage.set('blacklist', this.blacklist)
-                    .catch((err) => console.error(err));
-            });
+            // this.storage.ready().then(() => {
+            //     this.storage.set('blacklist', this.blacklist)
+            //         .catch((err) => console.error(err));
+            // });
         }
     }
 
@@ -258,10 +257,10 @@ export class LocalDataService {
         const index = getIndexOfShuttle(this.blacklist, shuttle);
         if (index !== -1) {
             this.blacklist.splice(index, 1);
-            this.storage.ready().then(() => {
-                this.storage.set('blacklist', this.blacklist)
-                    .catch((err) => console.error(err));
-            });
+            // this.storage.ready().then(() => {
+            //     this.storage.set('blacklist', this.blacklist)
+            //         .catch((err) => console.error(err));
+            // });
             if (this.userDb.getUserId()) {
                 this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'blacklisted' + '-' + shuttle._id});
             } else {

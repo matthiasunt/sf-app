@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Platform} from '@ionic/angular';
 import PouchDB from 'pouchdb';
 import {GeoService} from '../geo/geo.service';
 import {Shuttle} from '../../models/shuttle';
@@ -14,15 +13,12 @@ export class UserDbService {
     private db: any;
     private remote: string;
     private details: any;
-
     private history: any[];
     private favorites: any[];
     private blacklist: any[];
     private settings: any;
 
     constructor(public http: HttpClient,
-                public platform: Platform,
-                public storage: Storage,
                 private geoService: GeoService) {
 
         this.db = new PouchDB('sf-private');
