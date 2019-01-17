@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {Plugins} from '@capacitor/core';
 import {map} from 'rxjs/operators';
 import {getDistance} from 'geolib';
+import {ENV} from '@env';
+
 const {Geolocation} = Plugins;
 
 @Injectable({
@@ -16,6 +18,11 @@ export class GeoService {
     constructor(
         private http: HttpClient,
     ) {
+        this.getCurrentPosition();
+    }
+    private async getCurrentPosition() {
+        // const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
+        // console.log('Current', coordinates);
     }
 
     public async getCityName(lang: string): Promise<string> {
@@ -28,7 +35,7 @@ export class GeoService {
             this.http.get(`https://maps.google.com/maps/api/geocode/json?`
                 + `latlng=${position.latitude},${position.longitude}`
                 + `&language=${lang}`
-                + `&key=AIzaSyA1HtE4SDS_FhkvZupw1l6kD0jRDG78rRk`)
+                + `&key=${ENV.GEOCODE_API_KEY}`)
                 .pipe(map(data => {
                 })).subscribe(res => {
                 console.log(res);
@@ -141,11 +148,6 @@ export class GeoService {
         // };
         // return this.position;
 
-    }
-
-    async getCurrentPosition() {
-        const coordinates = await Geolocation.getCurrentPosition();
-        console.log('Current', coordinates);
     }
 
 }

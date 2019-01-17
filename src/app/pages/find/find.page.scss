@@ -30,6 +30,7 @@ ion-content {
 
   #gps-row {
     display: flex;
+    margin-top: 30px;
   }
 
   #gps-button {
@@ -50,8 +51,8 @@ ion-content {
     text-align: center;
 
     ion-chip {
-      display: inline-block;
-      margin: 5px 3px 5px 3px;
+      //display: inline-block;
+      //margin: 5px 3px 5px 3px;
     }
   }
 
