@@ -1,6 +1,0 @@
-{
-  "appId": "coffeerush.apps.shuttlefinder",
-  "appName": "shuttle-finder",
-  "bundledWebRuntime": false,
-  "webDir": "www"
-}

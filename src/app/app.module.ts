@@ -9,10 +9,9 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-
+import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
 @NgModule({
     declarations: [AppComponent],
@@ -35,7 +34,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        UniqueDeviceID,
+        UniqueDeviceID
     ],
     bootstrap: [AppComponent]
 })

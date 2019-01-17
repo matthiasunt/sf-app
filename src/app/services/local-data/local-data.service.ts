@@ -13,7 +13,7 @@ export class LocalDataService {
 
     private softLoginCredentials: any;
     private preferredLanguge: string;
-    private usedDistricts: District[];
+    private recentDistricts: District[];
 
     // All shuttles called last
     private succceededShuttleHistory: any[];
@@ -53,14 +53,8 @@ export class LocalDataService {
         let val = await this.storage.get('direct_mode');
         this.directMode = val ? val : false;
 
-        val = await this.storage.get('used_districts');
-        // Delete districts in old format
-        if (val && val[0] && val[0].name[0]) {
-            this.usedDistricts = [];
-            this.storage.set('used_districts', this.usedDistricts).catch((err) => console.error(err));
-        } else {
-            this.usedDistricts = val ? val : [];
-        }
+        val = await this.storage.get('recent_districts');
+        this.recentDistricts = val ? val : [];
         this.getHistory();
         val = await this.storage.get('favorites');
         this.favorites = val ? val : [];
@@ -91,33 +85,30 @@ export class LocalDataService {
     }
 
     public getRecentlyUsedDistricts(): Promise<District[]> {
-        if (this.usedDistricts) {
-            return Promise.resolve(this.usedDistricts);
+        if (this.recentDistricts) {
+            return Promise.resolve(this.recentDistricts);
         } else {
             return new Promise((resolve) => {
-                this.storage.get('used_districts').then((val) => {
+                this.storage.get('recent_districts').then((val) => {
                     resolve(val);
                 });
             });
         }
     }
 
-    setRecentlyUsedDistrict(district) {
-        setTimeout(() => {
-
-            if (this.usedDistricts.length === 0) {
-                this.usedDistricts[0] = district;
+    public async setRecentlyUsedDistrict(district) {
+        setTimeout(async () => {
+            if (this.recentDistricts.length === 0) {
+                this.recentDistricts[0] = district;
             } else {
                 // prevent 2 same districts
-                if (this.usedDistricts[0]._id !== district._id) {
-                    this.usedDistricts[1] = this.usedDistricts[0];
-                    this.usedDistricts[0] = district;
+                if (this.recentDistricts[0]._id !== district._id) {
+                    this.recentDistricts[1] = this.recentDistricts[0];
+                    this.recentDistricts[0] = district;
                 }
             }
-            this.storage.ready().then(() => {
-                this.storage.set('used_districts', this.usedDistricts)
-                    .catch((err) => console.error(err));
-            });
+            await this.storage.ready();
+            await this.storage.set('recent_districts', this.recentDistricts);
         }, 500);
     }
 
@@ -132,30 +123,25 @@ export class LocalDataService {
 
     public async setDirectMode(directMode: boolean) {
         this.directMode = directMode;
-        this.storage.ready().then(() => {
-            this.storage.set('direct_mode', this.directMode)
-                .catch((err) => console.error(err));
-        });
+        await this.storage.ready();
+        await this.storage.set('direct_mode', this.directMode);
     }
 
     public getNumberOfCalls(): number {
         return this.numberOfCalls;
     }
 
-    public incrementNumberOfCalls() {
+    public async incrementNumberOfCalls() {
         this.numberOfCalls++;
-        this.storage.set('number_of_calls', this.numberOfCalls)
-            .catch((err) => console.error(err));
+        await this.storage.set('number_of_calls', this.numberOfCalls);
     }
 
 
-    public addShuttleToHistory(shuttle: any) {
+    public async addShuttleToHistory(shuttle: any) {
         this.incrementNumberOfCalls();
         this.history.push({shuttle: shuttle, date: new Date()});
-        this.storage.ready().then(() => {
-            this.storage.set('history', this.history)
-                .catch((err) => console.error(err));
-        });
+        await this.storage.ready();
+        await this.storage.set('history', this.history);
     }
 
     public getHistory(): Promise<any[]> {

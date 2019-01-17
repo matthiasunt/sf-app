@@ -1,9 +1,38 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>blacklist</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="dark">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            Blacklist
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+    <ion-list *ngIf="blacklist?.length > 0; Else noBlacklist">
+        <ion-item *ngFor="let s of blacklist" lines="full">
+            <ion-avatar slot="start">
+                <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
+            </ion-avatar>
+            <ion-label>
+                <ion-text>
+                    <h2>{{ s?.name }}</h2>
+                </ion-text>
+            </ion-label>
+            <!--<button (click)="removeFromBlacklist(s)" color="green" ion-button round item-end icon-end>-->
+            <!--Unblock-->
+            <!--<ion-icon name="checkmark-circle"></ion-icon>-->
+            <!--</button>-->
+        </ion-item>
+    </ion-list>
+    <ng-template #noBlacklist>
+        <p padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
+    </ng-template>
 
+    <ion-fab vertical="center" horizontal="end" slot="fixed">
+        <ion-fab-button [routerLink]="['/settings/blacklist/add']" color="dark">
+            <ion-icon name="remove-circle"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>

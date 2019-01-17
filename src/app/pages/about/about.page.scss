@@ -1,0 +1,48 @@
+ion-content {
+  #instagram-a {
+    margin-right: 9px;
+  }
+
+  #about-header-img {
+    width: 55%;
+    display: block;
+    margin: 10px auto;
+  }
+
+  #main-card {
+    //margin-top: 36px;
+  }
+
+  .questions-card {
+    //margin-top: -14px;
+  }
+
+  #missing-card {
+    //margin-top: 18px;
+  }
+
+  #imprint-privacy-p {
+    text-align: center;
+    margin-top: 28px;
+
+    a {
+      text-decoration-line: underline;
+    }
+  }
+}
+
+ion-footer {
+  #support-p {
+    font-size: 11px;
+    color: #757575;
+    margin-bottom: 0;
+  }
+
+  #forump-logo-div {
+    text-align: center;
+  }
+
+  #forump-logo-img {
+    width: 14em;
+  }
+}

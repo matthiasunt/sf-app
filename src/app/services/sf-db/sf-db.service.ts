@@ -83,9 +83,12 @@ export class SfDbService {
 
     public async getDistrict(id: string): Promise<District> {
         this.districts = await this.getDistricts();
-        return this.districts.filter((d) => {
-            return d._id === id;
-        })[0];
+        return this.districts.find((e) => e._id === id);
+    }
+
+    public async getShuttle(id: string): Promise<Shuttle> {
+        this.allShuttles = await this.getAllShuttles();
+        return this.allShuttles.find((e) => e._id === id);
     }
 
     public async getShuttlesByDistrict(district: District): Promise<Shuttle[]> {
@@ -117,13 +120,16 @@ export class SfDbService {
     // define type
     public async getShuttlesFromLocation(position: any, radius: number): Promise<any[]> {
         const ret: any[] = [];
-        const allShuttles = await this.getAllShuttles();
-        for (const s of allShuttles) {
-            const distance = this.geoService.getDistance(position, s.location);
-            if (distance && distance < radius) {
-                const shuttle: any = s;
-                shuttle.distance = distance;
-                ret.push(shuttle);
+        console.log(position);
+        if (position) {
+            const allShuttles = await this.getAllShuttles();
+            for (const s of allShuttles) {
+                const distance = this.geoService.getDistance(position, s.location);
+                if (distance && distance < radius) {
+                    const shuttle: any = s;
+                    shuttle.distance = distance;
+                    ret.push(shuttle);
+                }
             }
         }
         return this.buildRankingFromLocation(ret);
@@ -186,15 +192,10 @@ export class SfDbService {
     }
 
     // Should be a defined type (id, shuttle[])
-    private getShuttlesFromCache(districtId: string): any {
+    private getShuttlesFromCache(id: string): any {
         if (this.shuttlesByDistricts) {
-            for (const e of this.shuttlesByDistricts) {
-                if (e.districtId === districtId) {
-                    return e;
-                }
-            }
+            return this.shuttlesByDistricts.find((e) => e.districtId === id);
         }
-        return undefined;
     }
 
 

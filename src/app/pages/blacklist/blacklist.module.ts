@@ -1,26 +1,31 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {Routes, RouterModule} from '@angular/router';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { BlacklistPage } from './blacklist.page';
+import {BlacklistPage} from './blacklist.page';
+import {TranslateModule} from '@ngx-translate/core';
+import {ComponentsModule} from '../../components/components.module';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: BlacklistPage
-  }
+    {
+        path: '',
+        component: BlacklistPage
+    }
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [BlacklistPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        ComponentsModule,
+    ],
+    declarations: [BlacklistPage]
 })
-export class BlacklistPageModule {}
+export class BlacklistPageModule {
+}
