@@ -19,24 +19,15 @@ ion-avatar > div {
 
 .helpListBox {
   //background-color: map-get($colors, sf-yellow);
-
-  p {
-    color: black;
-  }
-
-  #call-icon {
-    padding-right: 10px;
-  }
 }
 
-ion-badge {
-  font-weight: normal;
-
-}
-
-.badge-md {
-  border-radius: 15px;
-}
+//ion-badge {
+//  font-weight: normal;
+//}
+//
+//.badge-md {
+//  border-radius: 15px;
+//}
 
 #big-spinner {
   width: 105px;

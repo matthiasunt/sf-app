@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Plugins} from '@capacitor/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
+
 import {hash} from 'hash-js';
 import {LocalDataService} from '../local-data/local-data.service';
 import {UserDbService} from '../user-db/user-db.service';
 import {ENV} from '../../../environments/environment';
-
-const {Device} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -19,23 +18,19 @@ export class AuthService {
 
     constructor(
         private http: HttpClient,
+        private uniqueDeviceID: UniqueDeviceID,
         private localData: LocalDataService,
         private userDb: UserDbService,
     ) {
         this.headers = new HttpHeaders().set('Content-Type', 'application/json');
         this.url = ENV.API_URL;
-        this.fetchDeviceInfo();
-
-    }
-
-    private async fetchDeviceInfo() {
-        this.deviceInfo = await Device.getInfo();
     }
 
     public async doSoftLogin() {
 
         let uuid: string;
         if (!this.deviceInfo.isVirtual) {
+            uuid = await this.uniqueDeviceID.get();
             uuid = this.deviceInfo.uuid;
         } else {
             uuid = 'browser-uuid';

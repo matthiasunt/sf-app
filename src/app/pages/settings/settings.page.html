@@ -12,9 +12,11 @@
 
 <ion-content padding>
     <ion-item>
-        <ion-label>
-            <ion-icon small slot="start" name="globe"></ion-icon>
-            {{ "settings.LANGUAGE" | translate }}
+        <ion-icon slot="start" name="globe"></ion-icon>
+        <ion-label text-wrap>
+            <ion-text>
+                <h2>{{ "settings.LANGUAGE" | translate }}</h2>
+            </ion-text>
         </ion-label>
         <ion-select color="dark-green" [(ngModel)]="selectedLang" (ionChange)="languageChange($event)"
                     interface="popover">
@@ -28,9 +30,11 @@
     <ion-list lines="none">
         <div id="blacklist-div" (click)="toPage('Blacklist')">
             <ion-item>
+                <ion-icon slot="start" name="remove-circle"></ion-icon>
                 <ion-label>
-                    <ion-icon size="small" slot="start" name="remove-circle"></ion-icon>
-                    Blacklist
+                    <ion-text>
+                        <h2>Blacklist</h2>
+                    </ion-text>
                 </ion-label>
             </ion-item>
             <ion-item text-wrap class="default-description-item">
@@ -42,15 +46,19 @@
         <hr>
 
         <ion-item>
+            <ion-icon color="primary" slot="start" name="flash"></ion-icon>
             <ion-label>
-                <ion-icon color="primary" size="small" slot="start" name="flash"></ion-icon>
-                {{ "settings.DIRECT_MODE" | translate }}
+                <ion-text>
+                    <h2>{{ "settings.DIRECT_MODE" | translate }}</h2>
+                </ion-text>
             </ion-label>
-            <ion-toggle color="green" [(ngModel)]="directMode" (ngModelChange)="modeChanged()"></ion-toggle>
+            <ion-toggle color="primary" [(ngModel)]="directMode" (ngModelChange)="modeChanged()"></ion-toggle>
         </ion-item>
         <ion-item text-wrap id="toggle-description-item">
-            <p *ngIf="directMode">{{ "settings.DIRECT_MODE_ON_DESCRIPTION" | translate }} </p>
-            <p *ngIf="!directMode">{{ "settings.DIRECT_MODE_OFF_DESCRIPTION" | translate }} </p>
+            <ion-text text-wrap>
+                <p *ngIf="directMode">{{ "settings.DIRECT_MODE_ON_DESCRIPTION" | translate }}</p>
+                <p *ngIf="!directMode">{{ "settings.DIRECT_MODE_OFF_DESCRIPTION" | translate }}</p>
+            </ion-text>
         </ion-item>
 
         <!-- <hr>
@@ -67,9 +75,11 @@
         <hr>
 
         <ion-item (click)="toAboutPage()">
+            <ion-icon slot="start" name="information-circle"></ion-icon>
             <ion-label>
-                <ion-icon item-start ios="ios-information-circle-outline" md="md-information-circle"></ion-icon>
-                {{ "page_titles.ABOUT" | translate }}
+                <ion-text>
+                    <h2>{{ "page_titles.ABOUT" | translate }}</h2>
+                </ion-text>
             </ion-label>
         </ion-item>
 
