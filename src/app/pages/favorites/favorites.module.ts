@@ -14,7 +14,7 @@ import {TranslateModule} from '@ngx-translate/core';
         FormsModule,
         RouterModule.forChild([{path: '', component: FavoritesPage}]),
         ComponentsModule,
-        TranslateModule
+        TranslateModule,
     ],
     declarations: [FavoritesPage]
 })

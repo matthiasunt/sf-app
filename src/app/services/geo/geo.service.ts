@@ -20,32 +20,29 @@ export class GeoService {
     ) {
         this.getCurrentPosition();
     }
+
     private async getCurrentPosition() {
-        // const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
-        // console.log('Current', coordinates);
+        const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
+        console.log('Current', coordinates);
     }
 
-    public async getCityName(lang: string): Promise<string> {
+    public async getCityName(lang: string) {
         const pos = await this.getCurrentPosition();
-        return await this.getGeocodedCityName(pos, lang);
+        console.log(pos);
     }
 
-    public getGeocodedCityName(position, lang: string): Promise<string> {
-        return new Promise((resolve) => {
-            this.http.get(`https://maps.google.com/maps/api/geocode/json?`
-                + `latlng=${position.latitude},${position.longitude}`
-                + `&language=${lang}`
-                + `&key=${ENV.GEOCODE_API_KEY}`)
-                .pipe(map(data => {
-                })).subscribe(res => {
-                console.log(res);
-                this.geocodedCityName = {
-                    name: this.getLocalityName(res['results']),
-                    lang: lang,
-                };
-                resolve(this.geocodedCityName.name);
-            });
-        });
+    public async getGeocodedCityName(position, lang: string): Promise<string> {
+        const data = await this.http.get(`https://maps.google.com/maps/api/geocode/json?`
+            + `latlng=${position.latitude},${position.longitude}`
+            + `&language=${lang}`
+            + `&key=${ENV.GEOCODE_API_KEY}`).toPromise();
+        console.log(data);
+        const name: string = this.getLocalityName(data['results']);
+        this.geocodedCityName = {
+            name: name,
+            lang: lang,
+        };
+        return name;
     }
 
 
@@ -121,7 +118,6 @@ export class GeoService {
             longitude: rLng,
             timestamp: new Date().getTime(),
         };
-        console.log(this.position);
         return this.position;
 
     }

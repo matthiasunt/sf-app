@@ -3,7 +3,7 @@ import {LocalDataService} from '../../services/local-data/local-data.service';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {GeoService} from '../../services/geo/geo.service';
-import {AlertController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
@@ -15,27 +15,28 @@ import {ActivatedRoute, Router} from '@angular/router';
     styleUrls: ['./selection.page.scss'],
 })
 export class SelectionPage implements OnInit {
-    private district: District;
-    private districtColors: string[];
+    district: District;
+    districtColors: string[];
 
-    private viaGPS: boolean;
-    private actualPos: any;
-    private actualCity: string;
-    private noValidCityName: boolean;
+    pos: any;
+    actualCity: string;
+    noValidCityName: boolean;
 
-    private outOfRange: boolean;
-    private showAllShuttles: boolean;
-    private queryResult: any[];
+    coordinates: any;
 
-    private shuttles: Shuttle[];
-    private shuttlesInRanges: any;
+    outOfRange: boolean;
+    showAllShuttles: boolean;
+    queryResult: any[];
 
-    private actualShuttleIndex: number;
+    shuttles: Shuttle[];
+    shuttlesInRanges: any;
 
-    constructor(public alertCtrl: AlertController,
-                private route: ActivatedRoute,
+    actualShuttleIndex: number;
+
+    constructor(private activatedRoute: ActivatedRoute,
+                private alertCtrl: AlertController,
                 private router: Router,
-                public translate: TranslateService,
+                private translate: TranslateService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private geo: GeoService,
@@ -43,9 +44,7 @@ export class SelectionPage implements OnInit {
     ) {
         // this.district = navParams.get('district');
         // this.districtColors = navParams.get('districtColors');
-        if (!this.districtColors) {
-            this.districtColors = ['#99CC33', '#FFFFFF'];
-        }
+
         // this.showAllShuttles = navParams.get('showAllShuttles');
         // this.viaGPS = navParams.get('viaGps');
 
@@ -54,19 +53,27 @@ export class SelectionPage implements OnInit {
     }
 
     async ngOnInit() {
-        const districtId = this.route.snapshot.paramMap.get('id');
-        this.district = await this.sfDb.getDistrict(districtId);
-        this.districtColors = this.colorGenerator.getDistrictColors(this.district);
-        if (this.district) {
-            this.fetchShuttlesByDistrict(this.district);
-        } else if (this.showAllShuttles) {
-            this.getAllShuttles();
-        } else if (this.viaGPS) {
-            this.getShuttlesViaGps();
+        this.districtColors = ['#99CC33', '#FFFFFF'];
+        const districtId = this.activatedRoute.snapshot.paramMap.get('id');
+        // Via District
+        if (districtId) {
+            this.district = await this.sfDb.getDistrict(districtId);
+            this.districtColors = this.colorGenerator.getDistrictColors(this.district);
+            this.getShuttlesByDistrict(this.district);
+            // Via GPS
+        } else {
+            const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
+            if (coords) {
+                this.coordinates = {
+                    lat: coords.split(',')[0],
+                    lng: coords.split(',')[1],
+                };
+                this.getShuttlesByCoords();
+            }
         }
     }
 
-    setToolbarStyle() {
+    getToolbarStyle() {
         return {
             'background-color': this.districtColors[0],
             'color': this.districtColors[1]
@@ -74,17 +81,12 @@ export class SelectionPage implements OnInit {
     }
 
 
-    private async fetchShuttlesByDistrict(d: District) {
+    private async getShuttlesByDistrict(d: District) {
         const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(this.district);
         this.shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
     }
 
-    private async getAllShuttles() {
-        const allShuttles = await this.sfDb.getAllShuttles();
-        this.shuttles = await this.sfDb.getMergedShuttles(allShuttles);
-    }
-
-    private async getShuttlesViaGps() {
+    private async getShuttlesByCoords() {
         let lang: string;
         switch (this.localData.getPrefLang()) {
             case 'it':
@@ -95,18 +97,18 @@ export class SelectionPage implements OnInit {
         }
 
         // this.actualPos = this.util.isDevice() ? await this.geo.getPosition() : this.geo.getRandomPosition();
-        this.actualPos = this.geo.getRandomPosition();
+        this.pos = this.geo.getRandomPosition();
 
-        let shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.actualPos, 25000);
+        let shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.pos, 25000);
         if (shuttlesTemp.length < 3) {
-            shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.actualPos, 30000);
+            shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.pos, 30000);
         }
         if (!shuttlesTemp || shuttlesTemp.length < 1) {
             this.outOfRange = true;
         } else {
             this.shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
         }
-        this.actualCity = await this.geo.getGeocodedCityName(this.actualPos, lang);
+        this.actualCity = await this.geo.getGeocodedCityName(this.pos, lang);
 
         if (!this.actualCity) {
             console.log(this.actualCity);
@@ -114,7 +116,9 @@ export class SelectionPage implements OnInit {
         }
     }
 
-    private itemClicked(shuttle: Shuttle) {
+    private shuttleClicked(shuttle: Shuttle) {
+        const currentUrl = this.router.url;
+        this.router.navigate([currentUrl + '/shuttle/' + shuttle._id]);
         // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
         //   this.presentReallyCallToast(shuttle);
         // }

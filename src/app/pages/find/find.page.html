@@ -2,7 +2,7 @@
     <app-sf-toolbar></app-sf-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="districts">
     <ion-row id="gps-row">
         <ion-col>
             <ion-label color="primary" class="section-headline">
@@ -14,9 +14,8 @@
             </ion-button>
         </ion-col>
     </ion-row>
-
     <div id="district-chip-row">
-        <ion-chip (click)="districtClicked(d)" *ngFor="let d of this.districts"
+        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
                   [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
                   [style.color]="colorGenerator.getDistrictColors(d)[1]">
             <ion-label>{{getDistrictName(d)}}</ion-label>

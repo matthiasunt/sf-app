@@ -1,0 +1,17 @@
+.toolbar-background {
+  background: none;
+}
+
+button > ion-ripple-effect {
+  background: none !important;
+}
+
+#avatar-div {
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  ion-avatar {
+    display: inline-block;
+    width: 50%;
+  }
+}

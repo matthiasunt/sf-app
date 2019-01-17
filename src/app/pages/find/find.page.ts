@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
@@ -15,7 +15,7 @@ import {ENV} from '@env';
     templateUrl: 'find.page.html',
     styleUrls: ['find.page.scss']
 })
-export class FindPage {
+export class FindPage implements OnInit {
     calledShuttle: any;
     districtsAvailable: boolean;
 
@@ -23,7 +23,6 @@ export class FindPage {
     private favorites: any[];
 
     constructor(
-        private navCtrl: NavController,
         private http: HttpClientModule,
         private router: Router,
         private toastCtrl: ToastController,
@@ -34,6 +33,9 @@ export class FindPage {
         private geo: GeoService,
         private colorGenerator: ColorGeneratorService,
     ) {
+    }
+
+    async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.fetchDistricts();
         this.fetchFavorites();
@@ -41,14 +43,10 @@ export class FindPage {
 
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
+        console.log('Districts fetched!');
         const recentDistricts = await this.localData.getRecentlyUsedDistricts();
         recentDistricts.forEach((d) => {
-            let index = -1;
-            for (let j = 0; j < tempDistricts.length; j++) {
-                if (tempDistricts[j]._id === d._id) {
-                    index = j;
-                }
-            }
+            const index = tempDistricts.findIndex((t) => t._id === d._id);
             if (index > -1) {
                 tempDistricts.splice(index, 1);
             }
@@ -69,7 +67,7 @@ export class FindPage {
             //   district: district
             // });
         } else {
-            this.router.navigate(['/tabs/find/selection/' + district._id]);
+            this.router.navigate(['/tabs/find/district/' + district._id]);
         }
         this.localData.setRecentlyUsedDistrict(district);
     }
@@ -91,7 +89,6 @@ export class FindPage {
     // }
 
     public async gpsClicked() {
-        //
         // //Device testing
         // if (this.util.isDevice()) {
         //     const locationAuthorized: boolean = await this.diagnostic.isLocationAuthorized();
@@ -134,6 +131,7 @@ export class FindPage {
         //         // this.navCtrl.push("Selection", {viaGps: true});
         //     }
         // }
+        this.router.navigate(['/tabs/find/gps/46.4983,11.3548']);
     }
 
     private async presentEnableGpsAlert() {

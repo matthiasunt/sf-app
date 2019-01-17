@@ -1,20 +1,20 @@
 <ion-header>
-    <ion-toolbar color="{{this.districtColors[0]}}" [ngStyle]="setToolbarStyle()">
+    <ion-toolbar color="{{this.districtColors[0]}}" [ngStyle]="getToolbarStyle()">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
             <div *ngIf="district">{{ getDistrictName(district) }}</div>
-            <!--<div *ngIf="actualCity"> {{ actualCity }}</div>-->
-            <!--<ion-spinner color="light" *ngIf="viaGPS && !actualCity && !noValidCityName && !outOfRange" name="dots"-->
-            <!--duration="900"></ion-spinner>-->
+            <div *ngIf="actualCity"> {{ actualCity }}</div>
+            <ion-spinner color="light" *ngIf="coordinates && !actualCity && !noValidCityName && !outOfRange" name="dots"
+                         duration="900"></ion-spinner>
         </ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-virtual-scroll [items]="shuttles">
-        <ion-item lines="full" button="true" *virtualItem="let s" approxItemHeight="59px" (click)="itemClicked(s)"
+        <ion-item lines="full" *virtualItem="let s" approxItemHeight="59px" (click)="shuttleClicked(s)"
                   [class.alreadyCalledElement]="localData.shuttleCalledLately(s)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGenerator.getShuttleColors(s)">
@@ -22,12 +22,14 @@
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>
-                    <h2>{{ s?.name }}</h2>
+                    <h2>{{ s?.name }}
+                        <ion-icon name="checkmark-circle" slot="end" color="primary"></ion-icon>
+                    </h2>
                     <p>
-                        <ion-badge *ngIf="viaGPS && s?.city?.de && s?.city?.it" color="primary">
+                        <ion-badge *ngIf="coordinates && s?.city?.de && s?.city?.it" color="primary">
                             {{ getCityName(s) }}
                         </ion-badge>
-                        <ion-badge *ngIf="!viaGPS && s?.city?.de && s?.city?.it
+                        <ion-badge *ngIf="!coordinates && s?.city?.de && s?.city?.it
                                    && districtColors" [style.background-color]="districtColors[0]"
                                    [style.color]="districtColors[1]">
                             {{ getCityName(s) }}
@@ -35,10 +37,10 @@
                     </p>
                 </ion-text>
             </ion-label>
-
+            <ion-icon name="call" size="large" slot="end" color="primary"></ion-icon>
         </ion-item>
     </ion-virtual-scroll>
-    <div *ngIf="viaGPS && outOfRange">
+    <div *ngIf="coordinates && outOfRange">
         <p padding class="no-data-p"> {{ "NO_SHUTTLE_FOUND" | translate }} </p>
     </div>
 
