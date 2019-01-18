@@ -1,26 +1,36 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
+import {Router} from '@angular/router';
+import {Shuttle} from '../../models/shuttle';
 
 @Component({
     selector: 'app-history',
     templateUrl: 'history.page.html',
     styleUrls: ['history.page.scss']
 })
-export class HistoryPage {
+export class HistoryPage implements OnInit {
     history: any[][];
 
-    constructor(private alertCtrl: AlertController,
+    constructor(private router: Router,
+                private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private colorGeneratorService: ColorGeneratorService,
     ) {
+    }
 
+    async ngOnInit() {
+        // this.history = await this.sfDb.getAllShuttles();
+    }
 
+    rateClicked(shuttle: Shuttle) {
+        const currentUrl = this.router.url;
+        this.router.navigate([currentUrl + '/rate/' + shuttle._id]);
     }
 
     private ionViewWillEnter() {
@@ -70,7 +80,7 @@ export class HistoryPage {
                 ret[j] = [];
                 ret[j][k] = history[i];
             } else {
-                if (this.getDate(history[i].date) != this.getDate(history[i - 1].date)) {
+                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
                     j++;
                     ret[j] = [];
                     k = 0;

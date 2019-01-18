@@ -16,7 +16,7 @@ import {SettingsPageModule} from '../settings/settings.module';
         FormsModule,
         TabsPageRoutingModule,
         RouterModule,
-        SettingsPageModule
+        SettingsPageModule,
     ],
     declarations: [TabsPage]
 })

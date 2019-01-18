@@ -14,7 +14,9 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent
+    ],
     entryComponents: [],
     imports: [
         BrowserModule,

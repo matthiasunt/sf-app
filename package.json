@@ -39,7 +39,7 @@
     "cordova-sqlite-storage": "^2.6.0",
     "core-js": "^2.5.4",
     "geolib": "latest",
-    "hash-js": "latest",
+    "hash.js": "^1.1.7",
     "pouchdb": "^7.0.0",
     "rxjs": "~6.3.3",
     "zone.js": "^0.8.28"

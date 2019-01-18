@@ -1,9 +1,12 @@
 export interface Shuttle {
   _id: string;
-  type: string;
   name: string;
   phone: string;
   districts: string[];
+  first_name: string;
+  last_name: string;
+  street: string;
+  zip: string;
   city: {
     de: string,
     it: string
@@ -12,5 +15,8 @@ export interface Shuttle {
     latitude: string,
     longitude: string
   };
+  website: string;
+  facebook: string;
+  description: string;
 
 }

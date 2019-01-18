@@ -24,19 +24,21 @@
                 <ion-text>
                     <h2>{{ shuttle?.name }}</h2>
                     <p>{{ sfDb.getFormattedPhoneNumber(shuttle?.phone) }}</p>
-                    <!--<button *ngIf="!isInList(s)" (click)="addToList(s)" color="{{addToFavorites? 'green' : 'dark'}}" ion-button-->
-                    <!--round-->
-                    <!--item-end icon-end>-->
-                    <!--{{addToFavorites ? 'Add' : 'Block'}}-->
-                    <!--<ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}"></ion-icon>-->
-                    <!--</button>-->
-                    <!--<button *ngIf="isInList(s)" (click)="removeFromList(s)" color="{{addToFavorites? 'negative' : 'green'}}"-->
-                    <!--ion-button round item-end icon-end>-->
-                    <!--{{addToFavorites ? 'Remove' : 'Unblock'}}-->
-                    <!--<ion-icon name="{{addToFavorites? 'trash' : 'checkmark-circle'}}"></ion-icon>-->
-                    <!--</button>-->
+
                 </ion-text>
             </ion-label>
+            <ion-button *ngIf="!isInList(shuttle)" (click)="addToList(shuttle)"
+                        color="{{addToFavorites? 'primary' : 'dark'}}"
+                        slot="end" shape="round">
+                <ion-label>{{addToFavorites ? 'Add' : 'Block'}}</ion-label>
+                <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="isInList(shuttle)" (click)="removeFromList(shuttle)"
+                        color="{{addToFavorites? 'danger' : 'success'}}"
+                        slot="end" shape="round">
+                <ion-label>{{addToFavorites ? 'Remove' : 'Unblock'}}</ion-label>
+                <ion-icon name="{{addToFavorites? 'trash' : 'checkmark-circle'}}" slot="end"></ion-icon>
+            </ion-button>
         </ion-item>
     </ion-virtual-scroll>
 

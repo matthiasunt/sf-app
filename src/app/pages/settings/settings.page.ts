@@ -3,7 +3,8 @@ import {PopoverController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {LocalDataService} from '../../services/local-data/local-data.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router, RoutesRecognized} from '@angular/router';
+import {filter, pairwise} from 'rxjs/operators';
 
 @Component({
     selector: 'app-settings',
@@ -14,8 +15,10 @@ export class SettingsPage implements OnInit {
     private selectedLang: string;
     private directMode: boolean;
     private shareData: boolean;
+    private prevUrl: string;
 
-    constructor(private activatedRoute: ActivatedRoute,
+    constructor(private router: Router,
+                private activatedRoute: ActivatedRoute,
                 private popoverCtrl: PopoverController,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
@@ -30,6 +33,11 @@ export class SettingsPage implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    backClicked() {
+        // console.log(this.prevUrl);
+        // this.router.navigate([this.prevUrl]);
     }
 
 

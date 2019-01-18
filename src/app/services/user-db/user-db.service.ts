@@ -4,12 +4,14 @@ import PouchDB from 'pouchdb';
 import {GeoService} from '../geo/geo.service';
 import {Shuttle} from '../../models/shuttle';
 import {District} from '../../models/district';
+import {Rating} from '../../models/rating';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserDbService {
 
+    private userId: string;
     private db: any;
     private remote: string;
     private details: any;
@@ -22,6 +24,7 @@ export class UserDbService {
                 private geoService: GeoService) {
 
         this.db = new PouchDB('sf-private');
+        this.userId = this.getUserId();
     }
 
     init(details) {
@@ -52,19 +55,19 @@ export class UserDbService {
                          end: Date,
                          district: District,) {
 
-        const uid = this.getUserId();
+
         let position;
         // if (await this.diagnostic.isLocationAuthorized() && await this.diagnostic.isLocationEnabled()) {
         //     position = await this.geoService.getPosition();
         // }
 
-        if (uid && shuttle && start && end) {
+        if (this.userId && shuttle && start && end) {
             this.db.put({
-                _id: 'call-' + uid + '-' + start.getTime(),
+                _id: 'call-' + this.userId + '-' + start.getTime(),
                 type: 'call',
-                shuttle: shuttle,
+                shuttle: shuttle._id,
                 public: false,
-                user_id: uid,
+                user_id: this.userId,
                 start_time: start,
                 end_time: end,
                 location: position,
@@ -73,6 +76,20 @@ export class UserDbService {
                 .catch((err) => console.error(err));
         } else {
             console.log('Error putting call');
+        }
+    }
+
+    public async putRating(ratingData: Rating, shuttle: Shuttle) {
+        try {
+            await this.db.put({
+                _id: 'rating-' + this.userId + '-' + new Date().toISOString(),
+                type: 'call',
+                shuttle_id: shuttle._id,
+                public: true,
+                user_id: this.userId,
+            });
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -89,13 +106,12 @@ export class UserDbService {
 
 
     private putListElement(shuttle: Shuttle, listType: string) {
-        const uid = this.getUserId();
-        if (uid) {
+        if (this.userId) {
             const doc = {
-                _id: listType + '-' + uid + '-' + shuttle._id,
+                _id: listType + '-' + this.userId + '-' + shuttle._id,
                 type: listType,
-                user_id: uid,
-                shuttle: shuttle,
+                user_id: this.userId,
+                shuttle_id: shuttle._id,
                 date: new Date(),
                 public: false,
             };
@@ -145,7 +161,7 @@ export class UserDbService {
         if (this.details) {
             return this.details.user_id;
         } else {
-            console.log('details not defined');
+            console.log('Details not defined');
         }
     }
 }

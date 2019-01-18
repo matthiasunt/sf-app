@@ -48,7 +48,7 @@ export class SfDbService {
         this.replicate();
     }
 
-    private replicate() {
+    private async replicate() {
         this.db.replicate.from(this.remote, {
             live: true, retry: true
         }).on('change', (info) => {
@@ -60,6 +60,7 @@ export class SfDbService {
         }).on('denied', (err) => {
             console.log('denied');
         });
+        this.fetchEverything();
     }
 
     public async getDistricts(): Promise<District[]> {
@@ -88,7 +89,11 @@ export class SfDbService {
 
     public async getShuttle(id: string): Promise<Shuttle> {
         this.allShuttles = await this.getAllShuttles();
-        return this.allShuttles.find((e) => e._id === id);
+        if (this.allShuttles[0]) {
+            return this.allShuttles.find((e) => e._id === id);
+        } else {
+            console.error('Shuttles undefined!');
+        }
     }
 
     public async getShuttlesByDistrict(district: District): Promise<Shuttle[]> {
@@ -120,7 +125,6 @@ export class SfDbService {
     // define type
     public async getShuttlesFromLocation(position: any, radius: number): Promise<any[]> {
         const ret: any[] = [];
-        console.log(position);
         if (position) {
             const allShuttles = await this.getAllShuttles();
             for (const s of allShuttles) {
@@ -200,7 +204,7 @@ export class SfDbService {
 
 
     public async getAllShuttles(): Promise<Shuttle[]> {
-        if (this.allShuttles) {
+        if (this.allShuttles && this.allShuttles[0] !== undefined) {
             return this.allShuttles;
         } else {
             try {
@@ -242,6 +246,7 @@ export class SfDbService {
     }
 
     public async fetchEverything() {
+        console.log('Fetch everything');
         this.getAllShuttles();
         const districts = await this.getDistricts();
         districts.forEach((e) => {
@@ -251,10 +256,12 @@ export class SfDbService {
 
     public getFormattedPhoneNumber(phone: string): string {
         let ret = '';
-        if (phone.charAt(3) === '0') {
-            ret += phone.substring(3, 7) + ' ' + phone.substring(7, 13);
-        } else {
-            ret += phone.substring(3, 6) + ' ' + phone.substring(6);
+        if (phone && phone.length > -1) {
+            if (phone.charAt(3) === '0') {
+                ret += phone.substring(3, 7) + ' ' + phone.substring(7, 13);
+            } else {
+                ret += phone.substring(3, 6) + ' ' + phone.substring(6);
+            }
         }
         return ret;
     }

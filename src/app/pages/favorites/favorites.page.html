@@ -7,12 +7,12 @@
     <!--*ngIf="favorites?.length > 0; Else noFavorites" no-lines>-->
     <ion-list *ngIf="favorites?.length > 0; Else noFavorites" lines="none">
         <ion-item *ngFor="let s of favorites">
-            <ion-avatar item-start>
+            <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
                 </app-sf-shuttle-icon>
-            </ion-avatar>
+            </ion-thumbnail>
             <ion-label>{{ s?.name }}</ion-label>
-            <ion-button (click)="removeFavorite(s)" color="danger" round slot="end">
+            <ion-button (click)="removeFavorite(s)" color="danger" shape="round" slot="end">
                 Remove
                 <ion-icon name="trash" slot="end"></ion-icon>
             </ion-button>
@@ -23,7 +23,7 @@
     </ng-template>
 
     <ion-fab vertical="center" horizontal="end" slot="fixed">
-        <ion-fab-button [routerLink]="['/tabs/favorites/add']" color="primary">
+        <ion-fab-button routerLink="/tabs/favorites/add" color="primary">
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>
     </ion-fab>

@@ -43,9 +43,7 @@ export class AppComponent {
 
     initializeApp() {
         this.platform.ready().then(() => {
-            if (ENV.production) {
-                this.authService.doSoftLogin();
-            }
+            this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(false);
             this.statusBar.styleLightContent();
             this.splashScreen.hide();

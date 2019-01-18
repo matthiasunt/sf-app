@@ -110,14 +110,14 @@ export class SelectionPage implements OnInit {
         }
         this.actualCity = await this.geo.getGeocodedCityName(this.pos, lang);
 
-        if (!this.actualCity) {
-            console.log(this.actualCity);
+        if (!this.actualCity || this.actualCity.length < 2) {
             this.noValidCityName = true;
         }
     }
 
     private shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
+        this.localData.addShuttleToHistory(shuttle);
         this.router.navigate([currentUrl + '/shuttle/' + shuttle._id]);
         // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
         //   this.presentReallyCallToast(shuttle);
