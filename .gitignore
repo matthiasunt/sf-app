@@ -30,7 +30,6 @@ www/
 $RECYCLE.BIN/
 playground/
 .sourcemaps/
-package-lock.json
 
 .DS_Store
 Thumbs.db
@@ -41,5 +40,4 @@ line-count.txt
 .gradle/*
 android/*
 ios/*
-src/environments/environment.prod.ts
-src/environments/environment.ts
+src/environments/*

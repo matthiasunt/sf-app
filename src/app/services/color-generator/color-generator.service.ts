@@ -65,6 +65,18 @@ export class ColorGeneratorService {
         return Math.abs(c) % max;
     }
 
+    public getContrastColor(hexcolor: string): string {
+        if (hexcolor && hexcolor.length > 0) {
+            const r = parseInt(hexcolor.substr(1, 2), 16);
+            const g = parseInt(hexcolor.substr(3, 2), 16);
+            const b = parseInt(hexcolor.substr(5, 2), 16);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return (yiq >= 160) ? 'black' : 'white';
+        } else {
+            return 'black';
+        }
+    }
+
     private DEFAULT_PALETTE = [
         // 19 x 14
         // 300 - 900, 6 options per color, 19 colors = 114 options

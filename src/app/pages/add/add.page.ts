@@ -6,7 +6,7 @@ import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Shuttle} from '../../models/shuttle';
 import {getIndexOfShuttle} from '../../tools/sf-tools';
-import {ActivatedRoute} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-add',
@@ -23,7 +23,7 @@ export class AddPage implements OnInit {
     private resultIndex: number;
     private list: any[];
 
-    constructor(private activatedRoute: ActivatedRoute,
+    constructor(private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
@@ -32,38 +32,17 @@ export class AddPage implements OnInit {
     ) {
     }
 
-    ngOnInit() {
-        this.activatedRoute.parent.url.subscribe((urlPath) => {
-            const parentPath = urlPath[urlPath.length - 2].path;
-            if (parentPath === 'blacklist') {
-                this.addToFavorites = false;
-            } else {
-                this.addToFavorites = true;
-            }
-        });
-        this.sfDb.getAllShuttles().then((data) => {
-            this.allShuttles = data;
-            this.queryResult = this.allShuttles;
-            // }).catch((err) => {
-            //   console.log(err);
-            //   if (!this.util.isOnline()) {
-            //     this.noConnection = true;
-            //   }
-        });
+    async ngOnInit() {
+        const splitUrl = this.router.url.split('/');
+        this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
+        this.allShuttles = await this.sfDb.getAllShuttles();
+        this.queryResult = this.allShuttles;
 
-        // setTimeout(() => {
-        //   if (this.util.isOnline() && !this.allShuttles) {
-        //     this.unavailable = true;
-        //   }
-        // }, 7000);
-
-        // this.list = navParams.get('list');
-
-        if (!this.list) {
-            this.list = [];
+        if (this.addToFavorites) {
+            this.list = await this.localData.getFavorites();
+        } else {
+            this.list = await this.localData.getBlacklist();
         }
-
-        // this.addToFavorites = navParams.get('addToFavorites');
         this.resultIndex = 0;
     }
 
@@ -92,7 +71,6 @@ export class AddPage implements OnInit {
             } else {
                 this.localData.addBlacklisted(shuttle);
             }
-            // this.list.push(shuttle);
         } else {
             // Shuttle already in other list
             const title = this.addToFavorites ?

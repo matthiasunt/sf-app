@@ -1,24 +1,32 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Route, Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
+import {ActivatedRoute, Router} from '@angular/router';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+import {NgForm} from '@angular/forms';
 
 @Component({
-    selector: 'app-shuttle',
-    templateUrl: './shuttle.page.html',
-    styleUrls: ['./shuttle.page.scss'],
+    selector: 'app-rate',
+    templateUrl: './rate.page.html',
+    styleUrls: ['./rate.page.scss'],
 })
-export class ShuttlePage implements OnInit {
+export class RatePage implements OnInit {
+
 
     shuttle: Shuttle;
-    shuttleColors: any;
+    shuttleColors: string[];
 
-    constructor(private activatedRoute: ActivatedRoute,
+    rating = {
+        service: 0,
+        drivingStyle: 0,
+        price: 0,
+        review: ''
+    };
+
+    constructor(private router: Router,
+                private activatedRoute: ActivatedRoute,
                 private sfDb: SfDbService,
-                private colorGenerator: ColorGeneratorService,
-    ) {
-
+                private colorGenerator: ColorGeneratorService) {
     }
 
     async ngOnInit() {
@@ -33,6 +41,11 @@ export class ShuttlePage implements OnInit {
             'background-color': this.shuttleColors[0],
             'color': this.colorGenerator.getContrastColor(this.shuttleColors[0])
         };
+    }
+
+    onSubmit(f: NgForm) {
+        console.log(f.value);
+        this.router.navigate(['tabs/history']);
     }
 
 }

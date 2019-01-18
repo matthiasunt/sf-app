@@ -22,8 +22,8 @@ export class GeoService {
     }
 
     private async getCurrentPosition() {
-        const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
-        console.log('Current', coordinates);
+        // const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
+        // console.log('Current', coordinates);
     }
 
     public async getCityName(lang: string) {
@@ -31,18 +31,17 @@ export class GeoService {
         console.log(pos);
     }
 
-    public async getGeocodedCityName(position, lang: string): Promise<string> {
+    public async getGeocodedCityName(coordinates: any, lang: string): Promise<string> {
         const data = await this.http.get(`https://maps.google.com/maps/api/geocode/json?`
-            + `latlng=${position.latitude},${position.longitude}`
+            + `latlng=${coordinates.latitude},${coordinates.longitude}`
             + `&language=${lang}`
             + `&key=${ENV.GEOCODE_API_KEY}`).toPromise();
-        console.log(data);
         const name: string = this.getLocalityName(data['results']);
         this.geocodedCityName = {
             name: name,
             lang: lang,
         };
-        return name;
+        return this.getBeatifulCityName(name);
     }
 
 

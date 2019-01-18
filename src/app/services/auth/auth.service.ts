@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
-import {hash} from 'hash-js';
 import {LocalDataService} from '../local-data/local-data.service';
 import {UserDbService} from '../user-db/user-db.service';
 import {ENV} from '../../../environments/environment';
+
+const hash = require('hash.js');
 
 @Injectable({
     providedIn: 'root'
@@ -29,13 +30,12 @@ export class AuthService {
     public async doSoftLogin() {
 
         let uuid: string;
-        if (!this.deviceInfo.isVirtual) {
-            uuid = await this.uniqueDeviceID.get();
-            uuid = this.deviceInfo.uuid;
-        } else {
-            uuid = 'browser-uuid';
-        }
-
+        // if (!this.deviceInfo.isVirtual) {
+        //     uuid = await this.uniqueDeviceID.get();
+        //     uuid = this.deviceInfo.uuid;
+        // } else {
+        uuid = 'browser123';
+        // }
         const id = this.hashString(uuid);
         const user = {
             username: id,
@@ -43,10 +43,14 @@ export class AuthService {
             password: 'softlogin',
             confirmPassword: 'softlogin'
         };
-        const loginRes = await this.login(user);
-
-        if (loginRes.status === 401) {
-            this.register(user);
+        try {
+            const loginRes = await this.login(user);
+            if (loginRes.status === 401) {
+                const res = await this.register(user);
+                console.log(res);
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -75,6 +79,7 @@ export class AuthService {
     }
 
     public login(credentials: any): Promise<any> {
+        console.log(credentials);
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         return new Promise((resolve) => {
@@ -86,7 +91,7 @@ export class AuthService {
                 }, (err) => {
                     console.log('Login error!');
                     console.log(err);
-                    if (err.status == 401) {
+                    if (err.status === 401) {
                         console.log('401 Unauthorized');
                     }
                     resolve(err);

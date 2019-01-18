@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-toolbar color="{{shuttleColors[1]}}" [ngStyle]="getToolbarStyle()">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Rate {{shuttle?.name}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <ion-item lines="none">
+            <ion-label position="stacked" color="primary">Service</ion-label>
+            <ion-range ngModel name="service" min="1" max="5" step="1" snaps="true">
+            </ion-range>
+            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+            <ion-icon size="small" slot="end" name="happy" color="primary"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-label position="stacked" color="primary">Fahrstil</ion-label>
+            <ion-range ngModel name="drivingStyle" min="1" max="5" step="1" snaps="true">
+            </ion-range>
+            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+            <ion-icon size="small" slot="end" name="happy" color="primary"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-label position="stacked" color="primary">Preis</ion-label>
+            <ion-range ngModel name="price" min="1" max="5" step="1" snaps="true">
+            </ion-range>
+            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+            <ion-icon size="small" slot="end" name="happy" color="primary"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-label position="stacked" color="primary">Rezension</ion-label>
+            <ion-textarea ngModel required name="review" maxlength="400" rows="5" placeholder="Super Shuttle!! 🔥"></ion-textarea>
+        </ion-item>
+        <ion-button type="submit" shape="round" expand="block">Send</ion-button>
+    </form>
+</ion-content>

@@ -12,18 +12,18 @@
 <ion-content padding>
     <ion-list *ngIf="blacklist?.length > 0; Else noBlacklist">
         <ion-item *ngFor="let s of blacklist" lines="full">
-            <ion-avatar slot="start">
+            <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
-            </ion-avatar>
+            </ion-thumbnail>
             <ion-label>
                 <ion-text>
                     <h2>{{ s?.name }}</h2>
                 </ion-text>
             </ion-label>
-            <!--<button (click)="removeFromBlacklist(s)" color="green" ion-button round item-end icon-end>-->
-            <!--Unblock-->
-            <!--<ion-icon name="checkmark-circle"></ion-icon>-->
-            <!--</button>-->
+            <ion-button (click)="removeFromBlacklist(s)" color="green" slot="end" shape="round">
+            Unblock
+            <ion-icon name="checkmark-circle"></ion-icon>
+            </ion-button>
         </ion-item>
     </ion-list>
     <ng-template #noBlacklist>
