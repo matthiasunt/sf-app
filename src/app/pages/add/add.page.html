@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="{{addToFavorites? 'primary' : 'dark'}}">
+    <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
         <ion-buttons slot="start">
             <ion-back-button
                     routerLink="{{ addToFavorites ? '/tabs/favorites' : '/settings/blacklist'}}"></ion-back-button>
@@ -13,7 +13,8 @@
     </ion-searchbar>
 </ion-header>
 
-<ion-content *ngIf="queryResult">
+<ion-content>
+    <ng-template *ngIf="queryResult && queryResult.length > 0 Else noData"></ng-template>
     <ion-virtual-scroll [items]="queryResult">
         <ion-item *virtualItem="let shuttle" lines="full">
             <ion-thumbnail slot="start" *ngIf="shuttle">
@@ -27,24 +28,28 @@
 
                 </ion-text>
             </ion-label>
-            <ion-button *ngIf="!isInList(shuttle)" (click)="addToList(shuttle)"
-                        color="{{addToFavorites? 'primary' : 'dark'}}"
-                        slot="end" shape="round">
-                <ion-label>{{addToFavorites ? 'Add' : 'Block'}}</ion-label>
-                <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
-            </ion-button>
-            <ion-button *ngIf="isInList(shuttle)" (click)="removeFromList(shuttle)"
-                        color="{{addToFavorites? 'danger' : 'success'}}"
-                        slot="end" shape="round">
-                <ion-label>{{addToFavorites ? 'Remove' : 'Unblock'}}</ion-label>
-                <ion-icon name="{{addToFavorites? 'trash' : 'checkmark-circle'}}" slot="end"></ion-icon>
-            </ion-button>
+            <ng-container *ngIf="!isInList(shuttle)">
+                <ion-button (click)="addToList(shuttle)"
+                            color="{{addToFavorites? 'success' : 'dark'}}"
+                            slot="end" shape="round" size="small">
+                    {{addToFavorites ? 'Add' : 'Block'}}
+                    <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
+                </ion-button>
+            </ng-container>
+            <ng-container *ngIf="isInList(shuttle)">
+                <ion-button (click)="removeFromList(shuttle)"
+                            color="{{addToFavorites? 'danger' : 'success'}}"
+                            slot="end" shape="round" size="small">
+                    {{addToFavorites ? 'Remove' : 'Unblock'}}
+                    <ion-icon name="{{addToFavorites? 'trash' : 'checkmark-circle'}}" slot="end"></ion-icon>
+                </ion-button>
+            </ng-container>
         </ion-item>
     </ion-virtual-scroll>
 
-    <!--<div *ngIf="queryResult?.length < 1 && allShuttles?.length > 0">-->
-    <!--<p class="no-data-p">{{ ("add.NO_RESULT" | translate) }}</p>-->
-    <!--</div>-->
+    <ng-template #noData>
+        <p class="no-data-p">{{ ("add.NO_RESULT" | translate) }}</p>
+    </ng-template>
 
     <!--<div *ngIf="allShuttles?.length < 1">-->
     <!--<ion-spinner *ngIf="!noConnection && !unavailable" color="grey" name="crescent"></ion-spinner>-->

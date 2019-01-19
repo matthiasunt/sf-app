@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-sf-toolbar',
@@ -7,10 +8,17 @@ import {Component, OnInit} from '@angular/core';
 })
 export class SfToolbarComponent implements OnInit {
 
-    constructor() {
+    constructor(private router: Router,
+    ) {
     }
 
     ngOnInit() {
+    }
+
+    toSettings() {
+        const currentUrl = this.router.url;
+        this.router.navigate(['/settings']);
+        // this.router.navigate([currentUrl + '/settings']);
     }
 
 }

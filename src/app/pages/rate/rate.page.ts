@@ -20,6 +20,7 @@ export class RatePage implements OnInit {
         service: 0,
         drivingStyle: 0,
         price: 0,
+        ownMusic: false,
         review: ''
     };
 

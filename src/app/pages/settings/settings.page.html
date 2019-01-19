@@ -1,7 +1,7 @@
 <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar color="secondary">
         <ion-buttons slot="start">
-            <ion-back-button (click)="backClicked()"></ion-back-button>
+            <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
             {{"page_titles.SETTINGS" | translate}}
@@ -18,7 +18,7 @@
                 <h2>{{ "settings.LANGUAGE" | translate }}</h2>
             </ion-text>
         </ion-label>
-        <ion-select color="dark-green" [(ngModel)]="selectedLang" (ionChange)="languageChange($event)"
+        <ion-select color="secondary" [(ngModel)]="selectedLang" (ionChange)="languageChange($event)"
                     interface="popover">
             <ion-select-option value="de_st">Südtirolerisch</ion-select-option>
             <ion-select-option value="it">Italiano</ion-select-option>
@@ -41,7 +41,7 @@
             <p *ngIf="!localData.inDirectMode()">{{ "settings.BLACKLIST_DESCRIPTION_2" | translate }}</p>
         </ion-item>
         <ion-item>
-            <ion-icon color="primary" slot="start" name="flash"></ion-icon>
+            <ion-icon color="secondary" slot="start" name="flash"></ion-icon>
             <ion-label>
                 <ion-text>
                     <h2>{{ "settings.DIRECT_MODE" | translate }}</h2>

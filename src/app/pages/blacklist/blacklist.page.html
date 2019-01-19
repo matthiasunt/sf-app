@@ -9,9 +9,9 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-    <ion-list *ngIf="blacklist?.length > 0; Else noBlacklist">
-        <ion-item *ngFor="let s of blacklist" lines="full">
+<ion-content>
+    <ion-virtual-scroll [items]="blacklist" *ngIf="blacklist?.length > 0; Else noBlacklist">
+        <ion-item *ngFor="let s" lines="full">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
             </ion-thumbnail>
@@ -20,12 +20,12 @@
                     <h2>{{ s?.name }}</h2>
                 </ion-text>
             </ion-label>
-            <ion-button (click)="removeFromBlacklist(s)" color="green" slot="end" shape="round">
-            Unblock
-            <ion-icon name="checkmark-circle"></ion-icon>
+            <ion-button (click)="removeFromBlacklist(s)" color="secondary" slot="end" shape="round" size="small">
+                Unblock
+                <ion-icon name="checkmark-circle" slot="end"></ion-icon>
             </ion-button>
         </ion-item>
-    </ion-list>
+    </ion-virtual-scroll>
     <ng-template #noBlacklist>
         <p padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
     </ng-template>

@@ -15,7 +15,7 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
     ],
     entryComponents: [],
     imports: [

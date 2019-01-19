@@ -22,31 +22,36 @@ export class AppComponent {
         private localDataService: LocalDataService,
     ) {
         this.initializeApp();
-        translate.setDefaultLang('en');
-        const lang = localDataService.getPrefLang();
-        if (lang) {
-            translate.use(lang);
-        } else {
-            switch (translate.getBrowserLang()) {
-                case 'de':
-                    translate.use('de');
-                    break;
-                case 'it':
-                    translate.use('it');
-                    break;
-                default:
-                    translate.use('en');
-                    break;
-            }
-        }
+        this.setLang();
     }
 
     initializeApp() {
         this.platform.ready().then(() => {
-            this.authService.doSoftLogin();
+            // this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(false);
             this.statusBar.styleLightContent();
             this.splashScreen.hide();
         });
+    }
+
+    private async setLang() {
+        this.translate.setDefaultLang('en');
+        const lang = await this.localDataService.getPrefLang();
+        console.log(lang);
+        if (lang) {
+            this.translate.use(lang);
+        } else {
+            switch (this.translate.getBrowserLang()) {
+                case 'de':
+                    this.translate.use('de');
+                    break;
+                case 'it':
+                    this.translate.use('it');
+                    break;
+                default:
+                    this.translate.use('en');
+                    break;
+            }
+        }
     }
 }
