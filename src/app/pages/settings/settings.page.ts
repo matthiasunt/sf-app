@@ -27,7 +27,6 @@ export class SettingsPage implements OnInit {
 
         this.shareData = true;
         this.selectedLang = translate.currentLang;
-
         this.directMode = localData.inDirectMode();
 
     }
@@ -35,35 +34,14 @@ export class SettingsPage implements OnInit {
     ngOnInit() {
     }
 
-    backClicked() {
-        // console.log(this.prevUrl);
-        // this.router.navigate([this.prevUrl]);
-    }
-
 
     private shareDataChanged() {
 
     }
 
-    private languageChange(lang: string) {
-        this.translate.use(lang);
-        this.localData.setPrefLang(lang);
-    }
-
-    private toPage(page: string) {
-        // this.navCtrl.push(page);
-    }
-
-    private toFavouritesPage() {
-        // this.navCtrl.push("Favorites");
-    }
-
-    private toBlacklistPage() {
-        // this.navCtrl.push("Blacklist");
-    }
-
-    private toAboutPage() {
-        // this.navCtrl.push("About");
+    private languageChange(event) {
+        this.translate.use(this.selectedLang);
+        this.localData.setPrefLang(this.selectedLang);
     }
 
     private modeChanged() {

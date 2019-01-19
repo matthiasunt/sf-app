@@ -10,7 +10,7 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 })
 export class BlacklistPage implements OnInit {
 
-    private blacklist: any[];
+    blacklist: any[];
 
     constructor(private sfDb: SfDbService,
                 private localData: LocalDataService,
@@ -25,7 +25,6 @@ export class BlacklistPage implements OnInit {
 
 
     removeFromBlacklist(element: any) {
-        // this.blacklist.splice(this.blacklist.indexOf(element), 1);
         this.localData.removeShuttleFromBlacklist(element);
     }
 

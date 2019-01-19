@@ -25,7 +25,7 @@ export class HistoryPage implements OnInit {
     }
 
     async ngOnInit() {
-        // this.history = await this.sfDb.getAllShuttles();
+        this.history = await this.localData.getHistory();
     }
 
     rateClicked(shuttle: Shuttle) {
@@ -34,12 +34,12 @@ export class HistoryPage implements OnInit {
     }
 
     private ionViewWillEnter() {
-        this.localData.getHistory().then((history) => {
-            const h = history.sort((a, b) => {
-                return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
-            });
-            this.history = this.getGroupedHistory(h);
-        });
+        // this.localData.getHistory().then((history) => {
+        //     const h = history.sort((a, b) => {
+        //         return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
+        //     });
+        //     this.history = this.getGroupedHistory(h);
+        // });
 
     }
 
@@ -49,15 +49,28 @@ export class HistoryPage implements OnInit {
         // });
     }
 
+    myHeaderFn(record, recordIndex, records) {
+        if (recordIndex === 0
+            || this.getDate(records[recordIndex - 1].date) !== this.getDate(record.date)) {
+            return this.getDate(record.date);
+        }
+    }
+
+    // Solve with a pipe?
+    private getDate(dateString: string): string {
+        let ret = new Date(dateString).toLocaleString(this.getLocaleFromPrefLang(),
+            {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+        ret = ret.charAt(0).toUpperCase() + ret.slice(1);
+        return ret;
+    }
+
 
     async clearHistoryAlert() {
         const alert = await this.alertCtrl.create({
             header: '',
             subHeader: this.translate.instant('history.msg.DELETE_ALL'),
             buttons: [
-                {
-                    text: this.translate.instant('NO')
-                },
+                {text: this.translate.instant('NO')},
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
@@ -69,28 +82,6 @@ export class HistoryPage implements OnInit {
             ]
         });
         await alert.present();
-    }
-
-    private getGroupedHistory(history: any[]): any[][] {
-        const ret: any[][] = [];
-        let j = 0;
-        let k = 0;
-        for (let i = 0; i < history.length; i++) {
-            if (i === 0) {
-                ret[j] = [];
-                ret[j][k] = history[i];
-            } else {
-                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
-                    j++;
-                    ret[j] = [];
-                    k = 0;
-                } else {
-                    k++;
-                }
-                ret[j][k] = history[i];
-            }
-        }
-        return ret;
     }
 
 
@@ -108,14 +99,6 @@ export class HistoryPage implements OnInit {
         } else {
             return this.translate.getBrowserLang();
         }
-    }
-
-    // Solve with a pipe?
-    private getDate(dateString: string): string {
-        let ret = new Date(dateString).toLocaleString(this.getLocaleFromPrefLang(),
-            {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
-        ret = ret.charAt(0).toUpperCase() + ret.slice(1);
-        return ret;
     }
 
     private getTime(dateString: string): string {
