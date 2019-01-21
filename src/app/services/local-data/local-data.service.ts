@@ -4,6 +4,8 @@ import {District} from '../../models/district';
 import {Platform} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {UserDbService} from '../user-db/user-db.service';
+import {TranslateService} from '@ngx-translate/core';
+
 import {getIndexOfShuttle} from '../../tools/sf-tools';
 
 @Injectable({
@@ -36,6 +38,7 @@ export class LocalDataService {
 
     constructor(
         private http: HttpClient,
+        private translate: TranslateService,
         private platform: Platform,
         private storage: Storage,
         private userDb: UserDbService,
@@ -119,6 +122,22 @@ export class LocalDataService {
 
     getPrefLang() {
         return this.preferredLanguge;
+    }
+
+    public getLocaleFromPrefLang(): string {
+        if (this.preferredLanguge) {
+            switch (this.preferredLanguge) {
+                case 'de':
+                case 'de_st':
+                    return 'de';
+                case 'it':
+                    return 'it';
+                default:
+                    return 'en';
+            }
+        } else {
+            return this.translate.getBrowserLang();
+        }
     }
 
     public async setDirectMode(directMode: boolean) {

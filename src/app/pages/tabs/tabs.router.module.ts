@@ -22,7 +22,7 @@ const routes: Routes = [
             {
                 path: 'favorites',
                 children: [
-                    {path: '', loadChildren: '../favorites/favorites.module#FavoritesPageModule'},
+                    {path: '', loadChildren: '../my-sf/my-sf.module#MySfPageModule'},
                 ]
             }
         ]
