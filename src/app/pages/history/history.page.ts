@@ -6,6 +6,7 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
+import {getBeatifulTimeString, getBeautifulDateString} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-history',
@@ -26,6 +27,7 @@ export class HistoryPage implements OnInit {
 
     async ngOnInit() {
         this.history = await this.localData.getHistory();
+        console.log(this.history);
     }
 
     rateClicked(shuttle: Shuttle) {
@@ -50,18 +52,13 @@ export class HistoryPage implements OnInit {
     }
 
     myHeaderFn(record, recordIndex, records) {
-        if (recordIndex === 0
-            || this.getDate(records[recordIndex - 1].date) !== this.getDate(record.date)) {
-            return this.getDate(record.date);
-        }
-    }
+        const locale = this.localData.getLocaleFromPrefLang();
+        const actualDateString = getBeautifulDateString(record.date, locale);
 
-    // Solve with a pipe?
-    private getDate(dateString: string): string {
-        let ret = new Date(dateString).toLocaleString(this.getLocaleFromPrefLang(),
-            {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
-        ret = ret.charAt(0).toUpperCase() + ret.slice(1);
-        return ret;
+        if (recordIndex === 0
+            || getBeautifulDateString(records[recordIndex - 1].date, locale) !== actualDateString) {
+            return actualDateString;
+        }
     }
 
 
@@ -85,27 +82,4 @@ export class HistoryPage implements OnInit {
     }
 
 
-    getLocaleFromPrefLang(lang: string = this.localData.getPrefLang()): string {
-        if (this.localData.getPrefLang()) {
-            switch (this.localData.getPrefLang()) {
-                case 'de':
-                case 'de_st':
-                    return 'de';
-                case 'it':
-                    return 'it';
-                default:
-                    return 'en';
-            }
-        } else {
-            return this.translate.getBrowserLang();
-        }
-    }
-
-    private getTime(dateString: string): string {
-        return new Date(dateString).toLocaleString(this.getLocaleFromPrefLang(),
-            {
-                hour: 'numeric',
-                minute: 'numeric'
-            });
-    }
 }

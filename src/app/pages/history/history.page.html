@@ -15,7 +15,7 @@
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ e?.shuttle?.name }}</h2>
-                    <p>{{ getTime(e?.date) }}</p>
+                    <p>{{ getBeautifulTimeString(e?.date, getLocaleFromPrefLang()) }}</p>
                 </ion-text>
             </ion-label>
             <ion-button (click)="rateClicked(e.shuttle)" color="tertiary" slot="end">
