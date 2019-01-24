@@ -36,7 +36,7 @@ export class SettingsPage implements OnInit {
 
     private languageChange(event) {
         this.translate.use(this.selectedLang);
-        this.localData.setLang(this.selectedLang);
+        this.localData.setPrefLang(this.selectedLang);
     }
 
 }

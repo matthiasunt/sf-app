@@ -27,6 +27,7 @@ export class HistoryPage implements OnInit {
     async ngOnInit() {
         this.history = await this.localData.getHistory();
         this.locale = this.localData.getLocaleFromPrefLang();
+        console.log(this.history);
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -45,12 +46,12 @@ export class HistoryPage implements OnInit {
         // });
     }
 
-    getTime(date: string, locale: string) {
-        return getBeautifulTimeString(date, locale);
+    getTime(date: string) {
+        return getBeautifulTimeString(date, this.locale);
     }
 
-    getDate(date: string, locale: string) {
-        return getBeautifulDateString(date, locale);
+    getDate(date: string) {
+        return getBeautifulDateString(date, this.locale);
     }
 
     myHeaderFn(record, recordIndex, records) {

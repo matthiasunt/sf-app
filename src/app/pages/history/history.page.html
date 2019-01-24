@@ -3,6 +3,7 @@
 </ion-header>
 
 <ion-content>
+    <ng-template *ngIf="history && history.length > 0 Else noHistory"></ng-template>
     <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn">
         <ion-item-divider *virtualHeader="let header">
             {{ header }}
@@ -15,10 +16,10 @@
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ e?.shuttle?.name }}</h2>
-                    <p>{{ getBeautifulTimeString(e?.date, getLocaleFromPrefLang()) }}</p>
+                    <p>{{ getTime(e?.date) }}</p>
                 </ion-text>
             </ion-label>
-            <ion-button (click)="rateClicked(e.shuttle)" color="tertiary" slot="end">
+            <ion-button (click)="rateClicked(e.shuttle, $event)" color="tertiary" slot="end">
                 Rate
                 <ion-icon name="star" slot="end"></ion-icon>
             </ion-button>
