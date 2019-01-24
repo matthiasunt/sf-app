@@ -3,9 +3,9 @@
 </ion-header>
 
 <ion-content>
-    <ng-container *ngIf="favorites?.length > 0">
-        <ion-virtual-scroll [items]="favorites">
-            <ion-item *virtualItem="let s" lines="none">
+    <ng-template *ngIf="favorites && favorites.length > 0 Else noFavorites">
+        <ion-list>
+            <ion-item *ngFor="let s of favorites" lines="none">
                 <ion-thumbnail slot="start">
                     <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
                     </app-sf-shuttle-icon>
@@ -16,11 +16,11 @@
                     <ion-icon name="trash" slot="end"></ion-icon>
                 </ion-button>
             </ion-item>
-        </ion-virtual-scroll>
-    </ng-container>
-    <ng-container *ngIf="!favorites || favorites.length < 1">
+        </ion-list>
+    </ng-template>
+    <ng-template #noFavorites>
         <p padding class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
-    </ng-container>
+    </ng-template>
     <ion-fab vertical="center" horizontal="end" slot="fixed">
         <ion-fab-button routerLink="/tabs/favorites/add" color="secondary">
             <ion-icon name="add"></ion-icon>
