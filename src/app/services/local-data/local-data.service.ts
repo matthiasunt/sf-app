@@ -14,7 +14,7 @@ import {getIndexOfShuttle} from '../../tools/sf-tools';
 export class LocalDataService {
 
     private softLoginCredentials: any;
-    private preferredLanguge: string;
+    private lang: string;
     private recentDistricts: District[];
     private history: any[];
     private favorites: any[];
@@ -36,21 +36,21 @@ export class LocalDataService {
     }
 
     private async fetchData() {
-        this.preferredLanguge = localStorage.getItem('pref_lang');
+        this.lang = localStorage.getItem('lang');
         await this.storage.ready();
 
 
-        let val = await this.storage.get('direct_mode');
+        let val = await this.storage.get('directMode');
         this.directMode = val ? val : false;
 
-        val = await this.storage.get('recent_districts');
+        val = await this.storage.get('recentDistricts');
         this.recentDistricts = val ? val : [];
         this.getHistory();
         val = await this.storage.get('favorites');
         this.favorites = val ? val : [];
         val = await this.storage.get('blacklist');
         this.blacklist = val ? val : [];
-        val = await this.storage.get('number_of_calls');
+        val = await this.storage.get('numberOfCalls');
         this.numberOfCalls = val ? val : 0;
     }
 
@@ -59,16 +59,16 @@ export class LocalDataService {
             return Promise.resolve(this.softLoginCredentials);
         } else {
             return new Promise(async (resolve) => {
-                const val = await this.storage.get('softlogin_credentials');
+                const val = await this.storage.get('softLoginCredentials');
                 this.softLoginCredentials = val;
                 resolve(this.softLoginCredentials);
             });
         }
     }
 
-    public saveSoftLoginCredentials(credentials: any): any {
-        this.softLoginCredentials = credentials;
-        this.storage.set('softlogin_credentials', credentials);
+    public saveSoftLoginCredentials(softLoginCredentials: any): any {
+        this.softLoginCredentials = softLoginCredentials;
+        this.saveItem('softLoginCredentials', softLoginCredentials);
     }
 
     public getRecentlyUsedDistricts(): Promise<District[]> {
@@ -76,7 +76,7 @@ export class LocalDataService {
             return Promise.resolve(this.recentDistricts);
         } else {
             return new Promise((resolve) => {
-                this.storage.get('recent_districts').then((val) => {
+                this.storage.get('recentDistricts').then((val) => {
                     resolve(val);
                 });
             });
@@ -94,34 +94,32 @@ export class LocalDataService {
                     this.recentDistricts[0] = district;
                 }
             }
-            await this.storage.ready();
-            await this.storage.set('recent_districts', this.recentDistricts);
+            this.saveItem('recentDistricts', this.recentDistricts);
         }, 500);
     }
 
     public getPrefLang() {
-        return this.preferredLanguge;
+        return this.lang;
     }
 
     public setPrefLang(lang) {
-        this.preferredLanguge = lang;
-        localStorage.setItem('pref_lang', lang);
+        this.lang = lang;
+        localStorage.setItem('lang', lang);
     }
 
     public getLocaleFromPrefLang(): string {
-        if (this.preferredLanguge === 'de_st') {
-            return 'de_st';
-        } else if (!this.preferredLanguge) {
+        if (this.lang === 'de_st') {
+            return 'de';
+        } else if (!this.lang) {
             return this.translate.getBrowserLang();
         }
-        return this.preferredLanguge;
+        return this.lang;
     }
 
     public async addShuttleToHistory(shuttle: any) {
         this.incrementNumberOfCalls();
         this.history.push({shuttle: shuttle, date: new Date()});
-        await this.storage.ready();
-        await this.storage.set('history', this.history);
+        await this.saveItem('history', this.history);
     }
 
     public getHistory(): Promise<any[]> {
@@ -162,22 +160,16 @@ export class LocalDataService {
         return this.favorites;
     }
 
-    public setFavorites(favorites: any) {
+    public async setFavorites(favorites: any) {
         this.favorites = favorites;
-        this.storage.ready().then(() => {
-            this.storage.set('favorites', this.favorites)
-                .catch((err) => console.error(err));
-        });
+        await this.saveItem('favorites', this.favorites);
     }
 
-    public addFavorite(shuttle: any): boolean {
+    public async addFavorite(shuttle: any): Promise<boolean>{
         if (getIndexOfShuttle(this.favorites, shuttle) === -1) {
             this.userDb.putFavorite(shuttle);
             this.favorites.push(shuttle);
-            this.storage.ready().then(() => {
-                this.storage.set('favorites', this.favorites)
-                    .catch((err) => console.error(err));
-            });
+            await this.saveItem('favorites', this.favorites);
             return true;
         } else {
             console.log('error adding favorite');
@@ -185,14 +177,11 @@ export class LocalDataService {
         }
     }
 
-    public removeShuttleFromFavorites(shuttle: any): boolean {
+    public async removeShuttleFromFavorites(shuttle: any): Promise<boolean> {
         const index = getIndexOfShuttle(this.favorites, shuttle);
         if (index !== -1) {
             this.favorites.splice(index, 1);
-            this.storage.ready().then(() => {
-                this.storage.set('favorites', this.favorites)
-                    .catch((err) => console.error(err));
-            });
+            await this.saveItem('favorites', this.favorites);
             if (this.userDb.getUserId()) {
                 this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'favorite' + '-' + shuttle._id});
             } else {
@@ -209,25 +198,19 @@ export class LocalDataService {
         return this.blacklist;
     }
 
-    public addBlacklisted(shuttle: any) {
+    public async addBlacklisted(shuttle: any) {
         if (getIndexOfShuttle(this.blacklist, shuttle) === -1) {
             this.userDb.putBlacklisted(shuttle);
             this.blacklist.push(shuttle);
-            this.storage.ready().then(() => {
-                this.storage.set('blacklist', this.blacklist)
-                    .catch((err) => console.error(err));
-            });
+            await this.saveItem('blacklist', this.blacklist);
         }
     }
 
-    public removeShuttleFromBlacklist(shuttle: any) {
+    public async removeShuttleFromBlacklist(shuttle: any) {
         const index = getIndexOfShuttle(this.blacklist, shuttle);
         if (index !== -1) {
             this.blacklist.splice(index, 1);
-            this.storage.ready().then(() => {
-                this.storage.set('blacklist', this.blacklist)
-                    .catch((err) => console.error(err));
-            });
+            await this.saveItem('blacklist', this.blacklist);
             if (this.userDb.getUserId()) {
                 this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'blacklisted' + '-' + shuttle._id});
             } else {
@@ -243,8 +226,7 @@ export class LocalDataService {
 
     public async setDirectMode(directMode: boolean) {
         this.directMode = directMode;
-        await this.storage.ready();
-        await this.storage.set('direct_mode', this.directMode);
+        await this.saveItem('directMode', this.directMode);
     }
 
     public getNumberOfCalls(): number {
@@ -253,7 +235,7 @@ export class LocalDataService {
 
     public async incrementNumberOfCalls() {
         this.numberOfCalls++;
-        await this.storage.set('number_of_calls', this.numberOfCalls);
+        await this.saveItem('numberOfCalls', this.numberOfCalls);
     }
 
     private async getItem(key: string): Promise<any> {

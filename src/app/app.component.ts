@@ -37,7 +37,6 @@ export class AppComponent {
     private async setLang() {
         this.translate.setDefaultLang('en');
         const lang = await this.localDataService.getPrefLang();
-        console.log(lang);
         if (lang) {
             this.translate.use(lang);
         } else {
