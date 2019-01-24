@@ -59,7 +59,7 @@ export class FindPage implements OnInit {
     }
 
     private async districtClicked(district) {
-        if (this.localData.inDirectMode()) {
+        if (this.localData.getDirectMode()) {
             const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
             const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
             // this.navCtrl.push("Call", {

@@ -42,13 +42,6 @@ export class SelectionPage implements OnInit {
                 private geo: GeoService,
                 private colorGenerator: ColorGeneratorService,
     ) {
-        // this.district = navParams.get('district');
-        // this.districtColors = navParams.get('districtColors');
-
-        // this.showAllShuttles = navParams.get('showAllShuttles');
-        // this.viaGPS = navParams.get('viaGps');
-
-        // Via specific district
 
     }
 

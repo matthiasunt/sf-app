@@ -16,24 +16,11 @@ export class LocalDataService {
     private softLoginCredentials: any;
     private preferredLanguge: string;
     private recentDistricts: District[];
-
-    // All shuttles called last
-    private succceededShuttleHistory: any[];
-
-    // All called shuttles
     private history: any[];
-
-    private numberOfCalls: number;
-
     private favorites: any[];
     private blacklist: any[];
-
-
+    private numberOfCalls: number;
     private directMode: boolean;
-
-    private usersFirstStart: boolean;
-
-    private appOpened: number;
 
 
     constructor(
@@ -65,8 +52,6 @@ export class LocalDataService {
         this.blacklist = val ? val : [];
         val = await this.storage.get('number_of_calls');
         this.numberOfCalls = val ? val : 0;
-        val = await this.storage.get('app_opened');
-        this.appOpened = val ? val : 0;
     }
 
     public getSoftLoginCredentials(): Promise<any> {
@@ -75,7 +60,6 @@ export class LocalDataService {
         } else {
             return new Promise(async (resolve) => {
                 const val = await this.storage.get('softlogin_credentials');
-                console.log(val);
                 this.softLoginCredentials = val;
                 resolve(this.softLoginCredentials);
             });
@@ -115,46 +99,23 @@ export class LocalDataService {
         }, 500);
     }
 
-    setPrefLang(lang) {
+    public getPrefLang() {
+        return this.preferredLanguge;
+    }
+
+    public setPrefLang(lang) {
         this.preferredLanguge = lang;
         localStorage.setItem('pref_lang', lang);
     }
 
-    getPrefLang() {
-        return this.preferredLanguge;
-    }
-
     public getLocaleFromPrefLang(): string {
-        if (this.preferredLanguge) {
-            switch (this.preferredLanguge) {
-                case 'de':
-                case 'de_st':
-                    return 'de';
-                case 'it':
-                    return 'it';
-                default:
-                    return 'en';
-            }
-        } else {
+        if (this.preferredLanguge === 'de_st') {
+            return 'de_st';
+        } else if (!this.preferredLanguge) {
             return this.translate.getBrowserLang();
         }
+        return this.preferredLanguge;
     }
-
-    public async setDirectMode(directMode: boolean) {
-        this.directMode = directMode;
-        await this.storage.ready();
-        await this.storage.set('direct_mode', this.directMode);
-    }
-
-    public getNumberOfCalls(): number {
-        return this.numberOfCalls;
-    }
-
-    public async incrementNumberOfCalls() {
-        this.numberOfCalls++;
-        await this.storage.set('number_of_calls', this.numberOfCalls);
-    }
-
 
     public async addShuttleToHistory(shuttle: any) {
         this.incrementNumberOfCalls();
@@ -242,7 +203,6 @@ export class LocalDataService {
             console.log('shuttle not found');
             return false;
         }
-
     }
 
     public getBlacklist() {
@@ -250,7 +210,7 @@ export class LocalDataService {
     }
 
     public addBlacklisted(shuttle: any) {
-        if (getIndexOfShuttle(this.blacklist, shuttle) == -1) {
+        if (getIndexOfShuttle(this.blacklist, shuttle) === -1) {
             this.userDb.putBlacklisted(shuttle);
             this.blacklist.push(shuttle);
             this.storage.ready().then(() => {
@@ -277,12 +237,33 @@ export class LocalDataService {
     }
 
 
-    public inDirectMode(): boolean {
+    public getDirectMode(): boolean {
         return this.directMode;
     }
 
-    public getAppOpenend(): number {
-        return this.appOpened;
+    public async setDirectMode(directMode: boolean) {
+        this.directMode = directMode;
+        await this.storage.ready();
+        await this.storage.set('direct_mode', this.directMode);
+    }
+
+    public getNumberOfCalls(): number {
+        return this.numberOfCalls;
+    }
+
+    public async incrementNumberOfCalls() {
+        this.numberOfCalls++;
+        await this.storage.set('number_of_calls', this.numberOfCalls);
+    }
+
+    private async getItem(key: string): Promise<any> {
+        await this.storage.ready();
+        return await this.storage.get(key);
+    }
+
+    private async saveItem(key: string, item: any): Promise<any> {
+        await this.storage.ready();
+        return await this.storage.set(key, item);
     }
 
 }
