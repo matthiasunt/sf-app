@@ -59,6 +59,8 @@ export class SfDbService {
             this.fetchEverything();
         }).on('denied', (err) => {
             console.log('denied');
+        }).on('error', (err) => {
+            console.error(err.code);
         });
         this.fetchEverything();
     }
@@ -88,12 +90,13 @@ export class SfDbService {
     }
 
     public async getShuttle(id: string): Promise<Shuttle> {
-        this.allShuttles = await this.getAllShuttles();
-        if (this.allShuttles[0]) {
-            return this.allShuttles.find((e) => e._id === id);
-        } else {
-            console.error('Shuttles undefined!');
-        }
+        return await this.db.get(id);
+        // this.allShuttles = await this.getAllShuttles();
+        // if (this.allShuttles[0]) {
+        //     return this.allShuttles.find((e) => e._id === id);
+        // } else {
+        //     console.error('Shuttles undefined!');
+        // }
     }
 
     public async getShuttlesByDistrict(district: District): Promise<Shuttle[]> {
@@ -220,10 +223,10 @@ export class SfDbService {
         }
     }
 
-    public getMergedShuttles(shuttles: Shuttle[]): Shuttle[] {
+    public async getMergedShuttles(shuttles: Shuttle[]): Promise<Shuttle[]> {
         const s = shuttles.slice(0);
         // Save and remove favorites
-        const favorites = this.localData.getFavorites();
+        const favorites = await this.localData.getFavorites();
         const favoritesInShuttles: Shuttle[] = [];
         for (const fShuttle of favorites) {
             const index = getIndexOfShuttle(s, fShuttle);
@@ -233,7 +236,7 @@ export class SfDbService {
             }
         }
         // Remove blacklisted
-        const blacklist = this.localData.getBlacklist();
+        const blacklist = await this.localData.getBlacklist();
         for (const bShuttle of blacklist) {
             const index = getIndexOfShuttle(s, bShuttle);
             if (index !== -1) {
@@ -246,7 +249,7 @@ export class SfDbService {
     }
 
     public async fetchEverything() {
-        console.log('Fetch everything');
+        // console.log('Fetch everything');
         this.getAllShuttles();
         const districts = await this.getDistricts();
         districts.forEach((e) => {

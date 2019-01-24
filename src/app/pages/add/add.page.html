@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
         <ion-buttons slot="start">
-            <ion-back-button
+            <ion-back-button routerDirection="root"
                     routerLink="{{ addToFavorites ? '/tabs/favorites' : '/settings/blacklist'}}"></ion-back-button>
         </ion-buttons>
         <ion-title>
