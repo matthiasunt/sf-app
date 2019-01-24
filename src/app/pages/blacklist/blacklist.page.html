@@ -10,25 +10,27 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="blacklist" *ngIf="blacklist?.length > 0; Else noBlacklist">
-        <ion-item *ngFor="let s" lines="full">
-            <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
-            </ion-thumbnail>
-            <ion-label>
-                <ion-text>
-                    <h2>{{ s?.name }}</h2>
-                </ion-text>
-            </ion-label>
-            <ion-button (click)="removeFromBlacklist(s)" color="secondary" slot="end" shape="round" size="small">
-                Unblock
-                <ion-icon name="checkmark-circle" slot="end"></ion-icon>
-            </ion-button>
-        </ion-item>
-    </ion-virtual-scroll>
-    <ng-template #noBlacklist>
+    <ng-container *ngIf="blacklist?.length > 0">
+        <ion-virtual-scroll [items]="blacklist">
+            <ion-item *virtualItem="let s" lines="full">
+                <ion-thumbnail slot="start">
+                    <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
+                </ion-thumbnail>
+                <ion-label>
+                    <ion-text>
+                        <h2>{{ s?.name }}</h2>
+                    </ion-text>
+                </ion-label>
+                <ion-button (click)="removeFromBlacklist(s)" color="secondary" slot="end" shape="round" size="small">
+                    Unblock
+                    <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+                </ion-button>
+            </ion-item>
+        </ion-virtual-scroll>
+    </ng-container>
+    <ng-container *ngIf="!blacklist || blacklist.length < 1">
         <p padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
-    </ng-template>
+    </ng-container>
 
     <ion-fab vertical="center" horizontal="end" slot="fixed">
         <ion-fab-button [routerLink]="['/settings/blacklist/add']" color="dark">

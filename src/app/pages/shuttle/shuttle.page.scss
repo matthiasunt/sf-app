@@ -2,10 +2,6 @@
   background: none;
 }
 
-button > ion-ripple-effect {
-  background: none !important;
-}
-
 #avatar-div {
   width: 100%;
   text-align: center;
@@ -14,4 +10,13 @@ button > ion-ripple-effect {
     display: inline-block;
     width: 50%;
   }
+}
+
+.button-row {
+  margin: 0 4px;
+}
+
+#facebook-button {
+  background: #3b5998;
+  color: white;
 }

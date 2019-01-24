@@ -3,8 +3,7 @@ import {PopoverController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {LocalDataService} from '../../services/local-data/local-data.service';
-import {ActivatedRoute, Router, RoutesRecognized} from '@angular/router';
-import {filter, pairwise} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-settings',
@@ -15,7 +14,6 @@ export class SettingsPage implements OnInit {
     private selectedLang: string;
     private directMode: boolean;
     private shareData: boolean;
-    private prevUrl: string;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -24,28 +22,21 @@ export class SettingsPage implements OnInit {
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
     ) {
+    }
 
+    async ngOnInit() {
         this.shareData = true;
-        this.selectedLang = translate.currentLang;
-        this.directMode = localData.inDirectMode();
-
+        this.selectedLang = this.translate.currentLang;
+        this.directMode = await this.localData.getDirectMode();
     }
 
-    ngOnInit() {
-    }
-
-
-    private shareDataChanged() {
-
+    private modeChanged(event) {
+        this.localData.setDirectMode(this.directMode);
     }
 
     private languageChange(event) {
         this.translate.use(this.selectedLang);
-        this.localData.setPrefLang(this.selectedLang);
-    }
-
-    private modeChanged() {
-        // this.localData.setDirectMode(this.directMode);
+        this.localData.setLang(this.selectedLang);
     }
 
 }

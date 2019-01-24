@@ -1,7 +1,7 @@
 import {Shuttle} from '../models/shuttle';
 
 
-export function getBeatifulTimeString(dateString: string, locale: string): string {
+export function getBeautifulTimeString(dateString: string, locale: string): string {
     return new Date(dateString).toLocaleString(locale,
         {
             hour: 'numeric',

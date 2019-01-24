@@ -94,13 +94,11 @@ export class UserDbService {
     }
 
     public putFavorite(shuttle: Shuttle) {
-        console.log('Putting favorite on remote');
         this.putListElement(shuttle, 'favorite');
     }
 
 
     public putBlacklisted(shuttle: Shuttle) {
-        console.log('Putting blacklisted on remote');
         this.putListElement(shuttle, 'blacklisted');
     }
 
@@ -115,7 +113,6 @@ export class UserDbService {
                 date: new Date(),
                 public: false,
             };
-            console.log(doc);
             this.db.put(doc)
                 .then((res) => {
                     console.log(res);

@@ -15,6 +15,7 @@ export interface Shuttle {
     latitude: string,
     longitude: string
   };
+  email: string;
   website: string;
   facebook: string;
   description: string;

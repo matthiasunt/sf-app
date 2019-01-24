@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
@@ -15,6 +15,7 @@ export class ShuttlePage implements OnInit {
     shuttleColors: any;
 
     constructor(private activatedRoute: ActivatedRoute,
+                private router: Router,
                 private sfDb: SfDbService,
                 private colorGenerator: ColorGeneratorService,
     ) {
@@ -26,6 +27,11 @@ export class ShuttlePage implements OnInit {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = await this.sfDb.getShuttle(shuttleId);
         this.shuttleColors = this.colorGenerator.getShuttleColors(this.shuttle);
+    }
+
+    rateClicked(shuttle: Shuttle) {
+        const currentUrl = this.router.url;
+        this.router.navigate([currentUrl + '/rate/' + shuttle._id]);
     }
 
     private getToolbarStyle() {

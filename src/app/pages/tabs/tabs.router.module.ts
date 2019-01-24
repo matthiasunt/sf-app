@@ -22,7 +22,7 @@ const routes: Routes = [
             {
                 path: 'favorites',
                 children: [
-                    {path: '', loadChildren: '../my-sf/my-sf.module#MySfPageModule'},
+                    {path: '', loadChildren: '../favorites/favorites.module#FavoritesPageModule'},
                 ]
             }
         ]
@@ -32,18 +32,34 @@ const routes: Routes = [
         path: 'tabs/find/district/:id',
         children: [
             {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
-            {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'}
-        ],
+            {
+                path: 'shuttle/:id', children: [
+                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
+                ]
+            }
+        ]
     },
     {
         path: 'tabs/find/gps/:coordinates',
         children: [
             {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
-            {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'}
+            {
+                path: 'shuttle/:id', children: [
+                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
+                ]
+            }
         ],
     },
     {
         path: 'tabs/history', children: [
+            {
+                path: 'shuttle/:id', children: [
+                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
+                ]
+            },
             {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'},
         ]
     },
