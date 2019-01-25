@@ -3,7 +3,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="favorites" *ngIf="favorites && favorites.length > 0">
+    <ion-virtual-scroll [items]="favorites">
         <ion-item *virtualItem="let s" lines="full">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
@@ -16,7 +16,7 @@
             </ion-button>
         </ion-item>
     </ion-virtual-scroll>
-    <p *ngIf="!favorites || favorites.length < 1" padding class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
+    <p *ngIf="favorites?.length < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
     <ion-fab vertical="center" horizontal="end" slot="fixed">
         <ion-fab-button routerLink="/tabs/favorites/add" color="secondary">
             <ion-icon name="add"></ion-icon>

@@ -156,7 +156,6 @@ export class LocalDataService {
             this.userDb.putFavorite(shuttle);
             this.favorites.push(shuttle);
             await this.saveItem('favorites', this.favorites);
-            console.log(this.favorites);
             return true;
         } else {
             console.log('Favorite already added');

@@ -17,6 +17,7 @@ export class FavoritesPage implements OnInit {
                 private localData: LocalDataService,
                 private colorGeneratorService: ColorGeneratorService
     ) {
+        this.favorites = [];
     }
 
     async ngOnInit() {

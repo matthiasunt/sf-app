@@ -2,7 +2,7 @@
     <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
         <ion-buttons slot="start">
             <ion-back-button routerDirection="root"
-                    routerLink="{{ addToFavorites ? '/tabs/favorites' : '/settings/blacklist'}}"></ion-back-button>
+                             routerLink="{{ addToFavorites ? '/tabs/favorites' : '/settings/blacklist'}}"></ion-back-button>
         </ion-buttons>
         <ion-title>
             {{ addToFavorites ? ("add.ADD_FAVORITE" | translate) : ("add.LOCK_SHUTTLE" | translate) }}
@@ -14,17 +14,16 @@
 </ion-header>
 
 <ion-content>
-    <ng-template *ngIf="queryResult && queryResult.length > 0 Else noData"></ng-template>
     <ion-virtual-scroll [items]="queryResult">
         <ion-item *virtualItem="let shuttle" lines="full">
             <ion-thumbnail slot="start" *ngIf="shuttle">
-                <app-sf-shuttle-icon [colors]="colorGenerator.getShuttleColors(shuttle)">
+                <app-sf-shuttle-icon [colors]="getShuttleColors(shuttle)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ shuttle?.name }}</h2>
-                    <p>{{ sfDb.getFormattedPhoneNumber(shuttle?.phone) }}</p>
+                    <p>{{ getPhoneNumber(shuttle) }}</p>
 
                 </ion-text>
             </ion-label>
@@ -47,9 +46,7 @@
         </ion-item>
     </ion-virtual-scroll>
 
-    <ng-template #noData>
-        <p class="no-data-p">{{ ("add.NO_RESULT" | translate) }}</p>
-    </ng-template>
+    <p *ngIf="queryResult?.length < 1" class="no-data-p">{{ ("add.NO_RESULT" | translate) }}</p>
 
     <!--<div *ngIf="allShuttles?.length < 1">-->
     <!--<ion-spinner *ngIf="!noConnection && !unavailable" color="grey" name="crescent"></ion-spinner>-->

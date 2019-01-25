@@ -52,17 +52,23 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             live: true, retry: true
         }).on('change', (info) => {
-            console.log('change');
             this.fetchEverything();
         }).on('paused', (err) => {
-            console.log('paused');
             this.fetchEverything();
         }).on('denied', (err) => {
-            console.log('denied');
         }).on('error', (err) => {
             console.error(err.code);
         });
-        this.fetchEverything();
+    }
+
+    public async fetchEverything() {
+        const districts = await this.getDistricts();
+        this.getAllShuttles();
+        if (districts) {
+            districts.forEach((e) => {
+                this.getShuttlesByDistrict(e);
+            });
+        }
     }
 
     public async getDistricts(): Promise<District[]> {
@@ -246,15 +252,6 @@ export class SfDbService {
         // Sort randomly
         s.sort(() => Math.random() - 0.5);
         return favoritesInShuttles.concat(s);
-    }
-
-    public async fetchEverything() {
-        // console.log('Fetch everything');
-        this.getAllShuttles();
-        const districts = await this.getDistricts();
-        districts.forEach((e) => {
-            this.getShuttlesByDistrict(e);
-        });
     }
 
     public getFormattedPhoneNumber(phone: string): string {
