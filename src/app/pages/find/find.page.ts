@@ -40,13 +40,16 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        this.fetchDistricts();
-        this.fetchFavorites();
+        setTimeout(() => {
+            this.fetchDistricts();
+            this.fetchFavorites();
+        }, 3000);
     }
 
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
-        console.log('Districts fetched!');
+        this.districts = tempDistricts;
+        console.log(this.districts);
         const recentDistricts = await this.localData.getRecentDistricts();
         recentDistricts.forEach((d) => {
             const index = tempDistricts.findIndex((t) => t._id === d._id);
@@ -69,6 +72,16 @@ export class FindPage implements OnInit {
             this.router.navigate(['/tabs/find/district/' + district._id]);
         }
         this.localData.setRecentDistricts(district);
+    }
+
+    getChipStyle(district: District) {
+        if (district) {
+            const colors = this.colorGenerator.getDistrictColors(district);
+            return {
+                'background-color': colors[0],
+                'color': colors[1]
+            };
+        }
     }
 
     //
@@ -180,10 +193,7 @@ export class FindPage implements OnInit {
 
 
     private getDistrictName(district: any): string {
-        if (district.name
-            && district.name.de
-            && district.name.it
-            && district.name.de_st) {
+        if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
             switch (this.lang) {
                 case 'de_st':
                     return district.name.de_st;
@@ -192,8 +202,6 @@ export class FindPage implements OnInit {
                 default:
                     return district.name.de;
             }
-        } else {
-            console.log('Error getting district name');
         }
     }
 

@@ -22,6 +22,7 @@ export class HistoryPage implements OnInit {
                 public localData: LocalDataService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
+        this.history = [];
     }
 
     async ngOnInit() {

@@ -146,7 +146,7 @@ export class SelectionPage implements OnInit {
     }
 
     // Tool
-    private async getDistrictName(district: any): Promise<string> {
+    private getDistrictName(district: any): string {
         if (
             district &&
             district.name

@@ -30,6 +30,9 @@ export class AddPage implements OnInit {
                 private localData: LocalDataService,
                 private colorGenerator: ColorGeneratorService
     ) {
+        this.list = [];
+        this.allShuttles = [];
+        this.queryResult = [];
     }
 
     async ngOnInit() {
@@ -132,10 +135,24 @@ export class AddPage implements OnInit {
     }
 
     private isInList(shuttle: Shuttle): boolean {
-        if (this.list.findIndex(e => e._id === shuttle._id) < 0) {
-            return false;
-        } else {
-            return true;
+        if (shuttle) {
+            if (this.list.findIndex(e => e._id === shuttle._id) < 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    private getShuttleColors(shuttle: Shuttle) {
+        if (shuttle) {
+            return this.colorGenerator.getShuttleColors(shuttle);
+        }
+    }
+
+    private getPhoneNumber(shuttle: Shuttle) {
+        if (shuttle) {
+            return this.sfDb.getFormattedPhoneNumber(shuttle.phone);
         }
     }
 

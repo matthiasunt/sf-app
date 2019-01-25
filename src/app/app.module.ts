@@ -4,7 +4,6 @@ import {RouteReuseStrategy} from '@angular/router';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {IonicStorageModule} from '@ionic/storage';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -34,7 +33,6 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
     ],
     providers: [
         StatusBar,
-        SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         UniqueDeviceID
     ],
