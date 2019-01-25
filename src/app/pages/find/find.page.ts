@@ -22,6 +22,8 @@ export class FindPage implements OnInit {
     districts: District[];
     private favorites: any[];
 
+    lang: string;
+
     constructor(
         private http: HttpClientModule,
         private router: Router,
@@ -37,6 +39,7 @@ export class FindPage implements OnInit {
 
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
+        this.lang = await this.localData.getLang();
         this.fetchDistricts();
         this.fetchFavorites();
     }
@@ -44,7 +47,7 @@ export class FindPage implements OnInit {
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
         console.log('Districts fetched!');
-        const recentDistricts = await this.localData.getRecentlyUsedDistricts();
+        const recentDistricts = await this.localData.getRecentDistricts();
         recentDistricts.forEach((d) => {
             const index = tempDistricts.findIndex((t) => t._id === d._id);
             if (index > -1) {
@@ -60,16 +63,12 @@ export class FindPage implements OnInit {
 
     private async districtClicked(district) {
         if (this.localData.getDirectMode()) {
-            const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
-            const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-            // this.navCtrl.push("Call", {
-            //   shuttles: shuttles,
-            //   district: district
-            // });
+            // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
+            // const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
         } else {
             this.router.navigate(['/tabs/find/district/' + district._id]);
         }
-        this.localData.setRecentlyUsedDistrict(district);
+        this.localData.setRecentDistricts(district);
     }
 
     //
@@ -85,7 +84,7 @@ export class FindPage implements OnInit {
     //         //     districtColors: this.colorGenerator.getDistrictColors(district)
     //         // });
     //     }
-    //     this.localData.setRecentlyUsedDistrict(district);
+    //     this.localData.setRecentDistricts(district);
     // }
 
     public async gpsClicked() {
@@ -180,17 +179,12 @@ export class FindPage implements OnInit {
     }
 
 
-    private toDeparturePage(event) {
-        // this.navCtrl.push('Departure');
-    }
-
-
     private getDistrictName(district: any): string {
         if (district.name
             && district.name.de
             && district.name.it
             && district.name.de_st) {
-            switch (this.localData.getPrefLang()) {
+            switch (this.lang) {
                 case 'de_st':
                     return district.name.de_st;
                 case 'it':

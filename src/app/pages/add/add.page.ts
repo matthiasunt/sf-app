@@ -50,9 +50,9 @@ export class AddPage implements OnInit {
         const index = getIndexOfShuttle(this.list, shuttle);
         if (index !== -1) {
             if (this.addToFavorites) {
-                this.localData.removeShuttleFromFavorites(shuttle);
+                this.localData.removeFavorite(shuttle);
             } else {
-                this.localData.removeShuttleFromBlacklist(shuttle);
+                this.localData.removeBlacklisted(shuttle);
             }
         } else {
             console.log('shuttle not found');
@@ -62,10 +62,9 @@ export class AddPage implements OnInit {
 
     private async addToList(shuttle: Shuttle) {
         const listToCheck = this.addToFavorites ?
-            this.localData.getBlacklist() :
-            this.localData.getFavorites();
-        const index = getIndexOfShuttle(listToCheck, shuttle);
-        if (index === -1) {
+            await this.localData.getBlacklist() :
+            await this.localData.getFavorites();
+        if (listToCheck.findIndex(e => e._id === shuttle._id) < 0) {
             if (this.addToFavorites) {
                 this.localData.addFavorite(shuttle);
             } else {
@@ -117,11 +116,11 @@ export class AddPage implements OnInit {
     }
 
 
-    private getCityName(shuttle: Shuttle): string {
+    private async getCityName(shuttle: Shuttle): Promise<string> {
         if (shuttle &&
             shuttle.city
             && shuttle.city.de && shuttle.city.it) {
-            switch (this.localData.getPrefLang()) {
+            switch (await this.localData.getLang()) {
                 case 'de_st':
                     return shuttle.city.de;
                 case 'it':
@@ -133,7 +132,7 @@ export class AddPage implements OnInit {
     }
 
     private isInList(shuttle: Shuttle): boolean {
-        if (getIndexOfShuttle(this.list, shuttle) === -1) {
+        if (this.list.findIndex(e => e._id === shuttle._id) < 0) {
             return false;
         } else {
             return true;

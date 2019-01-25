@@ -13,7 +13,7 @@ import {AlertController} from '@ionic/angular';
     styleUrls: ['history.page.scss']
 })
 export class HistoryPage implements OnInit {
-    history: any[][];
+    history: any[];
     locale: string;
 
     constructor(private router: Router,
@@ -27,7 +27,6 @@ export class HistoryPage implements OnInit {
     async ngOnInit() {
         this.history = await this.localData.getHistory();
         this.locale = this.localData.getLocaleFromPrefLang();
-        console.log(this.history);
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -40,10 +39,9 @@ export class HistoryPage implements OnInit {
         this.router.navigate(['tabs/history/rate/' + shuttle._id]);
     }
 
-    private toCallPage(shuttle: any) {
-        // this.navCtrl.push('Call', {
-        //   shuttle: shuttle
-        // });
+    private callClicked(shuttle: Shuttle, event) {
+        event.stopPropagation();
+        event.preventDefault();
     }
 
     getTime(date: string) {

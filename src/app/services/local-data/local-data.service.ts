@@ -5,8 +5,7 @@ import {Platform} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {UserDbService} from '../user-db/user-db.service';
 import {TranslateService} from '@ngx-translate/core';
-
-import {getIndexOfShuttle} from '../../tools/sf-tools';
+import {Shuttle} from '../../models/shuttle';
 
 @Injectable({
     providedIn: 'root'
@@ -30,22 +29,21 @@ export class LocalDataService {
         private storage: Storage,
         private userDb: UserDbService,
     ) {
-
-        // using normal local storage, much faster
         this.fetchData();
     }
 
     private async fetchData() {
-        this.lang = localStorage.getItem('lang');
+
+
         await this.storage.ready();
-
-
         let val = await this.storage.get('directMode');
         this.directMode = val ? val : false;
-
+        val = await this.getLang();
+        this.lang = val ? val : this.translate.getBrowserLang();
         val = await this.storage.get('recentDistricts');
         this.recentDistricts = val ? val : [];
-        this.getHistory();
+        val = await this.getItem('history');
+        this.history = val ? val : [];
         val = await this.storage.get('favorites');
         this.favorites = val ? val : [];
         val = await this.storage.get('blacklist');
@@ -66,24 +64,17 @@ export class LocalDataService {
         }
     }
 
-    public saveSoftLoginCredentials(softLoginCredentials: any): any {
+    public async saveSoftLoginCredentials(softLoginCredentials: any) {
         this.softLoginCredentials = softLoginCredentials;
-        this.saveItem('softLoginCredentials', softLoginCredentials);
+        await this.saveItem('softLoginCredentials', softLoginCredentials);
     }
 
-    public getRecentlyUsedDistricts(): Promise<District[]> {
-        if (this.recentDistricts) {
-            return Promise.resolve(this.recentDistricts);
-        } else {
-            return new Promise((resolve) => {
-                this.storage.get('recentDistricts').then((val) => {
-                    resolve(val);
-                });
-            });
-        }
+    public async getRecentDistricts(): Promise<District[]> {
+        const ret = this.recentDistricts ? this.recentDistricts : await this.getItem('recentDistricts');
+        return ret ? ret : [];
     }
 
-    public async setRecentlyUsedDistrict(district) {
+    public async setRecentDistricts(district) {
         setTimeout(async () => {
             if (this.recentDistricts.length === 0) {
                 this.recentDistricts[0] = district;
@@ -94,17 +85,19 @@ export class LocalDataService {
                     this.recentDistricts[0] = district;
                 }
             }
-            this.saveItem('recentDistricts', this.recentDistricts);
+            await this.saveItem('recentDistricts', this.recentDistricts);
         }, 500);
     }
 
-    public getPrefLang() {
-        return this.lang;
+    public async getLang(): Promise<string> {
+        const ret = this.lang ? this.lang : await this.getItem('lang');
+        this.lang = ret;
+        return ret;
     }
 
-    public setPrefLang(lang) {
+    public async setLang(lang: string) {
         this.lang = lang;
-        localStorage.setItem('lang', lang);
+        await this.saveItem('lang', lang);
     }
 
     public getLocaleFromPrefLang(): string {
@@ -116,23 +109,16 @@ export class LocalDataService {
         return this.lang;
     }
 
+    // TODO: Add History Item Type
     public async addShuttleToHistory(shuttle: any) {
         this.incrementNumberOfCalls();
         this.history.push({shuttle: shuttle, date: new Date()});
         await this.saveItem('history', this.history);
     }
 
-    public getHistory(): Promise<any[]> {
-        if (this.history) {
-            return Promise.resolve(this.history);
-        } else {
-            return new Promise((resolve) => {
-                this.storage.get('history').then((val) => {
-                    this.history = val ? val : [];
-                    resolve(this.history);
-                });
-            });
-        }
+    public async getHistory(): Promise<any[]> {
+        const ret = this.history ? this.history : await this.getItem('history');
+        return ret ? ret : [];
     }
 
     public clearShuttleHistory() {
@@ -156,8 +142,8 @@ export class LocalDataService {
         return false;
     }
 
-    public getFavorites() {
-        return this.favorites;
+    public async getFavorites(): Promise<Shuttle[]> {
+        return this.favorites ? this.favorites : await this.getItem('favorites');
     }
 
     public async setFavorites(favorites: any) {
@@ -165,50 +151,52 @@ export class LocalDataService {
         await this.saveItem('favorites', this.favorites);
     }
 
-    public async addFavorite(shuttle: any): Promise<boolean>{
-        if (getIndexOfShuttle(this.favorites, shuttle) === -1) {
+    public async addFavorite(shuttle: any): Promise<boolean> {
+        if (this.favorites.findIndex(e => e._id === shuttle._id) < 0) {
             this.userDb.putFavorite(shuttle);
             this.favorites.push(shuttle);
             await this.saveItem('favorites', this.favorites);
+            console.log(this.favorites);
             return true;
         } else {
-            console.log('error adding favorite');
+            console.log('Favorite already added');
             return false;
         }
     }
 
-    public async removeShuttleFromFavorites(shuttle: any): Promise<boolean> {
-        const index = getIndexOfShuttle(this.favorites, shuttle);
-        if (index !== -1) {
+    public async removeFavorite(shuttle: any): Promise<boolean> {
+        const index = this.favorites.findIndex(e => e._id === shuttle._id);
+        if (index > -1) {
             this.favorites.splice(index, 1);
             await this.saveItem('favorites', this.favorites);
             if (this.userDb.getUserId()) {
                 this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'favorite' + '-' + shuttle._id});
             } else {
-                console.log('uid not defined');
+                console.log('UserDB: uid not defined');
             }
             return true;
         } else {
-            console.log('shuttle not found');
+            console.log('Local: shuttle not found');
             return false;
         }
     }
 
-    public getBlacklist() {
-        return this.blacklist;
+    public async getBlacklist(): Promise<Shuttle[]> {
+        return this.blacklist ? this.blacklist : await this.getItem('blacklist');
     }
 
     public async addBlacklisted(shuttle: any) {
-        if (getIndexOfShuttle(this.blacklist, shuttle) === -1) {
+        const index = this.blacklist.findIndex(e => e._id === shuttle._id);
+        if (index < 0) {
             this.userDb.putBlacklisted(shuttle);
             this.blacklist.push(shuttle);
             await this.saveItem('blacklist', this.blacklist);
         }
     }
 
-    public async removeShuttleFromBlacklist(shuttle: any) {
-        const index = getIndexOfShuttle(this.blacklist, shuttle);
-        if (index !== -1) {
+    public async removeBlacklisted(shuttle: any) {
+        const index = this.blacklist.findIndex(e => e._id === shuttle._id);
+        if (index > -1) {
             this.blacklist.splice(index, 1);
             await this.saveItem('blacklist', this.blacklist);
             if (this.userDb.getUserId()) {

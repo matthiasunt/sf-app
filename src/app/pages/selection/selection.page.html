@@ -37,7 +37,7 @@
                     </p>
                 </ion-text>
             </ion-label>
-            <ion-icon name="call" size="large" slot="end" color="secondary"></ion-icon>
+            <ion-icon (click)="callClicked(s, $event)" name="call" size="large" slot="end" color="secondary"></ion-icon>
         </ion-item>
     </ion-virtual-scroll>
     <div *ngIf="coordinates && outOfRange">
