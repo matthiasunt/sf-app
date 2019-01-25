@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {TabsPage} from './tabs.page';
 
 const routes: Routes = [
+    {path: '', redirectTo: '/tabs/find', pathMatch: 'full'},
     {
         path: 'tabs',
         component: TabsPage,
@@ -26,31 +27,6 @@ const routes: Routes = [
                 ]
             }
         ]
-    },
-    {path: '', redirectTo: '/tabs/find', pathMatch: 'full'},
-    {
-        path: 'tabs/find/district/:id',
-        children: [
-            {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
-            {
-                path: 'shuttle/:id', children: [
-                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
-                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
-                ]
-            }
-        ]
-    },
-    {
-        path: 'tabs/find/gps/:coordinates',
-        children: [
-            {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
-            {
-                path: 'shuttle/:id', children: [
-                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
-                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
-                ]
-            }
-        ],
     },
     {
         path: 'tabs/history', children: [

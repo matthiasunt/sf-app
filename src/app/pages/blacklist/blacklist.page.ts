@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+import {Shuttle} from '../../models/shuttle';
 
 @Component({
     selector: 'app-blacklist',
@@ -10,22 +11,21 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 })
 export class BlacklistPage implements OnInit {
 
-    blacklist: any[];
+    blacklist: Shuttle[];
 
     constructor(private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private colorGeneratorService: ColorGeneratorService
     ) {
-        this.blacklist = localData.getBlacklist();
-        console.log(this.blacklist);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.blacklist = await this.localData.getBlacklist();
     }
 
 
     removeFromBlacklist(element: any) {
-        this.localData.removeShuttleFromBlacklist(element);
+        this.localData.removeBlacklisted(element);
     }
 
 

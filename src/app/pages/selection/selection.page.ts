@@ -25,10 +25,10 @@ export class SelectionPage implements OnInit {
     coordinates: any;
 
     outOfRange: boolean;
-    showAllShuttles: boolean;
     queryResult: any[];
 
     shuttles: Shuttle[];
+    lang: string;
     shuttlesInRanges: any;
 
     actualShuttleIndex: number;
@@ -64,6 +64,7 @@ export class SelectionPage implements OnInit {
                 this.getShuttlesByCoords();
             }
         }
+        this.lang = await this.localData.getLang();
     }
 
     getToolbarStyle() {
@@ -80,13 +81,13 @@ export class SelectionPage implements OnInit {
     }
 
     private async getShuttlesByCoords() {
-        let lang: string;
-        switch (this.localData.getPrefLang()) {
+        let l;
+        switch (this.lang) {
             case 'it':
-                lang = 'it';
+                l = 'it';
                 break;
             default:
-                lang = 'de';
+                l = 'de';
         }
 
         // this.actualPos = this.util.isDevice() ? await this.geo.getPosition() : this.geo.getRandomPosition();
@@ -101,7 +102,7 @@ export class SelectionPage implements OnInit {
         } else {
             this.shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
         }
-        this.actualCity = await this.geo.getGeocodedCityName(this.pos, lang);
+        this.actualCity = await this.geo.getGeocodedCityName(this.pos, l);
 
         if (!this.actualCity || this.actualCity.length < 2) {
             this.noValidCityName = true;
@@ -120,6 +121,11 @@ export class SelectionPage implements OnInit {
         // }
     }
 
+    private callClicked(shuttle: Shuttle, event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
 
     private async presentReallyCallToast(shuttle) {
         const alert = await this.alertCtrl.create({
@@ -132,7 +138,6 @@ export class SelectionPage implements OnInit {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
-                        this.toCallPage(shuttle);
                     }
                 }
             ]
@@ -140,28 +145,15 @@ export class SelectionPage implements OnInit {
         await alert.present();
     }
 
-    private toDetailPage(shuttle: Shuttle) {
-        // this.navCtrl.push('ShuttleDetail', {
-        //   shuttle: shuttle,
-        //   district: this.district
-        // });
-    }
-
-    private toCallPage(shuttle: Shuttle) {
-        // this.navCtrl.push('Call', {
-        //   shuttle: shuttle, district: this.district
-        // });
-    }
-
     // Tool
-    private getDistrictName(district: any): string {
+    private async getDistrictName(district: any): Promise<string> {
         if (
             district &&
             district.name
             && district.name.de
             && district.name.it
             && district.name.de_st) {
-            switch (this.localData.getPrefLang()) {
+            switch (this.lang) {
                 case 'de_st':
                     return district.name.de_st;
                 case 'it':
@@ -179,7 +171,7 @@ export class SelectionPage implements OnInit {
         if (shuttle &&
             shuttle.city
             && shuttle.city.de && shuttle.city.it) {
-            switch (this.localData.getPrefLang()) {
+            switch (this.lang) {
                 case 'de_st':
                     return this.geo.getBeatifulCityName(shuttle.city.de);
                 case 'it':
