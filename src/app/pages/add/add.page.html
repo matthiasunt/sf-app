@@ -15,7 +15,7 @@
 
 <ion-content>
     <ion-virtual-scroll [items]="queryResult">
-        <ion-item *virtualItem="let shuttle" lines="full">
+        <ion-item *virtualItem="let shuttle" (click)="shuttleClicked(shuttle)" lines="full">
             <ion-thumbnail slot="start" *ngIf="shuttle">
                 <app-sf-shuttle-icon [colors]="getShuttleColors(shuttle)">
                 </app-sf-shuttle-icon>
@@ -28,7 +28,7 @@
                 </ion-text>
             </ion-label>
             <ng-container *ngIf="!isInList(shuttle)">
-                <ion-button (click)="addToList(shuttle)"
+                <ion-button (click)="addToList(shuttle, $event)"
                             color="{{addToFavorites? 'success' : 'dark'}}"
                             slot="end" shape="round" size="small">
                     {{addToFavorites ? 'Add' : 'Block'}}
@@ -36,7 +36,7 @@
                 </ion-button>
             </ng-container>
             <ng-container *ngIf="isInList(shuttle)">
-                <ion-button (click)="removeFromList(shuttle)"
+                <ion-button (click)="removeFromList(shuttle, $event)"
                             color="{{addToFavorites? 'danger' : 'success'}}"
                             slot="end" shape="round" size="small">
                     {{addToFavorites ? 'Remove' : 'Unblock'}}

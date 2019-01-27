@@ -10,6 +10,10 @@ const routes: Routes = [
                 path: 'blacklist', children: [
                     {path: '', loadChildren: './pages/blacklist/blacklist.module#BlacklistPageModule'},
                     {path: 'add', loadChildren: './pages/add/add.module#AddPageModule'},
+                    {path: 'add/shuttle/:id', loadChildren: './pages/shuttle/shuttle.module#ShuttlePageModule'},
+                    {path: 'add/shuttle/:id/rate/:id', loadChildren: './pages/rate/rate.module#RatePageModule'},
+                    {path: 'shuttle/:id', loadChildren: './pages/shuttle/shuttle.module#ShuttlePageModule'},
+                    {path: 'shuttle/:id/rate/:id', loadChildren: './pages/rate/rate.module#RatePageModule'},
                 ]
             },
             {path: 'about', loadChildren: './pages/about/about.module#AboutPageModule'},

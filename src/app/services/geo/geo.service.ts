@@ -62,7 +62,9 @@ export class GeoService {
             'in Passeier'
         ];
         for (const s of toRemove) {
-            ret = ret.replace(new RegExp(s, 'ig'), '').trim();
+            if (ret) {
+                ret = ret.replace(new RegExp(s, 'ig'), '').trim();
+            }
         }
         return ret;
     }
@@ -72,7 +74,7 @@ export class GeoService {
             for (const r of apiResults) {
                 if (r.types.indexOf('administrative_area_level_3') > -1
                     && r.types.indexOf('political') > -1) {
-                    for (let c of r.address_components) {
+                    for (const c of r.address_components) {
                         if (c.types.indexOf('administrative_area_level_3') > -1
                             && c.types.indexOf('political') > -1) {
                             return c.short_name;

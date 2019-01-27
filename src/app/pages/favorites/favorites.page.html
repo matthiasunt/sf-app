@@ -3,22 +3,35 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="favorites">
-        <ion-item *virtualItem="let s" lines="full">
+    <ion-list>
+        <ion-item *ngFor="let s of favorites" lines="full" (click)="shuttleClicked(s)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label>{{ s?.name }}</ion-label>
-            <ion-button (click)="removeFavorite(s)" color="danger" shape="round" slot="end" size="small">
+            <ion-button (click)="removeFavorite(s, $event)" color="danger" shape="round" slot="end" size="small">
                 Remove
                 <ion-icon name="trash" slot="end"></ion-icon>
             </ion-button>
         </ion-item>
-    </ion-virtual-scroll>
+    </ion-list>
+    <!--</ion-virtual-scroll><ion-virtual-scroll [items]="favorites">-->
+    <!--<ion-item *virtualItem="let s" lines="full">-->
+    <!--<ion-thumbnail slot="start">-->
+    <!--<app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">-->
+    <!--</app-sf-shuttle-icon>-->
+    <!--</ion-thumbnail>-->
+    <!--<ion-label>{{ s?.name }}</ion-label>-->
+    <!--<ion-button (click)="removeFavorite(s)" color="danger" shape="round" slot="end" size="small">-->
+    <!--Remove-->
+    <!--<ion-icon name="trash" slot="end"></ion-icon>-->
+    <!--</ion-button>-->
+    <!--</ion-item>-->
+    <!--</ion-virtual-scroll>-->
     <p *ngIf="favorites?.length < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
     <ion-fab vertical="center" horizontal="end" slot="fixed">
-        <ion-fab-button routerLink="/tabs/favorites/add" color="secondary">
+        <ion-fab-button (click)="addClicked()" color="secondary" type="button">
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>
     </ion-fab>

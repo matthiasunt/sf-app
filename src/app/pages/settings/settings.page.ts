@@ -11,9 +11,9 @@ import {ActivatedRoute, Router} from '@angular/router';
     styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-    private selectedLang: string;
-    private directMode: boolean;
-    private shareData: boolean;
+    selectedLang: string;
+    directMode: boolean;
+    shareData: boolean;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -30,11 +30,11 @@ export class SettingsPage implements OnInit {
         this.directMode = await this.localData.getDirectMode();
     }
 
-    private modeChanged(event) {
+    modeChanged(event) {
         this.localData.setDirectMode(this.directMode);
     }
 
-    private languageChange(event) {
+    languageChange(event) {
         this.translate.use(this.selectedLang);
         this.localData.setLang(this.selectedLang);
     }

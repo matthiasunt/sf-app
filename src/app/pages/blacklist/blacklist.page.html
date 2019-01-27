@@ -10,30 +10,25 @@
 </ion-header>
 
 <ion-content>
-    <ng-container *ngIf="blacklist?.length > 0">
-        <ion-virtual-scroll [items]="blacklist">
-            <ion-item *virtualItem="let s" lines="full">
-                <ion-thumbnail slot="start">
-                    <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
-                </ion-thumbnail>
-                <ion-label>
-                    <ion-text>
-                        <h2>{{ s?.name }}</h2>
-                    </ion-text>
-                </ion-label>
-                <ion-button (click)="removeFromBlacklist(s)" color="secondary" slot="end" shape="round" size="small">
-                    Unblock
-                    <ion-icon name="checkmark-circle" slot="end"></ion-icon>
-                </ion-button>
-            </ion-item>
-        </ion-virtual-scroll>
-    </ng-container>
-    <ng-container *ngIf="!blacklist || blacklist.length < 1">
-        <p padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
-    </ng-container>
-
+    <ion-list>
+        <ion-item *ngFor="let s of blacklist" lines="full" (click)="shuttleClicked(s)">
+            <ion-thumbnail slot="start">
+                <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)"></app-sf-shuttle-icon>
+            </ion-thumbnail>
+            <ion-label>
+                <ion-text>
+                    <h2>{{ s?.name }}</h2>
+                </ion-text>
+            </ion-label>
+            <ion-button (click)="removeFromBlacklist(s, $event)" color="secondary" slot="end" shape="round" size="small">
+                Unblock
+                <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+            </ion-button>
+        </ion-item>
+    </ion-list>
+    <p *ngIf="!blacklist || blacklist.length < 1" padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
     <ion-fab vertical="center" horizontal="end" slot="fixed">
-        <ion-fab-button [routerLink]="['/settings/blacklist/add']" color="dark">
+        <ion-fab-button (click)="blockClicked()" color="dark">
             <ion-icon name="remove-circle"></ion-icon>
         </ion-fab-button>
     </ion-fab>

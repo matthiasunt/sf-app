@@ -3,7 +3,6 @@
 </ion-header>
 
 <ion-content>
-    <ng-template></ng-template>
     <ion-virtual-scroll *ngIf="history && history.length > 0" [items]="history" [headerFn]="myHeaderFn">
         <ion-item-divider *virtualHeader="let header">
             {{ header }}
