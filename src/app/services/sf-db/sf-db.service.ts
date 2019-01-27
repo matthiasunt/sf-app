@@ -137,11 +137,13 @@ export class SfDbService {
         if (position) {
             const allShuttles = await this.getAllShuttles();
             for (const s of allShuttles) {
-                const distance = this.geoService.getDistance(position, s.location);
-                if (distance && distance < radius) {
-                    const shuttle: any = s;
-                    shuttle.distance = distance;
-                    ret.push(shuttle);
+                if (s && s.location) {
+                    const distance = this.geoService.getDistance(position, s.location);
+                    if (distance && distance < radius) {
+                        const shuttle: any = s;
+                        shuttle.distance = distance;
+                        ret.push(shuttle);
+                    }
                 }
             }
         }
