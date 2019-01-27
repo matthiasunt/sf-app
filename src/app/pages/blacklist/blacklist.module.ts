@@ -8,6 +8,7 @@ import {IonicModule} from '@ionic/angular';
 import {BlacklistPage} from './blacklist.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {ComponentsModule} from '../../components/components.module';
+import {BlacklistPageRoutingModule} from './blacklist-routing.module';
 
 const routes: Routes = [
     {
@@ -21,6 +22,7 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
+        BlacklistPageRoutingModule,
         RouterModule.forChild(routes),
         TranslateModule,
         ComponentsModule,

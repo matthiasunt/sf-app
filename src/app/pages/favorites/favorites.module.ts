@@ -6,12 +6,14 @@ import {FormsModule} from '@angular/forms';
 import {FavoritesPage} from './favorites.page';
 import {ComponentsModule} from '../../components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {FavoritesPageRoutingModule} from './favorites-routing.module';
 
 @NgModule({
     imports: [
         IonicModule,
         CommonModule,
         FormsModule,
+        FavoritesPageRoutingModule,
         RouterModule.forChild([{path: '', component: FavoritesPage}]),
         ComponentsModule,
         TranslateModule,

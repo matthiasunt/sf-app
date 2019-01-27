@@ -8,6 +8,7 @@ import {IonicModule} from '@ionic/angular';
 import {AddPage} from './add.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {ComponentsModule} from '../../components/components.module';
+import {AddPageRoutingModule} from './add-routing.module';
 
 const routes: Routes = [
     {
@@ -21,6 +22,7 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
+        AddPageRoutingModule,
         RouterModule.forChild(routes),
         TranslateModule,
         ComponentsModule,
