@@ -14,6 +14,7 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
     selector: 'app-selection',
     templateUrl: './selection.page.html',
     styleUrls: ['./selection.page.scss'],
+    providers: [CallNumber],
 })
 export class SelectionPage implements OnInit {
     district: District;
@@ -34,9 +35,10 @@ export class SelectionPage implements OnInit {
 
     actualShuttleIndex: number;
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private alertCtrl: AlertController,
+    constructor(private navCtrl: NavController,
                 private router: Router,
+                private activatedRoute: ActivatedRoute,
+                private alertCtrl: AlertController,
                 private callNumber: CallNumber,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
@@ -114,8 +116,7 @@ export class SelectionPage implements OnInit {
 
     private shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
-        this.localData.addShuttleToHistory(shuttle);
-        this.router.navigate([currentUrl + '/shuttle/' + shuttle._id]);
+        this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
         // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
         //   this.presentReallyCallToast(shuttle);
         // }
@@ -127,6 +128,7 @@ export class SelectionPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
+        this.localData.addShuttleToHistory(shuttle);
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

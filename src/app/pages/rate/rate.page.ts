@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {NgForm} from '@angular/forms';
+import {NavController} from '@ionic/angular';
 
 @Component({
     selector: 'app-rate',
@@ -24,7 +25,7 @@ export class RatePage implements OnInit {
         review: ''
     };
 
-    constructor(private router: Router,
+    constructor(private navCtrl: NavController,
                 private activatedRoute: ActivatedRoute,
                 private sfDb: SfDbService,
                 private colorGenerator: ColorGeneratorService) {
@@ -45,8 +46,7 @@ export class RatePage implements OnInit {
     }
 
     onSubmit(f: NgForm) {
-        console.log(f.value);
-        this.router.navigate(['tabs/history']);
+        this.navCtrl.navigateBack('tabs/history');
     }
 
 }

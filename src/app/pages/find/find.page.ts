@@ -24,16 +24,15 @@ export class FindPage implements OnInit {
 
     lang: string;
 
-    constructor(
-        private http: HttpClientModule,
-        private router: Router,
-        private toastCtrl: ToastController,
-        private alertCtrl: AlertController,
-        private translate: TranslateService,
-        private sfDb: SfDbService,
-        private localData: LocalDataService,
-        private geo: GeoService,
-        private colorGenerator: ColorGeneratorService,
+    constructor(private navCtrl: NavController,
+                private http: HttpClientModule,
+                private toastCtrl: ToastController,
+                private alertCtrl: AlertController,
+                private translate: TranslateService,
+                private sfDb: SfDbService,
+                private localData: LocalDataService,
+                private geo: GeoService,
+                private colorGenerator: ColorGeneratorService,
     ) {
     }
 
@@ -69,7 +68,7 @@ export class FindPage implements OnInit {
             // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
             // const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
         } else {
-            this.router.navigate(['/tabs/find/district/' + district._id]);
+            this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
         }
         this.localData.setRecentDistricts(district);
     }
@@ -143,7 +142,7 @@ export class FindPage implements OnInit {
         //         // this.navCtrl.push("Selection", {viaGps: true});
         //     }
         // }
-        this.router.navigate(['/tabs/find/gps/46.4983,11.3548']);
+        this.navCtrl.navigateForward('/tabs/find/gps/46.4983,11.3548');
     }
 
     private async presentEnableGpsAlert() {

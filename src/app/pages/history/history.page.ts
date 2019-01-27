@@ -5,20 +5,24 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 import {Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
 import {getBeautifulTimeString, getBeautifulDateString} from '../../tools/sf-tools';
-import {AlertController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
+import {CallNumber} from '@ionic-native/call-number/ngx';
 
 @Component({
     selector: 'app-history',
     templateUrl: 'history.page.html',
-    styleUrls: ['history.page.scss']
+    styleUrls: ['history.page.scss'],
+    providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
     history: any[];
     locale: string;
 
-    constructor(private router: Router,
+    constructor(private navCtrl: NavController,
+                private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
+                private callNumber: CallNumber,
                 public localData: LocalDataService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
@@ -32,18 +36,20 @@ export class HistoryPage implements OnInit {
     }
 
     private shuttleClicked(shuttle: Shuttle) {
-        this.router.navigate(['tabs/history/shuttle/' + shuttle._id]);
+        this.navCtrl.navigateForward('tabs/history/shuttle/' + shuttle._id);
     }
 
     private rateClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.router.navigate(['tabs/history/rate/' + shuttle._id]);
+        this.navCtrl.navigateForward('tabs/history/rate/' + shuttle._id);
     }
 
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
+        this.localData.addShuttleToHistory(shuttle);
+        this.callNumber.callNumber(shuttle.phone, true);
     }
 
     getTime(date: string) {
