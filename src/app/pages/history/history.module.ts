@@ -6,12 +6,14 @@ import {FormsModule} from '@angular/forms';
 import {HistoryPage} from './history.page';
 import {ComponentsModule} from '../../components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {HistoryPageRoutingModule} from './history-routing.module';
 
 @NgModule({
     imports: [
         IonicModule,
         CommonModule,
         FormsModule,
+        HistoryPageRoutingModule,
         RouterModule.forChild([{path: '', component: HistoryPage}]),
         ComponentsModule,
         TranslateModule,

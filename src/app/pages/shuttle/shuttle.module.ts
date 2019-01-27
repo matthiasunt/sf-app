@@ -7,6 +7,7 @@ import {IonicModule} from '@ionic/angular';
 
 import {ShuttlePage} from './shuttle.page';
 import {ComponentsModule} from '../../components/components.module';
+import {ShuttlePageRoutingModule} from './shuttle-routing.module';
 
 const routes: Routes = [
     {
@@ -20,8 +21,9 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
+        ShuttlePageRoutingModule,
         RouterModule.forChild(routes),
-        ComponentsModule
+        ComponentsModule,
     ],
     declarations: [ShuttlePage]
 })
