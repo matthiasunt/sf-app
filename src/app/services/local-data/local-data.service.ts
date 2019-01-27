@@ -155,6 +155,7 @@ export class LocalDataService {
         if (this.favorites.findIndex(e => e._id === shuttle._id) < 0) {
             this.userDb.putFavorite(shuttle);
             this.favorites.push(shuttle);
+            console.log(this.favorites);
             await this.saveItem('favorites', this.favorites);
             return true;
         } else {

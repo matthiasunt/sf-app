@@ -18,8 +18,8 @@ export class AddPage implements OnInit {
     addToFavorites: boolean;
     private unavailable: boolean;
     private noConnection: boolean;
-    private allShuttles: any[];
-    private queryResult: any[];
+    allShuttles: any[];
+    queryResult: any[];
     private resultIndex: number;
     private list: any[];
 
@@ -49,7 +49,14 @@ export class AddPage implements OnInit {
         this.resultIndex = 0;
     }
 
-    private removeFromList(shuttle: Shuttle) {
+    shuttleClicked(shuttle: Shuttle) {
+        const currentUrl = this.router.url;
+        this.router.navigate([currentUrl + '/shuttle/' + shuttle._id]);
+    }
+
+    private removeFromList(shuttle: Shuttle, event) {
+        event.stopPropagation();
+        event.preventDefault();
         const index = getIndexOfShuttle(this.list, shuttle);
         if (index !== -1) {
             if (this.addToFavorites) {
@@ -63,7 +70,9 @@ export class AddPage implements OnInit {
     }
 
 
-    private async addToList(shuttle: Shuttle) {
+    private async addToList(shuttle: Shuttle, event) {
+        event.stopPropagation();
+        event.preventDefault();
         const listToCheck = this.addToFavorites ?
             await this.localData.getBlacklist() :
             await this.localData.getFavorites();

@@ -8,6 +8,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
 import {ActivatedRoute, Router} from '@angular/router';
+import {CallNumber} from '@ionic-native/call-number/ngx';
 
 @Component({
     selector: 'app-selection',
@@ -36,6 +37,7 @@ export class SelectionPage implements OnInit {
     constructor(private activatedRoute: ActivatedRoute,
                 private alertCtrl: AlertController,
                 private router: Router,
+                private callNumber: CallNumber,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
@@ -66,6 +68,7 @@ export class SelectionPage implements OnInit {
         }
         this.lang = await this.localData.getLang();
     }
+
 
     getToolbarStyle() {
         return {
@@ -124,6 +127,7 @@ export class SelectionPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
+        this.callNumber.callNumber(shuttle.phone, true);
     }
 
 

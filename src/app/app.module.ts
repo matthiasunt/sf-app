@@ -34,7 +34,7 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
     providers: [
         StatusBar,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        UniqueDeviceID
+        UniqueDeviceID,
     ],
     bootstrap: [AppComponent]
 })
