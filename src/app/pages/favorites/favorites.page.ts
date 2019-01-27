@@ -16,7 +16,6 @@ export class FavoritesPage implements OnInit {
     favorites: Shuttle[];
 
     constructor(private navCtrl: NavController,
-                private router: Router,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private colorGeneratorService: ColorGeneratorService
@@ -28,12 +27,12 @@ export class FavoritesPage implements OnInit {
         this.favorites = await this.localData.getFavorites();
     }
 
-    private shuttleClicked(shuttle: Shuttle) {
+    shuttleClicked(shuttle: Shuttle) {
         this.navCtrl.navigateForward('tabs/favorites/shuttle/' + shuttle._id);
     }
 
     addClicked() {
-        this.navCtrl.navigateForward('settings/blacklist/add');
+        this.navCtrl.navigateForward('tabs/favorites/add');
     }
 
     private async removeFavorite(element: any, event) {

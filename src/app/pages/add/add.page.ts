@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {LocalDataService} from '../../services/local-data/local-data.service';
@@ -23,7 +23,8 @@ export class AddPage implements OnInit {
     private resultIndex: number;
     private list: any[];
 
-    constructor(private router: Router,
+    constructor(private navCtrl: NavController,
+        private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
