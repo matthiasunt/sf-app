@@ -33,8 +33,11 @@
     <ion-card>
         <ion-card-header>
             <ion-card-title>{{shuttle?.name}}</ion-card-title>
-            <ion-card-subtitle>{{shuttle?.phone}}</ion-card-subtitle>
+            <ion-card-subtitle>{{getPhoneNumber(shuttle)}}</ion-card-subtitle>
         </ion-card-header>
+        <ion-card-content>
+            Halli hallo, i bin dor Hons.
+        </ion-card-content>
     </ion-card>
 
     <ion-card *ngIf="shuttle?.email
@@ -62,14 +65,14 @@
     </ion-card>
 
     <ion-row class="button-row">
-        <ion-col>
-            <ion-button *ngIf="shuttle?.website" href="{{shuttle?.website}}" expand="block" color="secondary">
+        <ion-col *ngIf="shuttle?.website">
+            <ion-button href="{{shuttle?.website}}" expand="block" color="secondary">
                 <ion-icon name="globe" slot="start"></ion-icon>
                 Website
             </ion-button>
         </ion-col>
-        <ion-col>
-            <ion-button *ngIf="shuttle?.facebook" href="{{shuttle?.facebook}}"
+        <ion-col *ngIf="shuttle?.facebook">
+            <ion-button href="{{shuttle?.facebook}}"
                         id="facebook-button" expand="block">
                 <ion-icon name="logo-facebook" slot="start"></ion-icon>
                 Facebook
@@ -78,10 +81,10 @@
     </ion-row>
 
     <!--<ion-card>-->
-        <!--<ion-card-header>-->
-            <!--<ion-card-title>Ratings</ion-card-title>-->
-            <!--<ion-card-subtitle>4.7</ion-card-subtitle>-->
-        <!--</ion-card-header>-->
+    <!--<ion-card-header>-->
+    <!--<ion-card-title>Ratings</ion-card-title>-->
+    <!--<ion-card-subtitle>4.7</ion-card-subtitle>-->
+    <!--</ion-card-header>-->
     <!--</ion-card>-->
 
 </ion-content>

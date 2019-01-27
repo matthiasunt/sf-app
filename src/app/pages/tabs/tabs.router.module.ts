@@ -3,7 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {TabsPage} from './tabs.page';
 
 const routes: Routes = [
-    {path: '', redirectTo: '/tabs/find', pathMatch: 'full'},
+    {path: '', redirectTo: 'tabs/find', pathMatch: 'full'},
+    {path: 'tabs', redirectTo: 'tabs/find', pathMatch: 'full'},
     {
         path: 'tabs', component: TabsPage,
         children: [

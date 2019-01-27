@@ -39,10 +39,10 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        setTimeout(() => {
+        // setTimeout(() => {
             this.fetchDistricts();
             this.fetchFavorites();
-        }, 3000);
+        // }, 3000);
     }
 
     private async fetchDistricts() {

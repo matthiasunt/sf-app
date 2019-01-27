@@ -40,15 +40,15 @@
             <p *ngIf="directMode">{{ "settings.BLACKLIST_DESCRIPTION_1" | translate }}</p>
             <p *ngIf="!directMode">{{ "settings.BLACKLIST_DESCRIPTION_2" | translate }}</p>
         </ion-item>
-        <ion-item>
-            <ion-icon color="secondary" slot="start" name="flash"></ion-icon>
-            <ion-label>
-                <ion-text>
-                    <h2>{{ "settings.DIRECT_MODE" | translate }}</h2>
-                </ion-text>
-            </ion-label>
-            <ion-toggle color="primary" [(ngModel)]="directMode" (ngModelChange)="modeChanged($event)"></ion-toggle>
-        </ion-item>
+        <!--<ion-item>-->
+            <!--<ion-icon color="secondary" slot="start" name="flash"></ion-icon>-->
+            <!--<ion-label>-->
+                <!--<ion-text>-->
+                    <!--<h2>{{ "settings.DIRECT_MODE" | translate }}</h2>-->
+                <!--</ion-text>-->
+            <!--</ion-label>-->
+            <!--<ion-toggle color="primary" [(ngModel)]="directMode" (ngModelChange)="modeChanged($event)"></ion-toggle>-->
+        <!--</ion-item>-->
         <ion-item text-wrap id="toggle-description-item">
             <ion-text text-wrap>
                 <p *ngIf="directMode">{{ "settings.DIRECT_MODE_ON_DESCRIPTION" | translate }}</p>

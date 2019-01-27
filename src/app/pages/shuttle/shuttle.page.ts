@@ -53,4 +53,10 @@ export class ShuttlePage implements OnInit {
         };
     }
 
+    private getPhoneNumber(shuttle: Shuttle) {
+        if (shuttle) {
+            return this.sfDb.getFormattedPhoneNumber(shuttle.phone);
+        }
+    }
+
 }
