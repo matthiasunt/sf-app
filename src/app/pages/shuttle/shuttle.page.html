@@ -9,6 +9,7 @@
     </ion-toolbar>
 </ion-header>
 
+<!-- TODO: Confirmed badge, Services, Add to Favorites, report Shuttle -->
 <ion-content padding *ngIf="shuttle">
     <div id="avatar-div">
         <ion-avatar>
@@ -35,50 +36,47 @@
             <ion-card-title>{{shuttle?.name}}</ion-card-title>
             <ion-card-subtitle>{{getPhoneNumber(shuttle)}}</ion-card-subtitle>
         </ion-card-header>
-        <ion-card-content>
-            Halli hallo, i bin dor Hons.
-        </ion-card-content>
     </ion-card>
 
     <ion-card *ngIf="shuttle?.email
     && shuttle?.first_name && shuttle?.last_name
     && shuttle?.street && shuttle?.zip && shuttle?.city.de && shuttle?.city.it">
-        <ion-item lines="full" type="button">
-            <ion-icon name="mail" slot="start"></ion-icon>
-            <ion-label text-wrap>
-                <ion-text>
-                    <a href="mailto:{{shuttle?.email}}">{{shuttle?.email}}</a></ion-text>
-            </ion-label>
-        </ion-item>
-        <ion-item lines="full">
-            <ion-icon name="person" slot="start"></ion-icon>
-            <ion-label text-wrap>
-                <ion-text>{{shuttle?.first_name}} {{shuttle?.last_name}}</ion-text>
-            </ion-label>
-        </ion-item>
+        <!--<ion-item lines="full" type="button">-->
+            <!--<ion-icon name="mail" slot="start"></ion-icon>-->
+            <!--<ion-label text-wrap>-->
+                <!--<ion-text>-->
+                    <!--<a href="mailto:{{shuttle?.email}}">{{shuttle?.email}}</a></ion-text>-->
+            <!--</ion-label>-->
+        <!--</ion-item>-->
+        <!--<ion-item lines="full">-->
+            <!--<ion-icon name="person" slot="start"></ion-icon>-->
+            <!--<ion-label text-wrap>-->
+                <!--<ion-text>{{shuttle?.first_name}} {{shuttle?.last_name}}</ion-text>-->
+            <!--</ion-label>-->
+        <!--</ion-item>-->
         <ion-item lines="full">
             <ion-icon name="pin" slot="start"></ion-icon>
             <ion-label text-wrap>
-                <ion-text>{{shuttle?.street}}, {{shuttle?.zip}} {{shuttle?.city.de}}</ion-text>
+                <ion-text>{{shuttle?.zip}} {{shuttle?.city.de}}</ion-text>
             </ion-label>
         </ion-item>
     </ion-card>
 
-    <ion-row class="button-row">
-        <ion-col *ngIf="shuttle?.website">
-            <ion-button href="{{shuttle?.website}}" expand="block" color="secondary">
-                <ion-icon name="globe" slot="start"></ion-icon>
-                Website
-            </ion-button>
-        </ion-col>
-        <ion-col *ngIf="shuttle?.facebook">
-            <ion-button href="{{shuttle?.facebook}}"
-                        id="facebook-button" expand="block">
-                <ion-icon name="logo-facebook" slot="start"></ion-icon>
-                Facebook
-            </ion-button>
-        </ion-col>
-    </ion-row>
+    <!--<ion-row class="button-row">-->
+        <!--<ion-col *ngIf="shuttle?.website">-->
+            <!--<ion-button href="{{shuttle?.website}}" expand="block" color="secondary">-->
+                <!--<ion-icon name="globe" slot="start"></ion-icon>-->
+                <!--Website-->
+            <!--</ion-button>-->
+        <!--</ion-col>-->
+        <!--<ion-col *ngIf="shuttle?.facebook">-->
+            <!--<ion-button href="{{shuttle?.facebook}}"-->
+                        <!--id="facebook-button" expand="block">-->
+                <!--<ion-icon name="logo-facebook" slot="start"></ion-icon>-->
+                <!--Facebook-->
+            <!--</ion-button>-->
+        <!--</ion-col>-->
+    <!--</ion-row>-->
 
     <!--<ion-card>-->
     <!--<ion-card-header>-->

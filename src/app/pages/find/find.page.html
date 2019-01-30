@@ -14,24 +14,12 @@
             </ion-button>
         </ion-col>
     </ion-row>
-    <div id="district-chip-row" *ngIf="districts && districts.length > 0">
-        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
-                  [ngStyle]="getChipStyle(d)">
-            <ion-label>{{getDistrictName(d)}}</ion-label>
-        </ion-chip>
-    </div>
-    <p *ngIf="districts?.length < 1" class="no-data-p">No Districts 😏</p>
-    <!--<ion-slides *ngIf="favorites" id="favorites-slides" loop="false" slidesPerView="3" parallax="true">-->
-    <!--<ion-slide *ngFor="let s of favorites">-->
-    <!--<ion-card>-->
-    <!--<ion-card-content>-->
-    <!--<ion-avatar item-start>-->
-    <!--<cr-shuttle-icon [colors]="colorGenerator.getShuttleColors(s)"></cr-shuttle-icon>-->
-    <!--</ion-avatar>-->
-    <!--<p>{{s.name}}</p>-->
-    <!--</ion-card-content>-->
-    <!--</ion-card>-->
-    <!--</ion-slide>-->
-    <!--</ion-slides>-->
+    <ion-button *ngFor="let d of districts" shape="round"
+                (click)="districtClicked(d)"
+                [ngStyle]="getDistrictStyle(d)"
+                color="{{getDistrictColors(d)[0]}}">
+        {{getDistrictName(d)}}
+    </ion-button>
+    <p *ngIf="districts?.length < 1" class="no-data-p">Districts loading...</p>
 
 </ion-content>

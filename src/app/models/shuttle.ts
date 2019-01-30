@@ -19,5 +19,6 @@ export interface Shuttle {
   website: string;
   facebook: string;
   description: string;
+  confirmed: boolean;
 
 }

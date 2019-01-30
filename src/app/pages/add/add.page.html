@@ -1,8 +1,7 @@
 <ion-header>
     <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
         <ion-buttons slot="start">
-            <ion-back-button routerDirection="root"
-                             routerLink="{{ addToFavorites ? '/tabs/favorites' : '/settings/blacklist'}}"></ion-back-button>
+            <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
             {{ addToFavorites ? ("add.ADD_FAVORITE" | translate) : ("add.LOCK_SHUTTLE" | translate) }}
@@ -27,22 +26,22 @@
 
                 </ion-text>
             </ion-label>
-            <ng-container *ngIf="!isInList(shuttle)">
-                <ion-button (click)="addToList(shuttle, $event)"
-                            color="{{addToFavorites? 'success' : 'dark'}}"
-                            slot="end" shape="round" size="small">
+            <div *ngIf="!isInList(shuttle)" (click)="addToList(shuttle, $event)" class="add-remove-button-div">
+                <ion-button
+                        color="{{addToFavorites? 'success' : 'dark'}}"
+                        slot="end" shape="round" size="small">
                     {{addToFavorites ? 'Add' : 'Block'}}
                     <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
                 </ion-button>
-            </ng-container>
-            <ng-container *ngIf="isInList(shuttle)">
-                <ion-button (click)="removeFromList(shuttle, $event)"
-                            color="{{addToFavorites? 'danger' : 'success'}}"
-                            slot="end" shape="round" size="small">
+            </div>
+            <div *ngIf="isInList(shuttle)" (click)="removeFromList(shuttle, $event)" class="add-remove-button-div">
+                <ion-button
+                        color="{{addToFavorites? 'danger' : 'success'}}"
+                        slot="end" shape="round" size="small">
                     {{addToFavorites ? 'Remove' : 'Unblock'}}
                     <ion-icon name="{{addToFavorites? 'trash' : 'checkmark-circle'}}" slot="end"></ion-icon>
                 </ion-button>
-            </ng-container>
+            </div>
         </ion-item>
     </ion-virtual-scroll>
 
