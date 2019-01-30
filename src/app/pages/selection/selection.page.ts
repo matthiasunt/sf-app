@@ -42,9 +42,9 @@ export class SelectionPage implements OnInit {
                 private callNumber: CallNumber,
                 private translate: TranslateService,
                 private sfDb: SfDbService,
-                private localData: LocalDataService,
+                public localData: LocalDataService,
                 private geo: GeoService,
-                private colorGenerator: ColorGeneratorService,
+                public colorGenerator: ColorGeneratorService,
     ) {
 
     }
@@ -178,8 +178,6 @@ export class SelectionPage implements OnInit {
             shuttle.city
             && shuttle.city.de && shuttle.city.it) {
             switch (this.lang) {
-                case 'de_st':
-                    return this.geo.getBeatifulCityName(shuttle.city.de);
                 case 'it':
                     return this.geo.getBeatifulCityName(shuttle.city.it);
                 default:

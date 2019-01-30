@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
@@ -39,16 +38,13 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        // setTimeout(() => {
-            this.fetchDistricts();
-            this.fetchFavorites();
-        // }, 3000);
+        this.fetchDistricts();
+        this.fetchFavorites();
     }
 
     private async fetchDistricts() {
         const tempDistricts = await this.sfDb.getDistricts();
         this.districts = tempDistricts;
-        console.log(this.districts);
         const recentDistricts = await this.localData.getRecentDistricts();
         recentDistricts.forEach((d) => {
             const index = tempDistricts.findIndex((t) => t._id === d._id);
@@ -73,13 +69,19 @@ export class FindPage implements OnInit {
         this.localData.setRecentDistricts(district);
     }
 
-    getChipStyle(district: District) {
+    getDistrictStyle(district: District) {
         if (district) {
             const colors = this.colorGenerator.getDistrictColors(district);
             return {
                 'background-color': colors[0],
                 'color': colors[1]
             };
+        }
+    }
+
+    getDistrictColors(district: District) {
+        if (district) {
+            return this.colorGenerator.getDistrictColors(district);
         }
     }
 

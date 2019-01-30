@@ -18,7 +18,7 @@ export class BlacklistPage implements OnInit {
     constructor(private navCtrl: NavController,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
-                private colorGeneratorService: ColorGeneratorService
+                public colorGeneratorService: ColorGeneratorService
     ) {
     }
 

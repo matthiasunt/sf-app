@@ -4,8 +4,9 @@
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-            <div *ngIf="district">{{ getDistrictName(district) }}</div>
-            <div *ngIf="actualCity"> {{ actualCity }}</div>
+
+            <ng-container *ngIf="district">{{getDistrictName(district)}} ({{shuttles?.length}})</ng-container>
+            <ng-container *ngIf="actualCity">{{actualCity}} ({{shuttles?.length}})</ng-container>
             <ion-spinner color="light" *ngIf="coordinates && !actualCity && !noValidCityName && !outOfRange" name="dots"
                          duration="900"></ion-spinner>
         </ion-title>

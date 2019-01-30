@@ -20,10 +20,12 @@
                     <h2>{{ s?.name }}</h2>
                 </ion-text>
             </ion-label>
-            <ion-button (click)="removeFromBlacklist(s, $event)" color="secondary" slot="end" shape="round" size="small">
-                Unblock
-                <ion-icon name="checkmark-circle" slot="end"></ion-icon>
-            </ion-button>
+            <div (click)="removeFromBlacklist(s, $event)" class="add-remove-button-div">
+                <ion-button color="secondary" slot="end" shape="round" size="small">
+                    Unblock
+                    <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+                </ion-button>
+            </div>
         </ion-item>
     </ion-list>
     <p *ngIf="!blacklist || blacklist.length < 1" padding class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>

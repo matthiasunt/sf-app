@@ -41,6 +41,7 @@ export class GeoService {
             name: name,
             lang: lang,
         };
+        console.log(name);
         return this.getBeatifulCityName(name);
     }
 
