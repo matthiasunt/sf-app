@@ -4,7 +4,7 @@ ion-content {
 
 #gps-row {
   display: flex;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 
 #gps-button {
@@ -20,11 +20,42 @@ ion-content {
   vertical-align: middle;
 }
 
+.section-headline-small {
+  text-align: left;
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 #district-chip-row {
   text-align: center;
+
+  ion-chip {
+    height: 40px;
+    border-radius: 23px;
+    margin: 6px 3px;
+
+    ion-label {
+      padding: 0 4px;
+    }
+  }
+}
+
+#remaining-districts-chip-row {
+  text-align: center;
+  margin-top: 10px;
 }
 
 #gps-row {
-  margin-bottom: 20px;
+}
+
+#favorites-div {
+  margin-top: 15px;
+
+  ion-card {
+
+    width: 80%;
+    margin: 10px auto auto auto;
+  }
 }
 

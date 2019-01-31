@@ -18,8 +18,10 @@ export class FindPage implements OnInit {
     calledShuttle: any;
     districtsAvailable: boolean;
 
-    districts: District[];
-    private favorites: any[];
+    private allDistricts: District[];
+    recentDistricts: District[];
+    remainingDistricts: District[];
+    favorites: any[];
 
     lang: string;
 
@@ -33,6 +35,10 @@ export class FindPage implements OnInit {
                 private geo: GeoService,
                 private colorGenerator: ColorGeneratorService,
     ) {
+        this.allDistricts = [];
+        this.recentDistricts = [];
+        this.remainingDistricts = [];
+        this.favorites = [];
     }
 
     async ngOnInit(): Promise<void> {
@@ -42,17 +48,24 @@ export class FindPage implements OnInit {
         this.fetchFavorites();
     }
 
+    private async ionViewWillEnter() {
+        this.updateDistricts();
+    }
+
     private async fetchDistricts() {
-        const tempDistricts = await this.sfDb.getDistricts();
-        this.districts = tempDistricts;
-        const recentDistricts = await this.localData.getRecentDistricts();
-        recentDistricts.forEach((d) => {
-            const index = tempDistricts.findIndex((t) => t._id === d._id);
+        this.allDistricts = await this.sfDb.getDistricts();
+        this.updateDistricts();
+    }
+
+    private async updateDistricts() {
+        this.recentDistricts = await this.localData.getRecentDistricts();
+        this.remainingDistricts = this.allDistricts.slice();
+        this.recentDistricts.forEach((d) => {
+            const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
             if (index > -1) {
-                tempDistricts.splice(index, 1);
+                this.remainingDistricts.splice(index, 1);
             }
         });
-        this.districts = recentDistricts.concat(tempDistricts);
     }
 
     private async fetchFavorites() {
@@ -73,8 +86,8 @@ export class FindPage implements OnInit {
         if (district) {
             const colors = this.colorGenerator.getDistrictColors(district);
             return {
-                'background-color': colors[0],
-                'color': colors[1]
+                'background': colors[0],
+                'color': colors[0]
             };
         }
     }
