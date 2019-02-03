@@ -8,11 +8,16 @@ import {GeoService} from '../../services/geo/geo.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {District} from '../../models/district';
 import {ENV} from '@env';
+import {Shuttle} from '../../models/shuttle';
+import {Router} from '@angular/router';
+import {CallNumber} from '@ionic-native/call-number/ngx';
+import {DistrictsService} from '../../services/districts/districts.service';
 
 @Component({
     selector: 'app-find',
     templateUrl: 'find.page.html',
-    styleUrls: ['find.page.scss']
+    styleUrls: ['find.page.scss'],
+    providers: [CallNumber],
 })
 export class FindPage implements OnInit {
     calledShuttle: any;
@@ -26,14 +31,17 @@ export class FindPage implements OnInit {
     lang: string;
 
     constructor(private navCtrl: NavController,
+                private router: Router,
                 private http: HttpClientModule,
+                private callNumber: CallNumber,
                 private toastCtrl: ToastController,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
+                private districtsService: DistrictsService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private geo: GeoService,
-                private colorGenerator: ColorGeneratorService,
+                public colorGenerator: ColorGeneratorService,
     ) {
         this.allDistricts = [];
         this.recentDistricts = [];
@@ -44,12 +52,18 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        this.fetchDistricts();
-        this.fetchFavorites();
+        this.districtsService.getDistricts().subscribe((data) => {
+            this.allDistricts = data.rows.map(row => {
+                return row.doc;
+            });
+        });
+        // this.fetchDistricts();
+        // this.fetchFavorites();
     }
 
     private async ionViewWillEnter() {
-        this.updateDistricts();
+        // this.updateDistricts();
+        // this.fetchFavorites();
     }
 
     private async fetchDistricts() {
@@ -90,6 +104,24 @@ export class FindPage implements OnInit {
                 'color': colors[0]
             };
         }
+    }
+
+    private shuttleClicked(shuttle: Shuttle) {
+        const currentUrl = this.router.url;
+        this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
+        // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
+        //   this.presentReallyCallToast(shuttle);
+        // }
+        // else {
+        //   this.toCallPage(shuttle);
+        // }
+    }
+
+    private callClicked(shuttle: Shuttle, event) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.localData.addShuttleToHistory(shuttle);
+        this.callNumber.callNumber(shuttle.phone, true);
     }
 
     getDistrictColors(district: District) {

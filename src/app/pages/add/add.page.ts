@@ -7,6 +7,7 @@ import {ColorGeneratorService} from '../../services/color-generator/color-genera
 import {Shuttle} from '../../models/shuttle';
 import {getIndexOfShuttle} from '../../tools/sf-tools';
 import {Router} from '@angular/router';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 
 @Component({
     selector: 'app-add',
@@ -24,9 +25,10 @@ export class AddPage implements OnInit {
     private list: any[];
 
     constructor(private navCtrl: NavController,
-        private router: Router,
+                private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
+                private shuttlesService: ShuttlesService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private colorGenerator: ColorGeneratorService
@@ -39,8 +41,13 @@ export class AddPage implements OnInit {
     async ngOnInit() {
         const splitUrl = this.router.url.split('/');
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
-        this.allShuttles = await this.sfDb.getAllShuttles();
-        this.queryResult = this.allShuttles;
+        this.shuttlesService.getAllShuttles().subscribe((data) => {
+            this.allShuttles = data.rows.map((row) => {
+                return row.doc;
+            });
+            this.queryResult = this.allShuttles;
+        });
+
 
         if (this.addToFavorites) {
             this.list = await this.localData.getFavorites();
@@ -162,7 +169,7 @@ export class AddPage implements OnInit {
 
     private getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
-            return this.sfDb.getFormattedPhoneNumber(shuttle.phone);
+            return this.shuttlesService.getFormattedPhoneNumber(shuttle.phone);
         }
     }
 

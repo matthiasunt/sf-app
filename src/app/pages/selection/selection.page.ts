@@ -9,6 +9,8 @@ import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {DistrictsService} from '../../services/districts/districts.service';
 
 @Component({
     selector: 'app-selection',
@@ -41,22 +43,29 @@ export class SelectionPage implements OnInit {
                 private alertCtrl: AlertController,
                 private callNumber: CallNumber,
                 private translate: TranslateService,
+                private districtsService: DistrictsService,
+                private shuttlesService: ShuttlesService,
                 private sfDb: SfDbService,
                 public localData: LocalDataService,
                 private geo: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
-
+        this.districtColors = ['#99CC33', '#FFFFFF'];
     }
 
     async ngOnInit() {
-        this.districtColors = ['#99CC33', '#FFFFFF'];
         const districtId = this.activatedRoute.snapshot.paramMap.get('id');
         // Via District
         if (districtId) {
-            this.district = await this.sfDb.getDistrict(districtId);
-            this.districtColors = this.colorGenerator.getDistrictColors(this.district);
-            this.getShuttlesByDistrict(this.district);
+            this.districtsService.getDistrict(districtId).subscribe((district) => {
+                this.district = district;
+                this.districtColors = this.colorGenerator.getDistrictColors(this.district);
+            });
+            this.shuttlesService.getShuttlesByDistrict(districtId).subscribe((data) => {
+                this.shuttles = data.rows.map((row) => {
+                    return row.doc;
+                });
+            });
             // Via GPS
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
@@ -73,10 +82,12 @@ export class SelectionPage implements OnInit {
 
 
     getToolbarStyle() {
-        return {
-            'background-color': this.districtColors[0],
-            'color': this.districtColors[1]
-        };
+        if (this.districtColors && this.districtColors.length > 0) {
+            return {
+                'background-color': this.districtColors[0],
+                'color': this.districtColors[1]
+            };
+        }
     }
 
 
