@@ -4,6 +4,7 @@ import {FindPage} from './find.page';
 
 const routes: Routes = [
     {path: '', component: FindPage},
+    {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
     {
         path: 'district/:id',
         children: [

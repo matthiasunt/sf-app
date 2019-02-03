@@ -1,12 +1,15 @@
 <ion-header>
-    <ion-toolbar color="{{this.districtColors[0]}}" [ngStyle]="getToolbarStyle()">
+    <ion-toolbar color="{{districtColors[0]}}" [ngStyle]="getToolbarStyle()">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-
-            <ng-container *ngIf="district">{{getDistrictName(district)}} ({{shuttles?.length}})</ng-container>
-            <ng-container *ngIf="actualCity">{{actualCity}} ({{shuttles?.length}})</ng-container>
+            <ng-container *ngIf="district">{{getDistrictName(district)}}
+                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
+            </ng-container>
+            <ng-container *ngIf="actualCity">{{actualCity}}
+                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
+            </ng-container>
             <ion-spinner color="light" *ngIf="coordinates && !actualCity && !noValidCityName && !outOfRange" name="dots"
                          duration="900"></ion-spinner>
         </ion-title>
@@ -24,7 +27,7 @@
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ s?.name }}
-                        <!--<ion-icon name="checkmark-circle" slot="end" color="secondary"></ion-icon>-->
+                        <ion-icon *ngIf="s?.verified" name="checkmark-circle" slot="end" color="secondary"></ion-icon>
                     </h2>
                     <p>
                         <ion-badge *ngIf="coordinates && s?.city?.de && s?.city?.it" color="secondary">

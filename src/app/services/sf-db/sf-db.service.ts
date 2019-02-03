@@ -8,13 +8,14 @@ import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
 import {ENV} from '@env';
 import {getIndexOfShuttle, getIndexOfShuttleInList} from '../../tools/sf-tools';
+import {Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SfDbService {
 
-    private db: any;
+    public db: any;
     private remote: string;
     private details: any;
 
@@ -26,36 +27,26 @@ export class SfDbService {
     private blacklist: any[];
     private settings: any;
 
+    private syncSubject: Subject<boolean>;
+
     constructor(
         private http: HttpClient,
         private localData: LocalDataService,
         private geoService: GeoService,
     ) {
+
         this.db = new PouchDB('sf-public');
+        this.syncSubject = new Subject();
 
-        const options = {
-            auth: {
-                key: ENV.DB_USER,
-                password: ENV.DB_PASS
-            },
-            live: true,
-            retry: true
-        };
+        this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
+            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/sf-public';
 
-        this.remote = 'https://' + options.auth.key + ':'
-            + options.auth.password + '@' + ENV.DB_HOST + '/sf-public';
-
-        this.replicate();
-    }
-
-    private async replicate() {
         this.db.replicate.from(this.remote, {
-            live: true, retry: true
-        }).on('change', (info) => {
-            this.fetchEverything();
-        }).on('paused', (err) => {
-            this.fetchEverything();
-        }).on('denied', (err) => {
+            retry: true
+        }).on('complete', (info) => {
+            console.log(info);
+            this.syncSubject.next(true);
+            // this.fetchEverything();
         }).on('error', (err) => {
             console.error(err.code);
         });
@@ -63,31 +54,35 @@ export class SfDbService {
 
     public async fetchEverything() {
         const districts = await this.getDistricts();
-        this.getAllShuttles();
-        if (districts) {
-            districts.forEach((e) => {
-                this.getShuttlesByDistrict(e);
-            });
-        }
+        // this.getAllShuttles();
+        // if (districts) {
+        //     districts.forEach((e) => {
+        //         this.getShuttlesByDistrict(e);
+        //     });
+        // }
     }
 
     public async getDistricts(): Promise<District[]> {
         if (this.districts && this.districts.length > 7) {
             return Promise.resolve(this.districts);
         }
-        if (this.db) {
-            try {
-                const res = await this.db.query('districts/all', {include_docs: true});
-                this.districts = [];
-                res.rows.map((row) => this.districts.push(row.doc));
-                return this.districts;
-            } catch (err) {
-                console.log(err);
-                // return this.backupData.getDistricts();
+        this.syncSubject.subscribe({
+            async next(isDone) {
+                console.log(isDone);
+                if (isDone) {
+                    try {
+                        console.log(this.db);
+                        const res = await this.db.query('districts/all', {include_docs: true});
+                        this.districts = [];
+                        res.rows.map((row) => this.districts.push(row.doc));
+                        return this.districts;
+                    } catch (err) {
+                        console.error(err);
+                        // return this.backupData.getDistricts();
+                    }
+                }
             }
-        } else {
-            console.log('DB not defined');
-        }
+        });
     }
 
     public async getDistrict(id: string): Promise<District> {
@@ -254,17 +249,5 @@ export class SfDbService {
         // Sort randomly
         s.sort(() => Math.random() - 0.5);
         return favoritesInShuttles.concat(s);
-    }
-
-    public getFormattedPhoneNumber(phone: string): string {
-        let ret = '';
-        if (phone && phone.length > -1) {
-            if (phone.charAt(3) === '0') {
-                ret += phone.substring(3, 7) + ' ' + phone.substring(7, 13);
-            } else {
-                ret += phone.substring(3, 6) + ' ' + phone.substring(6);
-            }
-        }
-        return ret;
     }
 }

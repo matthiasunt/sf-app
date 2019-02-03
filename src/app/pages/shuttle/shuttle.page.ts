@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
-import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -23,7 +23,7 @@ export class ShuttlePage implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private localData: LocalDataService,
-                private sfDb: SfDbService,
+                private shuttlesService: ShuttlesService,
                 private colorGenerator: ColorGeneratorService,
     ) {
 
@@ -32,8 +32,11 @@ export class ShuttlePage implements OnInit {
     async ngOnInit() {
         this.shuttleColors = ['#99CC33', '#FFFFFF'];
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttle = await this.sfDb.getShuttle(shuttleId);
-        this.shuttleColors = this.colorGenerator.getShuttleColors(this.shuttle);
+        this.shuttlesService.getShuttle(shuttleId).subscribe((shuttle: Shuttle) => {
+            this.shuttle = shuttle;
+            this.shuttleColors = this.colorGenerator.getShuttleColors(shuttle);
+        });
+
     }
 
     callClicked(shuttle: Shuttle) {
@@ -55,7 +58,7 @@ export class ShuttlePage implements OnInit {
 
     private getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
-            return this.sfDb.getFormattedPhoneNumber(shuttle.phone);
+            return this.shuttlesService.getFormattedPhoneNumber(shuttle.phone);
         }
     }
 
