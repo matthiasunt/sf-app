@@ -1,6 +1,7 @@
 import {Injectable, NgZone} from '@angular/core';
 import {SfDbService} from '../sf-db/sf-db.service';
-import {from, Observable} from 'rxjs';
+import {BehaviorSubject, from, Observable} from 'rxjs';
+import {List} from 'immutable';
 import {District} from '../../models/district';
 
 @Injectable({
@@ -8,13 +9,28 @@ import {District} from '../../models/district';
 })
 export class DistrictsService {
 
+    private _districts: BehaviorSubject<List<District>> = new BehaviorSubject(List([]));
 
     constructor(private sfDbService: SfDbService) {
-
+        this.loadInitialData();
     }
 
-    public getDistricts(): Observable<any> {
-        return from(this.sfDbService.db.query('districts/all', {include_docs: true}));
+    get districts() {
+        return this._districts;
+    }
+
+    loadInitialData() {
+        from(this.sfDbService.db.query('districts/all', {include_docs: true}))
+            .subscribe(
+                (res: any) => {
+                    const districts: District[] = res.rows.map(row => {
+                        return row.doc;
+                    });
+                    this._districts.next(List(districts));
+                },
+                err => console.log('Error retrieving Districts')
+            );
+
     }
 
     public getDistrict(districtId: string): Observable<District> {

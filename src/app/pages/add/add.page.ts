@@ -41,10 +41,8 @@ export class AddPage implements OnInit {
     async ngOnInit() {
         const splitUrl = this.router.url.split('/');
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
-        this.shuttlesService.getAllShuttles().subscribe((data) => {
-            this.allShuttles = data.rows.map((row) => {
-                return row.doc;
-            });
+        this.shuttlesService.allShuttles.subscribe((data) => {
+            this.allShuttles = data.toArray();
             this.queryResult = this.allShuttles;
         });
 

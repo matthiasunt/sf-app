@@ -52,11 +52,11 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        this.districtsService.getDistricts().subscribe((data) => {
-            this.allDistricts = data.rows.map(row => {
-                return row.doc;
-            });
-        });
+        // this.districtsService.getDistricts().subscribe((data) => {
+        //     this.allDistricts = data.rows.map(row => {
+        //         return row.doc;
+        //     });
+        // });
         // this.fetchDistricts();
         // this.fetchFavorites();
     }
