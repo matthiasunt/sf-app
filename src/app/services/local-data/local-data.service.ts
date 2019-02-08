@@ -146,6 +146,10 @@ export class LocalDataService {
         return this.favorites ? this.favorites : await this.getItem('favorites');
     }
 
+    public isFavorite(shuttleId: string) {
+        return this.favorites.findIndex((e) => e._id === shuttleId) > -1;
+    }
+
     public async setFavorites(favorites: any) {
         this.favorites = favorites;
         await this.saveItem('favorites', this.favorites);

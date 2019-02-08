@@ -17,6 +17,7 @@ export class ShuttlePage implements OnInit {
 
     shuttle: Shuttle;
     shuttleColors: any;
+    isFavorite: boolean;
 
     constructor(private navCtrl: NavController,
                 private callNumber: CallNumber,
@@ -26,16 +27,19 @@ export class ShuttlePage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 private colorGenerator: ColorGeneratorService,
     ) {
-
+        this.shuttleColors = ['#99CC33', '#FFFFFF'];
+        this.isFavorite = false;
     }
 
     async ngOnInit() {
-        this.shuttleColors = ['#99CC33', '#FFFFFF'];
+
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttlesService.getShuttle(shuttleId).subscribe((shuttle: Shuttle) => {
             this.shuttle = shuttle;
             this.shuttleColors = this.colorGenerator.getShuttleColors(shuttle);
+            this.isFavorite = this.localData.isFavorite(shuttleId);
         });
+
 
     }
 
@@ -47,6 +51,14 @@ export class ShuttlePage implements OnInit {
     rateClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.navCtrl.navigateForward(currentUrl + '/rate/' + shuttle._id);
+    }
+
+    addToFavorites() {
+
+    }
+
+    removeFromFravorites() {
+
     }
 
     private getToolbarStyle() {

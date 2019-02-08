@@ -25,13 +25,13 @@
     <!--</div>-->
     <!--</ng-container>-->
     <!--<ng-container *ngIf="remainingDistricts && remainingDistricts.length > 0">-->
-        <div id="remaining-districts-chip-row">
-            <ion-chip (click)="districtClicked(d)" *ngFor="let d of allDistricts"
-                      [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
-                      [style.color]="colorGenerator.getDistrictColors(d)[1]">
-                <ion-label>{{getDistrictName(d)}}</ion-label>
-            </ion-chip>
-        </div>
+    <div id="remaining-districts-chip-row">
+        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districtsService.districts | async"
+                  [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
+                  [style.color]="colorGenerator.getDistrictColors(d)[1]">
+            <ion-label>{{getDistrictName(d)}}</ion-label>
+        </ion-chip>
+    </div>
     <!--</ng-container>-->
 
     <!--<ng-container *ngIf="districts && districts.length > 0">-->
