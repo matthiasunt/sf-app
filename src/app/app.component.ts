@@ -5,7 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {LocalDataService} from './services/local-data/local-data.service';
 import {AuthService} from './services/auth/auth.service';
 import {Plugins} from '@capacitor/core';
-import {ENV} from '@env';
+import {ShuttlesService} from './services/shuttles/shuttles.service';
 
 const {SplashScreen} = Plugins;
 const {Device} = Plugins;
@@ -22,6 +22,7 @@ export class AppComponent {
         private translate: TranslateService,
         private authService: AuthService,
         private localDataService: LocalDataService,
+        private shuttlesService: ShuttlesService,
     ) {
         this.initializeApp();
         this.setLang();

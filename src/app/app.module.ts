@@ -11,12 +11,12 @@ import {AppComponent} from './app.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
-
 @NgModule({
     declarations: [
         AppComponent,
     ],
-    entryComponents: [],
+    entryComponents: [
+    ],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

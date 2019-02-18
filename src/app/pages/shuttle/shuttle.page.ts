@@ -6,6 +6,7 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-shuttle',
@@ -34,11 +35,10 @@ export class ShuttlePage implements OnInit {
     async ngOnInit() {
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttlesService.getShuttle(shuttleId).subscribe((shuttle: Shuttle) => {
-            this.shuttle = shuttle;
-            this.shuttleColors = this.colorGenerator.getShuttleColors(shuttle);
-            this.isFavorite = this.localData.isFavorite(shuttleId);
-        });
+        this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+        this.shuttle = this.shuttle;
+        this.shuttleColors = this.colorGenerator.getShuttleColors(this.shuttle);
+        this.isFavorite = this.localData.isFavorite(shuttleId);
 
 
     }
@@ -70,7 +70,7 @@ export class ShuttlePage implements OnInit {
 
     private getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
-            return this.shuttlesService.getFormattedPhoneNumber(shuttle.phone);
+            return getFormattedPhoneNumber(shuttle.phone);
         }
     }
 

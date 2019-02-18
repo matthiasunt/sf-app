@@ -1,5 +1,16 @@
 import {Shuttle} from '../models/shuttle';
 
+export function getFormattedPhoneNumber(phone: string): string {
+    let ret = '';
+    if (phone && phone.length > -1) {
+        if (phone.charAt(3) === '0') {
+            ret += phone.substring(3, 7) + ' ' + phone.substring(7, 13);
+        } else {
+            ret += phone.substring(3, 6) + ' ' + phone.substring(6);
+        }
+    }
+    return ret;
+}
 
 export function getBeautifulTimeString(dateString: string, locale: string): string {
     return new Date(dateString).toLocaleString(locale,
