@@ -1,18 +1,20 @@
 import {Injectable, NgZone} from '@angular/core';
 import {SfDbService} from '../sf-db/sf-db.service';
-import {BehaviorSubject, from, Observable} from 'rxjs';
+import {BehaviorSubject, from} from 'rxjs';
 import {Shuttle} from '../../models/shuttle';
-import {List} from 'immutable';
+import {Map} from 'immutable';
 import {District} from '../../models/district';
+import {DistrictsService} from '../districts/districts.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ShuttlesService {
-    private _allShuttles: BehaviorSubject<List<Shuttle>> = new BehaviorSubject(List([]));
-    private _shuttlesByDistrict;
+    private _allShuttles: BehaviorSubject<Map<string, Shuttle>> = new BehaviorSubject(Map({}));
+    private _shuttlesByDistrict: Map<string, any> = Map({});
 
     constructor(private sfDbService: SfDbService,
+                private districtsService: DistrictsService,
                 public zone: NgZone) {
         this.loadInitialData();
     }
@@ -22,40 +24,40 @@ export class ShuttlesService {
         return this._allShuttles;
     }
 
-    loadInitialData() {
-        from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
+    public getShuttlesByDistrict(districtId: string) {
+        return this._shuttlesByDistrict.get(districtId);
+    }
+
+    private loadInitialData() {
+        console.log('Load init data');
+        // Fetch Shuttles by Districts
+        this.districtsService.districts.subscribe((districts) => {
+            districts.map((district) => {
+                this.sfDbService.db.query('shuttles/by_district', {
+                    include_docs: true, key: district._id
+                }).then((res) => {
                     const shuttles: Shuttle[] = res.rows.map(row => {
                         return row.doc;
                     });
-                    this._allShuttles.next(List(shuttles));
+                    this._shuttlesByDistrict = this._shuttlesByDistrict.set(district._id, shuttles);
+                });
+            });
+        });
+
+        from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+            .subscribe(
+                (res: any) => {
+                    let shuttles: Map<string, Shuttle> = Map();
+                    res.rows.map(row => {
+                        shuttles = shuttles.set(row.doc._id, row.doc);
+                    });
+                    this._allShuttles.next(shuttles);
                 },
                 err => console.log('Error retrieving Shuttles')
             );
-
     }
 
-    public getShuttlesByDistrict(districtId: string): Observable<any> {
-        return from(this.sfDbService.db.query('shuttles/by_district', {
-            include_docs: true, key: districtId
-        }));
-    }
-
-    public getShuttle(shuttleId: string): Observable<Shuttle> {
-        return from(this.sfDbService.db.get(shuttleId));
-    }
-
-
-    public getFormattedPhoneNumber(phone: string): string {
-        let ret = '';
-        if (phone && phone.length > -1) {
-            if (phone.charAt(3) === '0') {
-                ret += phone.substring(3, 7) + ' ' + phone.substring(7, 13);
-            } else {
-                ret += phone.substring(3, 6) + ' ' + phone.substring(6);
-            }
-        }
-        return ret;
+    public getShuttle(shuttleId: string): Shuttle {
+        return this._allShuttles.value.get(shuttleId);
     }
 }

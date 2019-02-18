@@ -61,11 +61,7 @@ export class SelectionPage implements OnInit {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
-            this.shuttlesService.getShuttlesByDistrict(districtId).subscribe((data) => {
-                this.shuttles = data.rows.map((row) => {
-                    return row.doc;
-                });
-            });
+            this.shuttles = this.shuttlesService.getShuttlesByDistrict(districtId);
             // Via GPS
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
