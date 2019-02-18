@@ -12,7 +12,7 @@ import {Rating} from '../../models/rating';
 export class UserDbService {
 
     private userId: string;
-    private db: any;
+    public db: any;
     private remote: string;
     private details: any;
     private history: any[];
@@ -24,13 +24,13 @@ export class UserDbService {
                 private geoService: GeoService) {
 
         this.db = new PouchDB('sf-private');
-        this.userId = this.getUserId();
     }
 
     init(details) {
+        this.userId = details.user_id;
         this.details = details;
         this.remote = details.userDBs.sf;
-
+        console.log(details);
         this.db.sync(this.remote, {live: true, retry: true})
             .on('denied', (err) => {
                 console.log(err);
@@ -53,7 +53,8 @@ export class UserDbService {
     public async putCall(shuttle: Shuttle,
                          start: Date,
                          end: Date,
-                         district: District,) {
+                         district: District,
+    ) {
 
 
         let position;
@@ -128,25 +129,6 @@ export class UserDbService {
         } else {
             console.log('uid not defined');
         }
-    }
-
-
-    private getDocsFromView(query: string): Promise<any[]> {
-        return new Promise((resolve) => {
-            this.db.query(query, {
-                include_docs: true,
-            }).then((res) => {
-                const ret = [];
-                res.rows.map((row) => {
-                    if (!row.doc.cleared) {
-                        ret.push(row.doc);
-                    }
-                });
-                resolve(ret);
-            }).catch((err) => {
-                console.error(err);
-            });
-        });
     }
 
     public async removeDoc(doc: any) {

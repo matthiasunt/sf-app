@@ -10,7 +10,7 @@
         <ion-item *virtualItem="let e" lines="full" (click)="shuttleClicked(e.shuttle)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon
-                        [colors]="colorGeneratorService.getShuttleColors(e.shuttle)"></app-sf-shuttle-icon>
+                        [color]="colorGeneratorService.getShuttleColor(e.shuttle)"></app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>

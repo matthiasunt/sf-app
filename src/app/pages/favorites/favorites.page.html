@@ -6,7 +6,7 @@
     <ion-list *ngIf="favorites?.length > 0">
         <ion-item *ngFor="let s of favorites" lines="full" (click)="shuttleClicked(s)">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [colors]="colorGeneratorService.getShuttleColors(s)">
+                <app-sf-shuttle-icon [color]="colorGeneratorService.getShuttleColor(s)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label>{{ s?.name }}</ion-label>

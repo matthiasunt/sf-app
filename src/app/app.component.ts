@@ -35,7 +35,7 @@ export class AppComponent {
             if (info.platform !== 'web') {
                 SplashScreen.hide();
             }
-            // this.authService.doSoftLogin();
+            this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(false);
             this.statusBar.styleLightContent();
         });

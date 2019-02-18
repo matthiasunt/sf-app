@@ -21,7 +21,7 @@
         <ion-item lines="full" *virtualItem="let s" approxItemHeight="59px" (click)="shuttleClicked(s)"
                   [class.alreadyCalledElement]="localData.shuttleCalledLately(s)">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [colors]="colorGenerator.getShuttleColors(s)">
+                <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(s)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>

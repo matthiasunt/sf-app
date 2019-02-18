@@ -12,6 +12,7 @@ import {Shuttle} from '../../models/shuttle';
 import {Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {DistrictsService} from '../../services/districts/districts.service';
+import {getContrastColor} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-find',
@@ -23,7 +24,8 @@ export class FindPage implements OnInit {
     calledShuttle: any;
     districtsAvailable: boolean;
 
-    private allDistricts: District[];
+    private allDistricts;
+    private districts: District[];
     recentDistricts: District[];
     remainingDistricts: District[];
     favorites: any[];
@@ -37,8 +39,7 @@ export class FindPage implements OnInit {
                 private toastCtrl: ToastController,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
-                private districtsService: DistrictsService,
-                private sfDb: SfDbService,
+                public districtsService: DistrictsService,
                 private localData: LocalDataService,
                 private geo: GeoService,
                 public colorGenerator: ColorGeneratorService,
@@ -52,38 +53,29 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
-        // this.districtsService.getDistricts().subscribe((data) => {
-        //     this.allDistricts = data.rows.map(row => {
-        //         return row.doc;
-        //     });
-        // });
-        // this.fetchDistricts();
-        // this.fetchFavorites();
+        this.allDistricts = this.districtsService.districts.subscribe((districts) => {
+            console.log(districts);
+            this.allDistricts = districts.toArray();
+        });
+        this.favorites = await this.localData.getFavorites();
     }
 
     private async ionViewWillEnter() {
-        // this.updateDistricts();
-        // this.fetchFavorites();
-    }
-
-    private async fetchDistricts() {
-        this.allDistricts = await this.sfDb.getDistricts();
         this.updateDistricts();
+        this.favorites = await this.localData.getFavorites();
     }
 
     private async updateDistricts() {
         this.recentDistricts = await this.localData.getRecentDistricts();
-        this.remainingDistricts = this.allDistricts.slice();
-        this.recentDistricts.forEach((d) => {
-            const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
-            if (index > -1) {
-                this.remainingDistricts.splice(index, 1);
-            }
-        });
-    }
-
-    private async fetchFavorites() {
-        this.favorites = await this.localData.getFavorites();
+        if (this.allDistricts && this.allDistricts.length > 0) {
+            this.remainingDistricts = this.allDistricts.slice();
+            this.recentDistricts.forEach((d) => {
+                const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
+                if (index > -1) {
+                    this.remainingDistricts.splice(index, 1);
+                }
+            });
+        }
     }
 
     private async districtClicked(district) {
@@ -251,5 +243,8 @@ export class FindPage implements OnInit {
         }
     }
 
+    getContrastColor(shuttleColor: string) {
+        return getContrastColor(shuttleColor);
+    }
 }
 

@@ -5,16 +5,15 @@ import {Injectable} from '@angular/core';
 })
 export class ColorGeneratorService {
 
-    public getShuttleColors(shuttle: any): string[] {
-        const ret: string[] = [];
+    public getShuttleColor(shuttle: any): string {
+        let ret = '';
         if (shuttle && shuttle.name && shuttle.phone) {
-            let tone = this.djb2(shuttle.phone, 13);
+            let tone = this.djb2(shuttle.phone, 14);
             const color = this.djb2(shuttle.name, 15);
             if (tone === 9) {
                 tone++;
             }
-            ret[0] = this.DEFAULT_PALETTE[tone][color];
-            ret[1] = this.DEFAULT_PALETTE[tone + 1][color];
+            ret = this.DEFAULT_PALETTE[tone][color];
         } else {
             console.log('Shuttle not defined');
         }
@@ -63,18 +62,6 @@ export class ColorGeneratorService {
             c = (c * 32) + c + char; /* hash * 33 + c */
         }
         return Math.abs(c) % max;
-    }
-
-    public getContrastColor(hexcolor: string): string {
-        if (hexcolor && hexcolor.length > 0) {
-            const r = parseInt(hexcolor.substr(1, 2), 16);
-            const g = parseInt(hexcolor.substr(3, 2), 16);
-            const b = parseInt(hexcolor.substr(5, 2), 16);
-            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-            return (yiq >= 160) ? 'black' : 'white';
-        } else {
-            return 'black';
-        }
     }
 
     private DEFAULT_PALETTE = [
