@@ -88,7 +88,7 @@ export class SelectionPage implements OnInit {
 
 
     private async getShuttlesByDistrict(d: District) {
-        const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(this.district);
+        const shuttlesByDistrict = await this.shuttlesService.getShuttlesByDistrict(this.district._id);
         this.shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
     }
 

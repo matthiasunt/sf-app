@@ -3,7 +3,6 @@ import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from} from 'rxjs';
 import {Shuttle} from '../../models/shuttle';
 import {Map} from 'immutable';
-import {District} from '../../models/district';
 import {DistrictsService} from '../districts/districts.service';
 
 @Injectable({

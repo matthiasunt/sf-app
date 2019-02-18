@@ -5,6 +5,8 @@ import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {NgForm} from '@angular/forms';
 import {NavController} from '@ionic/angular';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {getContrastColor} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-rate',
@@ -15,7 +17,7 @@ export class RatePage implements OnInit {
 
 
     shuttle: Shuttle;
-    shuttleColors: string[];
+    shuttleColor: string;
 
     rating = {
         service: 0,
@@ -27,21 +29,21 @@ export class RatePage implements OnInit {
 
     constructor(private navCtrl: NavController,
                 private activatedRoute: ActivatedRoute,
-                private sfDb: SfDbService,
+                private shuttlesService: ShuttlesService,
                 private colorGenerator: ColorGeneratorService) {
     }
 
     async ngOnInit() {
-        this.shuttleColors = ['#99CC33', '#FFFFFF'];
+        this.shuttleColor = '#99CC33';
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttle = await this.sfDb.getShuttle(shuttleId);
-        this.shuttleColors = this.colorGenerator.getShuttleColors(this.shuttle);
+        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+        this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
     }
 
     private getToolbarStyle() {
         return {
-            'background-color': this.shuttleColors[0],
-            'color': this.colorGenerator.getContrastColor(this.shuttleColors[0])
+            'background-color': this.shuttleColor[0],
+            'color': getContrastColor(this.shuttleColor[0])
         };
     }
 

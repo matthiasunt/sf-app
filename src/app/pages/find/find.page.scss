@@ -27,6 +27,10 @@ ion-content {
   vertical-align: middle;
 }
 
+ion-chip > ion-avatar {
+  background-color: white;
+}
+
 #district-chip-row {
   text-align: center;
 

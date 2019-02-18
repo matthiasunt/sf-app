@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="{{shuttleColors[1]}}" [ngStyle]="getToolbarStyle()">
+    <ion-toolbar color="{{shuttleColor}}" [ngStyle]="getToolbarStyle()">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
@@ -23,7 +23,7 @@
 
     <div id="avatar-div">
         <ion-avatar>
-            <app-sf-shuttle-icon [colors]="colorGenerator.getShuttleColors(shuttle)">
+            <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
             </app-sf-shuttle-icon>
         </ion-avatar>
     </div>

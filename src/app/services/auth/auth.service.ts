@@ -4,7 +4,7 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
 import {LocalDataService} from '../local-data/local-data.service';
 import {UserDbService} from '../user-db/user-db.service';
-import {ENV} from '../../../environments/environment';
+import {ENV} from '@env';
 
 const hash = require('hash.js');
 
@@ -79,13 +79,11 @@ export class AuthService {
     }
 
     public login(credentials: any): Promise<any> {
-        console.log(credentials);
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         return new Promise((resolve) => {
             this.http.post(this.url + '/auth/login', JSON.stringify(credentials), {headers: this.headers})
                 .subscribe(res => {
-                    console.log('Logged in');
                     this.userDb.init(res);
                     resolve(res);
                 }, (err) => {

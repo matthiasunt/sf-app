@@ -6,7 +6,7 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
-import {getFormattedPhoneNumber} from '../../tools/sf-tools';
+import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-shuttle',
@@ -17,7 +17,7 @@ import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 export class ShuttlePage implements OnInit {
 
     shuttle: Shuttle;
-    shuttleColors: any;
+    shuttleColor: string;
     isFavorite: boolean;
 
     constructor(private navCtrl: NavController,
@@ -28,7 +28,7 @@ export class ShuttlePage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 private colorGenerator: ColorGeneratorService,
     ) {
-        this.shuttleColors = ['#99CC33', '#FFFFFF'];
+        this.shuttleColor = '#99CC33';
         this.isFavorite = false;
     }
 
@@ -37,7 +37,7 @@ export class ShuttlePage implements OnInit {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         this.shuttle = this.shuttle;
-        this.shuttleColors = this.colorGenerator.getShuttleColors(this.shuttle);
+        this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.localData.isFavorite(shuttleId);
 
 
@@ -63,8 +63,8 @@ export class ShuttlePage implements OnInit {
 
     private getToolbarStyle() {
         return {
-            'background-color': this.shuttleColors[0],
-            'color': this.colorGenerator.getContrastColor(this.shuttleColors[0])
+            'background-color': this.shuttleColor,
+            'color': getContrastColor(this.shuttleColor)
         };
     }
 

@@ -159,9 +159,9 @@ export class AddPage implements OnInit {
         }
     }
 
-    private getShuttleColors(shuttle: Shuttle) {
+    private getShuttleColor(shuttle: Shuttle) {
         if (shuttle) {
-            return this.colorGenerator.getShuttleColors(shuttle);
+            return this.colorGenerator.getShuttleColor(shuttle);
         }
     }
 
@@ -192,5 +192,4 @@ export class AddPage implements OnInit {
             });
         }
     }
-
 }

@@ -16,7 +16,7 @@
     <ion-virtual-scroll [items]="queryResult">
         <ion-item *virtualItem="let shuttle" (click)="shuttleClicked(shuttle)" lines="full">
             <ion-thumbnail slot="start" *ngIf="shuttle">
-                <app-sf-shuttle-icon [colors]="getShuttleColors(shuttle)">
+                <app-sf-shuttle-icon [color]="getShuttleColor(shuttle)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
