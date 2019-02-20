@@ -16,7 +16,7 @@ export class AuthService {
     private url: string;
     private headers: HttpHeaders;
     private deviceInfo: any;
-
+    private userId: string;
     constructor(
         private http: HttpClient,
         private uniqueDeviceID: UniqueDeviceID,
@@ -37,6 +37,7 @@ export class AuthService {
         uuid = 'browser123';
         // }
         const id = this.hashString(uuid);
+        this.userId = id;
         const user = {
             username: id,
             email: id + '@shuttlefinder.it',
@@ -52,6 +53,10 @@ export class AuthService {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    public getUserId() {
+        return this.userId;
     }
 
     private hashString(str): string {

@@ -79,57 +79,6 @@ export class UserDbService {
         }
     }
 
-    public async putRating(ratingData, shuttle: Shuttle) {
-        try {
-            await this.db.put({
-                _id: 'rating-' + this.userId + '-' + new Date().toISOString(),
-                type: 'call',
-                shuttle_id: shuttle._id,
-                public: true,
-                user_id: this.userId,
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    public putFavorite(shuttle: Shuttle) {
-        this.putListElement(shuttle, 'favorite');
-    }
-
-
-    public putBlacklisted(shuttle: Shuttle) {
-        this.putListElement(shuttle, 'blacklisted');
-    }
-
-
-    private putListElement(shuttle: Shuttle, listType: string) {
-        if (this.userId) {
-            const doc = {
-                _id: listType + '-' + this.userId + '-' + shuttle._id,
-                type: listType,
-                user_id: this.userId,
-                shuttle_id: shuttle._id,
-                date: new Date(),
-                public: false,
-            };
-            this.db.put(doc)
-                .then((res) => {
-                    console.log(res);
-                }).catch((err) => {
-                if (err.status === 409) {
-                    this.db.get(doc._id).then((res) => {
-                        this.db.put(res).catch(err => console.error(err));
-                    }).catch(err => console.error(err));
-                } else {
-                    console.error(err);
-                }
-            });
-        } else {
-            console.log('uid not defined');
-        }
-    }
-
     public async removeDoc(doc: any) {
         const docFromDb = await this.db.get(doc._id);
         return this.db.remove(docFromDb._id, docFromDb._rev);
