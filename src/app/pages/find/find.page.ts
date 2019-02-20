@@ -58,7 +58,6 @@ export class FindPage implements OnInit {
         console.log(ENV.message);
         this.lang = await this.localData.getLang();
         this.allDistricts = this.districtsService.districts.subscribe((districts) => {
-            console.log(districts);
             this.allDistricts = districts.toArray();
         });
     }

@@ -12,14 +12,14 @@
 <!-- TODO: Confirmed badge, Services, Add to Favorites, report Shuttle -->
 <ion-content padding *ngIf="shuttle">
 
-    <!--<ion-fab vertical="top" horizontal="end" slot="fixed">-->
-        <!--<ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">-->
-            <!--<ion-icon name="heart"></ion-icon>-->
-        <!--</ion-fab-button>-->
-        <!--<ion-fab-button *ngIf="isFavorite" (click)="removeFromFravorites()" color="danger" type="button">-->
-            <!--<ion-icon name="trash"></ion-icon>-->
-        <!--</ion-fab-button>-->
-    <!--</ion-fab>-->
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">
+            <ion-icon name="heart"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button *ngIf="isFavorite" (click)="removeFromFravorites()" color="danger" type="button">
+            <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 
     <div id="avatar-div">
         <ion-avatar>

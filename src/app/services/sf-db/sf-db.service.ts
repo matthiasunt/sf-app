@@ -71,26 +71,7 @@ export class SfDbService {
         return this.buildRankingFromLocation(ret);
     }
 
-    private buildRankingFromLocation(arr: any[]): any {
-        const a1: string[] = [];
-        const a2: string[] = [];
-        const a3: string[] = [];
-        arr.forEach((e) => {
-            if (e.distance) {
-                if (e.distance < 12000) {
-                    a1.push(e);
-                } else if (e.distance < 25000) {
-                    a2.push(e);
-                } else {
-                    a3.push(e);
-                }
-            }
-        });
-        a1.sort(() => Math.random() - 0.5);
-        a2.sort(() => Math.random() - 0.5);
-        a3.sort(() => Math.random() - 0.5);
-        return a1.concat(a2.concat(a3));
-    }
+
 
 
     private buildRankingFromLocationInRanges(arr: any[], radius: number): any {

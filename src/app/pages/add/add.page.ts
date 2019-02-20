@@ -11,6 +11,7 @@ import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 import {ListsService} from '../../services/lists/lists.service';
 import {ElementType, ListElement} from '../../models/list-element';
 import {List} from 'immutable';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
     selector: 'app-add',
@@ -32,6 +33,7 @@ export class AddPage implements OnInit {
                 private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
+                private authService: AuthService,
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
                 private sfDb: SfDbService,
@@ -76,12 +78,13 @@ export class AddPage implements OnInit {
         const listToCheck: List<ListElement> = this.addToFavorites ?
             this.blacklist :
             this.favorites;
+        const type = this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted;
         const listElement: ListElement = {
-            _id: `abc-${shuttle._id}`,
-            userId: 'abc',
+            _id: `${this.authService.getUserId()}-${type}-${shuttle._id}`,
+            userId: this.authService.getUserId(),
             shuttleId: shuttle._id,
             date: new Date().toISOString(),
-            type: this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted
+            type: type
         };
         if (listToCheck.findIndex(e => e.shuttleId === shuttle._id) < 0) {
             this.listsService.addListElement(listElement);

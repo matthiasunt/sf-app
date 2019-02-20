@@ -10,6 +10,7 @@ import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {CallsService} from '../../services/calls/calls.service';
 import {ElementType, ListElement} from '../../models/list-element';
 import {ListsService} from '../../services/lists/lists.service';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -27,6 +28,7 @@ export class ShuttlePage implements OnInit {
                 private callNumber: CallNumber,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
+                private authService: AuthService,
                 private localData: LocalDataService,
                 private listsService: ListsService,
                 private shuttlesService: ShuttlesService,
@@ -43,7 +45,8 @@ export class ShuttlePage implements OnInit {
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         this.shuttle = this.shuttle;
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
-        this.isFavorite = this.listsService.favorites.getValue().find
+        this.isFavorite = this.listsService.favorites.getValue()
+            .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
 
 
     }
@@ -59,19 +62,22 @@ export class ShuttlePage implements OnInit {
     }
 
     addToFavorites() {
+        const type = ElementType.Favorite;
         const listElement: ListElement = {
-            _id: `abc-${this.shuttle._id}`,
-            userId: 'abc',
+            _id: `${this.authService.getUserId()}-${type}-${this.shuttle._id}`,
+            userId: this.authService.getUserId(),
             shuttleId: this.shuttle._id,
             date: new Date().toISOString(),
-            type: ElementType.Favorite
+            type: type
         };
         this.listsService.addListElement(listElement);
+        this.isFavorite = true;
     }
 
     removeFromFravorites() {
         this.listsService.removeListElementByShuttleId(this.shuttle._id,
             this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
+        this.isFavorite = false;
     }
 
     private getToolbarStyle() {

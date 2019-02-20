@@ -11,6 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 import {DistrictsService} from '../../services/districts/districts.service';
+import {ListsService} from '../../services/lists/lists.service';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-selection',
@@ -31,7 +33,7 @@ export class SelectionPage implements OnInit {
     outOfRange: boolean;
     queryResult: any[];
 
-    shuttles: Shuttle[];
+    shuttles: List<Shuttle>;
     lang: string;
     shuttlesInRanges: any;
 
@@ -45,7 +47,7 @@ export class SelectionPage implements OnInit {
                 private translate: TranslateService,
                 private districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
-                private sfDb: SfDbService,
+                private listsService: ListsService,
                 public localData: LocalDataService,
                 private geo: GeoService,
                 public colorGenerator: ColorGeneratorService,
@@ -61,7 +63,11 @@ export class SelectionPage implements OnInit {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
-            this.shuttles = this.shuttlesService.getShuttlesByDistrict(districtId);
+            const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
+            this.shuttles = shuttlesTemp;
+            // this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+            //     this.listsService.favorites.getValue(),
+            //     this.listsService.blacklist.getValue());
             // Via GPS
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
@@ -86,12 +92,6 @@ export class SelectionPage implements OnInit {
         }
     }
 
-
-    private async getShuttlesByDistrict(d: District) {
-        const shuttlesByDistrict = this.shuttlesService.getShuttlesByDistrict(this.district._id);
-        this.shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-    }
-
     private async getShuttlesByCoords() {
         let l;
         switch (this.lang) {
@@ -103,22 +103,22 @@ export class SelectionPage implements OnInit {
         }
 
         // this.actualPos = this.util.isDevice() ? await this.geo.getPosition() : this.geo.getRandomPosition();
-        this.pos = this.geo.getRandomPosition();
-
-        let shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.pos, 25000);
-        if (shuttlesTemp.length < 3) {
-            shuttlesTemp = await this.sfDb.getShuttlesFromLocation(this.pos, 30000);
-        }
-        if (!shuttlesTemp || shuttlesTemp.length < 1) {
-            this.outOfRange = true;
-        } else {
-            this.shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
-        }
-        this.actualCity = await this.geo.getGeocodedCityName(this.pos, l);
-
-        if (!this.actualCity || this.actualCity.length < 2) {
-            this.noValidCityName = true;
-        }
+        // this.pos = this.geo.getRandomPosition();
+        //
+        // let shuttlesTemp = await this.shuttlesService.getShuttlesFromLocation(this.pos, 25000);
+        // if (shuttlesTemp.length < 3) {
+        //     shuttlesTemp = await this.shuttlesService.getShuttlesFromLocation(this.pos, 30000);
+        // }
+        // if (!shuttlesTemp || shuttlesTemp.length < 1) {
+        //     this.outOfRange = true;
+        // } else {
+        //     this.shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
+        // }
+        // this.actualCity = await this.geo.getGeocodedCityName(this.pos, l);
+        //
+        // if (!this.actualCity || this.actualCity.length < 2) {
+        //     this.noValidCityName = true;
+        // }
     }
 
     private shuttleClicked(shuttle: Shuttle) {
