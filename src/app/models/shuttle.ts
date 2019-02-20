@@ -1,24 +1,25 @@
+import {Address} from './address';
+
 export interface Shuttle {
-  _id: string;
-  name: string;
-  phone: string;
-  districts: string[];
-  first_name: string;
-  last_name: string;
-  street: string;
-  zip: string;
-  city: {
-    de: string,
-    it: string
-  };
-  location: {
-    latitude: string,
-    longitude: string
-  };
-  email: string;
-  website: string;
-  facebook: string;
-  description: string;
-  confirmed: boolean;
+    _id: string;
+    name: string;
+    phone: string;
+    phoneSecondary?: string;
+    info?: string;
+    email?: string;
+    facebookUrl?: string;
+    websiteUrl?: string;
+    numberOfVehicles?: number;
+    customColor?: string;
+
+    address?: Address;
+    coordinates?: Coordinates;
+
+    lastName?: string;
+    firstName?: string;
+
+    districtIds: string[];
+    verified?: boolean;
+
 
 }

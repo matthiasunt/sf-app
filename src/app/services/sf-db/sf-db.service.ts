@@ -58,8 +58,8 @@ export class SfDbService {
         if (position) {
             const allShuttles = await this.getAllShuttles();
             for (const s of allShuttles) {
-                if (s && s.location) {
-                    const distance = this.geoService.getDistance(position, s.location);
+                if (s && s.coordinates) {
+                    const distance = this.geoService.getDistance(position, s.coordinates);
                     if (distance && distance < radius) {
                         const shuttle: any = s;
                         shuttle.distance = distance;
@@ -153,27 +153,28 @@ export class SfDbService {
     }
 
     public async getMergedShuttles(shuttles: Shuttle[]): Promise<Shuttle[]> {
-        const s = shuttles.slice(0);
-        // Save and remove favorites
-        const favorites = await this.localData.getFavorites();
-        const favoritesInShuttles: Shuttle[] = [];
-        for (const fShuttle of favorites) {
-            const index = getIndexOfShuttle(s, fShuttle);
-            if (index !== -1) {
-                favoritesInShuttles.push(s[index]);
-                s.splice(index, 1);
-            }
-        }
-        // Remove blacklisted
-        const blacklist = await this.localData.getBlacklist();
-        for (const bShuttle of blacklist) {
-            const index = getIndexOfShuttle(s, bShuttle);
-            if (index !== -1) {
-                s.splice(index, 1);
-            }
-        }
-        // Sort randomly
-        s.sort(() => Math.random() - 0.5);
-        return favoritesInShuttles.concat(s);
+        // const s = shuttles.slice(0);
+        // // Save and remove favorites
+        // const favorites = await this.localData.getFavorites();
+        // const favoritesInShuttles: Shuttle[] = [];
+        // for (const fShuttle of favorites) {
+        //     const index = getIndexOfShuttle(s, fShuttle);
+        //     if (index !== -1) {
+        //         favoritesInShuttles.push(s[index]);
+        //         s.splice(index, 1);
+        //     }
+        // }
+        // // Remove blacklisted
+        // const blacklist = await this.localData.getBlacklist();
+        // for (const bShuttle of blacklist) {
+        //     const index = getIndexOfShuttle(s, bShuttle);
+        //     if (index !== -1) {
+        //         s.splice(index, 1);
+        //     }
+        // }
+        // // Sort randomly
+        // s.sort(() => Math.random() - 0.5);
+        // return favoritesInShuttles.concat(s);
+        return shuttles.slice(0);
     }
 }

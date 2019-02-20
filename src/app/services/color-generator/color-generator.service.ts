@@ -14,8 +14,6 @@ export class ColorGeneratorService {
                 tone++;
             }
             ret = this.DEFAULT_PALETTE[tone][color];
-        } else {
-            console.log('Shuttle not defined');
         }
         return ret;
     }

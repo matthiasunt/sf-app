@@ -16,8 +16,7 @@ export class LocalDataService {
     private lang: string;
     private recentDistricts: District[];
     private history: any[];
-    private favorites: any[];
-    private blacklist: any[];
+
     private numberOfCalls: number;
     private directMode: boolean;
 
@@ -44,10 +43,7 @@ export class LocalDataService {
         this.recentDistricts = val ? val : [];
         val = await this.getItem('history');
         this.history = val ? val : [];
-        val = await this.storage.get('favorites');
-        this.favorites = val ? val : [];
-        val = await this.storage.get('blacklist');
-        this.blacklist = val ? val : [];
+
         val = await this.storage.get('numberOfCalls');
         this.numberOfCalls = val ? val : 0;
     }
@@ -140,75 +136,6 @@ export class LocalDataService {
             }
         }
         return false;
-    }
-
-    public async getFavorites(): Promise<Shuttle[]> {
-        return this.favorites ? this.favorites : await this.getItem('favorites');
-    }
-
-    public isFavorite(shuttleId: string) {
-        return this.favorites.findIndex((e) => e._id === shuttleId) > -1;
-    }
-
-    public async setFavorites(favorites: any) {
-        this.favorites = favorites;
-        await this.saveItem('favorites', this.favorites);
-    }
-
-    public async addFavorite(shuttle: any): Promise<boolean> {
-        if (this.favorites.findIndex(e => e._id === shuttle._id) < 0) {
-            this.userDb.putFavorite(shuttle);
-            this.favorites.push(shuttle);
-            console.log(this.favorites);
-            await this.saveItem('favorites', this.favorites);
-            return true;
-        } else {
-            console.log('Favorite already added');
-            return false;
-        }
-    }
-
-    public async removeFavorite(shuttle: any): Promise<boolean> {
-        const index = this.favorites.findIndex(e => e._id === shuttle._id);
-        if (index > -1) {
-            this.favorites.splice(index, 1);
-            await this.saveItem('favorites', this.favorites);
-            if (this.userDb.getUserId()) {
-                this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'favorite' + '-' + shuttle._id});
-            } else {
-                console.log('UserDB: uid not defined');
-            }
-            return true;
-        } else {
-            console.log('Local: shuttle not found');
-            return false;
-        }
-    }
-
-    public async getBlacklist(): Promise<Shuttle[]> {
-        return this.blacklist ? this.blacklist : await this.getItem('blacklist');
-    }
-
-    public async addBlacklisted(shuttle: any) {
-        const index = this.blacklist.findIndex(e => e._id === shuttle._id);
-        if (index < 0) {
-            this.userDb.putBlacklisted(shuttle);
-            this.blacklist.push(shuttle);
-            await this.saveItem('blacklist', this.blacklist);
-        }
-    }
-
-    public async removeBlacklisted(shuttle: any) {
-        const index = this.blacklist.findIndex(e => e._id === shuttle._id);
-        if (index > -1) {
-            this.blacklist.splice(index, 1);
-            await this.saveItem('blacklist', this.blacklist);
-            if (this.userDb.getUserId()) {
-                this.userDb.removeDoc({_id: this.userDb.getUserId() + '-' + 'blacklisted' + '-' + shuttle._id});
-            } else {
-                console.log('uid not defined');
-            }
-        }
     }
 
 

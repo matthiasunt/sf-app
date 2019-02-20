@@ -5,9 +5,12 @@ import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Shuttle} from '../../models/shuttle';
-import {getFormattedPhoneNumber, getIndexOfShuttle} from '../../tools/sf-tools';
+import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {Router} from '@angular/router';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {ListsService} from '../../services/lists/lists.service';
+import {ElementType, ListElement} from '../../models/list-element';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-add',
@@ -19,139 +22,79 @@ export class AddPage implements OnInit {
     addToFavorites: boolean;
     private unavailable: boolean;
     private noConnection: boolean;
-    allShuttles;
-    queryResult: any[];
-    private resultIndex: number;
-    private list: any[];
+    allShuttles: Shuttle[] = [];
+    queryResult: Shuttle[] = [];
+    resultIndex: number;
+    favorites: List<ListElement> = List([]);
+    blacklist: List<ListElement> = List([]);
 
     constructor(private navCtrl: NavController,
                 private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private shuttlesService: ShuttlesService,
+                public listsService: ListsService,
                 private sfDb: SfDbService,
                 private localData: LocalDataService,
                 private colorGenerator: ColorGeneratorService
     ) {
-        this.list = [];
-        this.allShuttles = [];
-        this.queryResult = [];
     }
 
     async ngOnInit() {
         const splitUrl = this.router.url.split('/');
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
         this.shuttlesService.allShuttles.subscribe((data) => {
-            this.allShuttles = data.toIndexedSeq().toArray();
+            this.allShuttles = data.toList().toArray();
             this.queryResult = this.allShuttles;
         });
 
-
-        if (this.addToFavorites) {
-            this.list = await this.localData.getFavorites();
-        } else {
-            this.list = await this.localData.getBlacklist();
-        }
+        this.listsService.favorites.subscribe((list) => {
+            this.favorites = list;
+        });
+        this.listsService.blacklist.subscribe((list) => {
+            this.blacklist = list;
+        });
         this.resultIndex = 0;
     }
 
-    shuttleClicked(shuttle: Shuttle) {
+    public shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.router.navigate([currentUrl + '/shuttle/' + shuttle._id]);
     }
 
-    private removeFromList(shuttle: Shuttle, event) {
+    public removeFromList(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        const index = getIndexOfShuttle(this.list, shuttle);
-        if (index !== -1) {
-            if (this.addToFavorites) {
-                this.localData.removeFavorite(shuttle);
-            } else {
-                this.localData.removeBlacklisted(shuttle);
-            }
-        } else {
-            console.log('shuttle not found');
-        }
+        this.listsService.removeListElementByShuttleId(shuttle._id,
+            this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
     }
 
 
     private async addToList(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        const listToCheck = this.addToFavorites ?
-            await this.localData.getBlacklist() :
-            await this.localData.getFavorites();
-        if (listToCheck.findIndex(e => e._id === shuttle._id) < 0) {
-            if (this.addToFavorites) {
-                this.localData.addFavorite(shuttle);
-            } else {
-                this.localData.addBlacklisted(shuttle);
-            }
+        const listToCheck: List<ListElement> = this.addToFavorites ?
+            this.blacklist :
+            this.favorites;
+        const listElement: ListElement = {
+            _id: `abc-${shuttle._id}`,
+            userId: 'abc',
+            shuttleId: shuttle._id,
+            date: new Date().toISOString(),
+            type: this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted
+        };
+        if (listToCheck.findIndex(e => e.shuttleId === shuttle._id) < 0) {
+            this.listsService.addListElement(listElement);
         } else {
-            // Shuttle already in other list
-            const title = this.addToFavorites ?
-                this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_TITLE') :
-                this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_TITLE');
-
-            const subTitle = this.addToFavorites ?
-                this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_SUBTITLE') :
-                this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_SUBTITLE');
-
-            const alert = await this.alertCtrl.create({
-                header: title,
-                subHeader: subTitle,
-                buttons: [{
-                    text: this.translate.instant('OK'),
-                    handler: () => {
-                    }
-                }]
-            });
-            await alert.present();
+            this.presentAlreadyAddedInOtherListAlert();
         }
     }
 
 
-    private async presentAlreadyAddedInOtherListAlert() {
-        const title = this.addToFavorites ?
-            this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_TITLE') :
-            this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_TITLE');
-
-        const subTitle = this.addToFavorites ?
-            this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_SUBTITLE') :
-            this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_SUBTITLE');
-
-        const alert = await this.alertCtrl.create({
-            header: title,
-            subHeader: subTitle,
-            buttons: [{
-                text: this.translate.instant('OK'),
-                handler: () => {
-                }
-            }]
-        });
-        await alert.present();
-    }
-
-
-    private async getCityName(shuttle: Shuttle): Promise<string> {
-        if (shuttle &&
-            shuttle.city
-            && shuttle.city.de && shuttle.city.it) {
-            switch (await this.localData.getLang()) {
-                case 'de_st':
-                    return shuttle.city.de;
-                case 'it':
-                    return shuttle.city.it;
-                default:
-                    return shuttle.city.de;
-            }
-        }
-    }
-
-    private isInList(shuttle: Shuttle): boolean {
+    public isInList(shuttle: Shuttle): boolean {
+        const list = this.addToFavorites ? this.favorites : this.blacklist;
         if (shuttle) {
-            if (this.list.findIndex(e => e._id === shuttle._id) < 0) {
+            if (list.findIndex(e => e.shuttleId === shuttle._id) < 0) {
                 return false;
             } else {
                 return true;
@@ -159,19 +102,19 @@ export class AddPage implements OnInit {
         }
     }
 
-    private getShuttleColor(shuttle: Shuttle) {
+    public getShuttleColor(shuttle: Shuttle) {
         if (shuttle) {
             return this.colorGenerator.getShuttleColor(shuttle);
         }
     }
 
-    private getPhoneNumber(shuttle: Shuttle) {
+    public getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
             return getFormattedPhoneNumber(shuttle.phone);
         }
     }
 
-    private getQueryResult(ev: any) {
+    public getQueryResult(ev: any) {
         this.queryResult = this.allShuttles;
         const val = ev.target.value;
         if (!val) {
@@ -191,5 +134,27 @@ export class AddPage implements OnInit {
                         .indexOf(val.toLowerCase().replace(/\s/g, '')) > -1);
             });
         }
+    }
+
+    /* Alerts */
+    private async presentAlreadyAddedInOtherListAlert() {
+        const title = this.addToFavorites ?
+            this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_TITLE') :
+            this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_TITLE');
+
+        const subTitle = this.addToFavorites ?
+            this.translate.instant('add.msg.ALREADY_ADDED_IN_BLACKLIST_SUBTITLE') :
+            this.translate.instant('add.msg.ALREADY_ADDED_IN_FAVORITES_SUBTITLE');
+
+        const alert = await this.alertCtrl.create({
+            header: title,
+            subHeader: subTitle,
+            buttons: [{
+                text: this.translate.instant('OK'),
+                handler: () => {
+                }
+            }]
+        });
+        await alert.present();
     }
 }

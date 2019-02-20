@@ -4,7 +4,6 @@ import PouchDB from 'pouchdb';
 import {GeoService} from '../geo/geo.service';
 import {Shuttle} from '../../models/shuttle';
 import {District} from '../../models/district';
-import {Rating} from '../../models/rating';
 
 @Injectable({
     providedIn: 'root'
@@ -80,7 +79,7 @@ export class UserDbService {
         }
     }
 
-    public async putRating(ratingData: Rating, shuttle: Shuttle) {
+    public async putRating(ratingData, shuttle: Shuttle) {
         try {
             await this.db.put({
                 _id: 'rating-' + this.userId + '-' + new Date().toISOString(),

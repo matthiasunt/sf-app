@@ -7,6 +7,9 @@ import {LocalDataService} from '../../services/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
+import {CallsService} from '../../services/calls/calls.service';
+import {ElementType, ListElement} from '../../models/list-element';
+import {ListsService} from '../../services/lists/lists.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -25,7 +28,9 @@ export class ShuttlePage implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private localData: LocalDataService,
+                private listsService: ListsService,
                 private shuttlesService: ShuttlesService,
+                public callsService: CallsService,
                 private colorGenerator: ColorGeneratorService,
     ) {
         this.shuttleColor = '#99CC33';
@@ -38,13 +43,13 @@ export class ShuttlePage implements OnInit {
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         this.shuttle = this.shuttle;
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
-        this.isFavorite = this.localData.isFavorite(shuttleId);
+        this.isFavorite = this.listsService.favorites.getValue().find
 
 
     }
 
     callClicked(shuttle: Shuttle) {
-        this.localData.addShuttleToHistory(shuttle);
+        // this.localData.addShuttleToHistory(shuttle);
         this.callNumber.callNumber(shuttle.phone, true);
     }
 
@@ -54,11 +59,19 @@ export class ShuttlePage implements OnInit {
     }
 
     addToFavorites() {
-
+        const listElement: ListElement = {
+            _id: `abc-${this.shuttle._id}`,
+            userId: 'abc',
+            shuttleId: this.shuttle._id,
+            date: new Date().toISOString(),
+            type: ElementType.Favorite
+        };
+        this.listsService.addListElement(listElement);
     }
 
     removeFromFravorites() {
-
+        this.listsService.removeListElementByShuttleId(this.shuttle._id,
+            this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
     }
 
     private getToolbarStyle() {
@@ -71,6 +84,21 @@ export class ShuttlePage implements OnInit {
     private getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
             return getFormattedPhoneNumber(shuttle.phone);
+        }
+    }
+
+    public async getLocalityName(): Promise<string> {
+        if (this.shuttle && this.shuttle.address && this.shuttle.address.locality) {
+            const locality = this.shuttle.address.locality;
+            switch (await this.localData.getLang()) {
+                case 'de_st':
+                    return locality.de;
+                case 'it':
+                    return locality.it;
+                default:
+                    return locality.de;
+            }
+
         }
     }
 

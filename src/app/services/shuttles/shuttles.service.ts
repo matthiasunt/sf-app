@@ -2,8 +2,9 @@ import {Injectable, NgZone} from '@angular/core';
 import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from} from 'rxjs';
 import {Shuttle} from '../../models/shuttle';
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import {DistrictsService} from '../districts/districts.service';
+import {ListElement} from '../../models/list-element';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,14 @@ export class ShuttlesService {
 
     public getShuttlesByDistrict(districtId: string) {
         return this._shuttlesByDistrict.get(districtId);
+    }
+
+    public getShuttlesFromList(list: List<ListElement>) {
+        let shuttles: List<Shuttle> = List();
+        list.map((element) => {
+            shuttles = shuttles.push(this._allShuttles.getValue().get(element.shuttleId));
+        });
+        return shuttles;
     }
 
     private loadInitialData() {

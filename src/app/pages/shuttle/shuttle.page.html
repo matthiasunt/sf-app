@@ -12,14 +12,14 @@
 <!-- TODO: Confirmed badge, Services, Add to Favorites, report Shuttle -->
 <ion-content padding *ngIf="shuttle">
 
-    <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">
-            <ion-icon name="heart"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button *ngIf="isFavorite" (click)="removeFromFravorites()" color="danger" type="button">
-            <ion-icon name="trash"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+    <!--<ion-fab vertical="top" horizontal="end" slot="fixed">-->
+        <!--<ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">-->
+            <!--<ion-icon name="heart"></ion-icon>-->
+        <!--</ion-fab-button>-->
+        <!--<ion-fab-button *ngIf="isFavorite" (click)="removeFromFravorites()" color="danger" type="button">-->
+            <!--<ion-icon name="trash"></ion-icon>-->
+        <!--</ion-fab-button>-->
+    <!--</ion-fab>-->
 
     <div id="avatar-div">
         <ion-avatar>
@@ -48,9 +48,7 @@
         </ion-card-header>
     </ion-card>
 
-    <ion-card *ngIf="shuttle?.email
-    && shuttle?.first_name && shuttle?.last_name
-    && shuttle?.street && shuttle?.zip && shuttle?.city.de && shuttle?.city.it">
+    <ion-card *ngIf="shuttle?.address?.locality?.de && shuttle?.address?.locality?.it">
         <!--<ion-item lines="full" type="button">-->
         <!--<ion-icon name="mail" slot="start"></ion-icon>-->
         <!--<ion-label text-wrap>-->
@@ -67,7 +65,7 @@
         <ion-item lines="full">
             <ion-icon name="pin" slot="start"></ion-icon>
             <ion-label text-wrap>
-                <ion-text>{{shuttle?.city.de}}</ion-text>
+                <ion-text>{{getLocalityName()}}</ion-text>
             </ion-label>
         </ion-item>
     </ion-card>

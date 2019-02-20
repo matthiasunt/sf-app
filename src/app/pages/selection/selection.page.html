@@ -30,13 +30,14 @@
                         <ion-icon *ngIf="s?.verified" name="checkmark-circle" slot="end" color="secondary"></ion-icon>
                     </h2>
                     <p>
-                        <ion-badge *ngIf="coordinates && s?.city?.de && s?.city?.it" color="secondary">
-                            {{ getCityName(s) }}
+                        <ion-badge *ngIf="coordinates && s?.address?.locality?.de && s?.address?.locality?.it"
+                                   color="secondary">
+                            {{ getLocalityName(s) }}
                         </ion-badge>
-                        <ion-badge *ngIf="!coordinates && s?.city?.de && s?.city?.it
+                        <ion-badge *ngIf="!coordinates && s?.address?.locality?.de && s?.address?.locality?.it
                                    && districtColors" [style.background-color]="districtColors[0]"
                                    [style.color]="districtColors[1]">
-                            {{ getCityName(s) }}
+                            {{ getLocalityName(s) }}
                         </ion-badge>
                     </p>
                 </ion-text>
