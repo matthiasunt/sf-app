@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {SfDbService} from '../../services/sf-db/sf-db.service';
-import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Shuttle} from '../../models/shuttle';
-import {Router} from '@angular/router';
 import {NavController} from '@ionic/angular';
+import {ListsService} from '../../services/lists/lists.service';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {ElementType} from '../../models/list-element';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-favorites',
@@ -13,33 +14,27 @@ import {NavController} from '@ionic/angular';
 })
 export class FavoritesPage implements OnInit {
 
-    favorites: Shuttle[];
-
     constructor(private navCtrl: NavController,
-                private sfDb: SfDbService,
-                private localData: LocalDataService,
+                public shuttlesService: ShuttlesService,
+                public listsService: ListsService,
                 public colorGeneratorService: ColorGeneratorService
     ) {
-        this.favorites = [];
     }
 
     async ngOnInit() {
-        this.favorites = await this.localData.getFavorites();
     }
 
-    shuttleClicked(shuttle: Shuttle) {
+    public shuttleClicked(shuttle: Shuttle) {
         this.navCtrl.navigateForward('tabs/favorites/shuttle/' + shuttle._id);
     }
 
-    addClicked() {
+    public addClicked() {
         this.navCtrl.navigateForward('tabs/favorites/add');
     }
 
-    private async removeFavorite(element: any, event) {
+    private async removeFavorite(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        // this.favorites.splice(this.favorites.findIndex(e => e._id === element._id), 1);
-        await this.localData.removeFavorite(element);
-        console.log(this.favorites);
+        this.listsService.removeListElementByShuttleId(shuttle._id, ElementType.Favorite);
     }
 }

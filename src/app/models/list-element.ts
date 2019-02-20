@@ -1,11 +1,12 @@
 export interface ListElement {
+    _id: string;
+    type: ElementType;
     userId: string;
     shuttleId: string;
     date: string;
-    elementType: ElementType;
 }
 
 export enum ElementType {
-    Favorite,
-    Blacklisted,
+    Favorite = 'favorite',
+    Blacklisted = 'blacklisted'
 }

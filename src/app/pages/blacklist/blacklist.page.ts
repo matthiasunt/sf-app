@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavController} from '@ionic/angular';
-
-import {SfDbService} from '../../services/sf-db/sf-db.service';
-import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Shuttle} from '../../models/shuttle';
+import {ListsService} from '../../services/lists/lists.service';
+import {ElementType} from '../../models/list-element';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 
 @Component({
     selector: 'app-blacklist',
@@ -13,32 +13,29 @@ import {Shuttle} from '../../models/shuttle';
 })
 export class BlacklistPage implements OnInit {
 
-    blacklist: Shuttle[];
-
     constructor(private navCtrl: NavController,
-                private sfDb: SfDbService,
-                private localData: LocalDataService,
+                public listsService: ListsService,
+                public shuttlesService: ShuttlesService,
                 public colorGeneratorService: ColorGeneratorService
     ) {
     }
 
     async ngOnInit() {
-        this.blacklist = await this.localData.getBlacklist();
     }
 
-    blockClicked() {
+    public blockClicked() {
         this.navCtrl.navigateForward('settings/blacklist/add');
     }
 
-    private shuttleClicked(shuttle: Shuttle) {
+    public shuttleClicked(shuttle: Shuttle) {
         this.navCtrl.navigateForward('settings/blacklist/shuttle/' + shuttle._id);
     }
 
 
-    removeFromBlacklist(element: any, event) {
+    removeFromBlacklist(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.localData.removeBlacklisted(element);
+        this.listsService.removeListElementByShuttleId(shuttle._id, ElementType.Blacklisted);
     }
 
 

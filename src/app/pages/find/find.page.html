@@ -14,7 +14,7 @@
             </ion-button>
         </ion-col>
     </ion-row>
-    <div>
+    <div id="district-chip-row">
         <ion-chip (click)="districtClicked(d)" *ngFor="let d of districtsService.districts | async"
                   [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
                   [style.color]="colorGenerator.getDistrictColors(d)[1]">
@@ -46,25 +46,22 @@
     <!--{{getDistrictName(d)}}-->
     <!--</ion-button>-->
     <hr>
-    <ng-container *ngIf="favorites?.length > 0">
         <div id="favorites-div">
-            <ion-row>
-                <ion-col>
-                    <ion-label color="primary" class="section-headline-small">
-                        Favorites
-                    </ion-label>
-                </ion-col>
-            </ion-row>
-
-            <ion-chip *ngFor="let s of favorites" (click)="shuttleClicked(s)"
-                      [style.background-color]="colorGenerator.getShuttleColor(s)"
-                      [style.color]="getContrastColor(colorGenerator.getShuttleColor(s))">
-                <ion-avatar>
-                    <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(s)">
+            <!--<ion-row>-->
+                <!--<ion-col>-->
+                    <!--<ion-label color="primary" class="section-headline-small">-->
+                        <!--Favoriten-->
+                    <!--</ion-label>-->
+                <!--</ion-col>-->
+            <!--</ion-row>-->
+            <ion-chip *ngFor="let shuttle of shuttlesService.getShuttlesFromList(listsService.favorites.getValue())" (click)="shuttleClicked(shuttle)"
+                      [style.background-color]="colorGenerator.getShuttleColor(shuttle)"
+                      [style.color]="getContrastColor(colorGenerator.getShuttleColor(shuttle))">
+                <ion-avatar *ngIf="shuttle">
+                    <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
                     </app-sf-shuttle-icon>
                 </ion-avatar>
-                <ion-label>{{ s?.name }}</ion-label>
+                <ion-label>{{ shuttle?.name }}</ion-label>
             </ion-chip>
         </div>
-    </ng-container>
 </ion-content>

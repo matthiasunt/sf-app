@@ -13,6 +13,8 @@ import {Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {DistrictsService} from '../../services/districts/districts.service';
 import {getContrastColor} from '../../tools/sf-tools';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {ListsService} from '../../services/lists/lists.service';
 
 @Component({
     selector: 'app-find',
@@ -40,6 +42,8 @@ export class FindPage implements OnInit {
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 public districtsService: DistrictsService,
+                private shuttlesService: ShuttlesService,
+                public listsService: ListsService,
                 private localData: LocalDataService,
                 private geo: GeoService,
                 public colorGenerator: ColorGeneratorService,
@@ -57,12 +61,10 @@ export class FindPage implements OnInit {
             console.log(districts);
             this.allDistricts = districts.toArray();
         });
-        this.favorites = await this.localData.getFavorites();
     }
 
     private async ionViewWillEnter() {
         this.updateDistricts();
-        this.favorites = await this.localData.getFavorites();
     }
 
     private async updateDistricts() {

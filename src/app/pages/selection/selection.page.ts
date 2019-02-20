@@ -88,7 +88,7 @@ export class SelectionPage implements OnInit {
 
 
     private async getShuttlesByDistrict(d: District) {
-        const shuttlesByDistrict = await this.shuttlesService.getShuttlesByDistrict(this.district._id);
+        const shuttlesByDistrict = this.shuttlesService.getShuttlesByDistrict(this.district._id);
         this.shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
     }
 
@@ -180,16 +180,18 @@ export class SelectionPage implements OnInit {
     }
 
 
-    private getCityName(shuttle: Shuttle): string {
-        if (shuttle &&
-            shuttle.city
-            && shuttle.city.de && shuttle.city.it) {
-            switch (this.lang) {
+    public async getLocalityName(shuttle: Shuttle): Promise<string> {
+        if (shuttle && shuttle.address && shuttle.address.locality) {
+            const locality = shuttle.address.locality;
+            switch (await this.localData.getLang()) {
+                case 'de_st':
+                    return locality.de;
                 case 'it':
-                    return this.geo.getBeatifulCityName(shuttle.city.it);
+                    return locality.it;
                 default:
-                    return this.geo.getBeatifulCityName(shuttle.city.de);
+                    return locality.de;
             }
+
         }
     }
 

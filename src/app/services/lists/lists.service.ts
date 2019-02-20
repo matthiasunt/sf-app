@@ -2,14 +2,15 @@ import {Injectable} from '@angular/core';
 import {UserDbService} from '../user-db/user-db.service';
 import {BehaviorSubject, from} from 'rxjs';
 import {List} from 'immutable';
-import {ElementType, ListElement} from '../../models/new-models/list-element';
+import {ElementType, ListElement} from '../../models/list-element';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ListsService {
-    private _favorites: BehaviorSubject<List<ListElement>>;
-    private _blacklist: BehaviorSubject<List<ListElement>>;
+    private _favorites: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
+    private _blacklist: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
+
 
     constructor(private userDbService: UserDbService) {
         this.loadInitialData();
@@ -49,6 +50,7 @@ export class ListsService {
                     });
                     switch (type) {
                         case ElementType.Favorite:
+                            console.log(list);
                             this._favorites.next(list);
                             break;
                         case ElementType.Blacklisted:
@@ -56,39 +58,43 @@ export class ListsService {
                     }
 
                 },
-                err => console.log('Error retrieving Blacklist')
+                (err) => {
+                    console.error(err);
+                }
             );
     }
 
-    public addListElement(listElement: ListElement) {
-        const obs = this.userDbService.db.put(listElement);
-        obs.subscribe(
-            res => {
-                switch (listElement.elementType) {
-                    case ElementType.Favorite:
-                        this._favorites.next(this._favorites.getValue().push(listElement));
-                        break;
-                    case ElementType.Blacklisted:
-                        this._blacklist.next(this._blacklist.getValue().push(listElement));
-                        break;
-                }
-            });
-        return obs;
+    public async addListElement(listElement: ListElement) {
+        try {
+            const res = await this.userDbService.db.put(listElement);
+            console.log(res);
+            if (listElement.type === ElementType.Favorite) {
+                this._favorites.next(this._favorites.getValue().push(listElement));
+            } else {
+                this._blacklist.next(this._blacklist.getValue().push(listElement));
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    public deleteListElement(listElement: ListElement) {
-        // let obs: Observable = this.userDbService.db.put(deleted);
-        //
-        // obs.subscribe(
-        //     res => {
-        //         let todos: List<Todo> = this._todos.getValue();
-        //         let index = todos.findIndex((todo) => todo.id === deleted.id);
-        //         this._todos.next(todos.delete(index));
-        //
-        //     }
-        // );
-        //
-        // return obs;
+    public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {
+        const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
+        console.log(list);
+        const listElement = list.find((element) => element.shuttleId === shuttleId);
+        console.log(listElement);
+        try {
+            const res = await this.userDbService.removeDoc(listElement);
+            console.log(res);
+            const index = list.findIndex((element) => element.shuttleId === shuttleId);
+            if (type === ElementType.Favorite) {
+                this._favorites.next(this._favorites.getValue().delete(index));
+            } else {
+                this._blacklist.next(this._blacklist.getValue().delete(index));
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     public hideListElement(listElement: ListElement) {
