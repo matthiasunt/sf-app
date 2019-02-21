@@ -11,6 +11,7 @@ import {CallsService} from '../../services/calls/calls.service';
 import {ElementType, ListElement} from '../../models/list-element';
 import {ListsService} from '../../services/lists/lists.service';
 import {AuthService} from '../../services/auth/auth.service';
+import {CallOriginName} from '../../models/call';
 
 @Component({
     selector: 'app-shuttle',
@@ -42,6 +43,7 @@ export class ShuttlePage implements OnInit {
     async ngOnInit() {
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
+        console.log(this.router.url);
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         this.shuttle = this.shuttle;
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
@@ -52,7 +54,10 @@ export class ShuttlePage implements OnInit {
     }
 
     callClicked(shuttle: Shuttle) {
-        this.callsService.handleCall(shuttle._id, 'shuttle-page');
+        this.callsService.handleCall(shuttle._id, {
+            name: CallOriginName.District,
+            value: '',
+        });
         this.callNumber.callNumber(shuttle.phone, true);
     }
 
