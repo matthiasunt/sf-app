@@ -4,12 +4,13 @@ import {LocalDataService} from '../../services/local-data/local-data.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
-import {getBeautifulTimeString, getBeautifulDateString} from '../../tools/sf-tools';
+import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
 import {AlertController, NavController} from '@ionic/angular';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {CallsService} from '../../services/calls/calls.service';
 import {HistoryElement} from '../../models/history-element';
 import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {CallOriginName} from '../../models/call';
 
 @Component({
     selector: 'app-history',
@@ -54,7 +55,10 @@ export class HistoryPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.callsService.handleCall(shuttle._id, 'history');
+        this.callsService.handleCall(shuttle._id, {
+            name: CallOriginName.History,
+            value: ''
+        });
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

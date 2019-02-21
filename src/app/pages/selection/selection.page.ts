@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {LocalDataService} from '../../services/local-data/local-data.service';
-import {SfDbService} from '../../services/sf-db/sf-db.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {GeoService} from '../../services/geo/geo.service';
 import {AlertController, NavController} from '@ionic/angular';
@@ -15,6 +14,7 @@ import {ListsService} from '../../services/lists/lists.service';
 import {List} from 'immutable';
 import {CallsService} from '../../services/calls/calls.service';
 import {AuthService} from '../../services/auth/auth.service';
+import {CallOriginName} from '../../models/call';
 
 @Component({
     selector: 'app-selection',
@@ -139,7 +139,10 @@ export class SelectionPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.callsService.handleCall(shuttle._id, this.district._id);
+        this.callsService.handleCall(shuttle._id, {
+            name: CallOriginName.District,
+            value: this.district._id
+        });
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

@@ -4,6 +4,8 @@ import {Plugins} from '@capacitor/core';
 import {map} from 'rxjs/operators';
 import {getDistance} from 'geolib';
 import {ENV} from '@env';
+import {NativeGeocoder, NativeGeocoderOptions, NativeGeocoderReverseResult} from '@ionic-native/native-geocoder/ngx';
+import {DeviceService} from '../device/device.service';
 
 const {Geolocation} = Plugins;
 
@@ -17,8 +19,19 @@ export class GeoService {
 
     constructor(
         private http: HttpClient,
+        private deviceService: DeviceService,
+        private nativeGeocoder: NativeGeocoder,
     ) {
         this.getCurrentPosition();
+        if (this.deviceService.getPlatform() !== 'web') {
+            const options: NativeGeocoderOptions = {
+                useLocale: true,
+                maxResults: 5
+            };
+            this.nativeGeocoder.reverseGeocode(52.5072095, 13.1452818, options)
+                .then((result: NativeGeocoderReverseResult[]) => console.log(JSON.stringify(result[0])))
+                .catch((error: any) => console.log(error));
+        }
     }
 
     private async getCurrentPosition() {
