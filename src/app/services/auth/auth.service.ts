@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
-import {LocalDataService} from '../local-data/local-data.service';
-import {UserDbService} from '../user-db/user-db.service';
+import {LocalDataService} from '../data/local-data/local-data.service';
+import {UserDbService} from '../data/user-db/user-db.service';
 import {ENV} from '@env';
 
 const hash = require('hash.js');

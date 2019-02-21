@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
-import {GeoService} from '../geo/geo.service';
-import {Shuttle} from '../../models/shuttle';
-import {District} from '../../models/district';
+import {GeoService} from '../../geo/geo.service';
 
 @Injectable({
     providedIn: 'root'
@@ -47,36 +45,6 @@ export class UserDbService {
         this.db.destroy().then(() => {
             console.log('database removed');
         });
-    }
-
-    public async putCall(shuttle: Shuttle,
-                         start: Date,
-                         end: Date,
-                         district: District,
-    ) {
-
-
-        let position;
-        // if (await this.diagnostic.isLocationAuthorized() && await this.diagnostic.isLocationEnabled()) {
-        //     position = await this.geoService.getPosition();
-        // }
-
-        if (this.userId && shuttle && start && end) {
-            this.db.put({
-                _id: 'call-' + this.userId + '-' + start.getTime(),
-                type: 'call',
-                shuttle: shuttle._id,
-                public: false,
-                user_id: this.userId,
-                start_time: start,
-                end_time: end,
-                location: position,
-                district: district,
-            }).then(res => console.log(res))
-                .catch((err) => console.error(err));
-        } else {
-            console.log('Error putting call');
-        }
     }
 
     public async removeDoc(doc: any) {

@@ -19,17 +19,17 @@
                 </ion-text>
             </ion-label>
             <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
-                <!--<ion-button color="tertiary" slot="end">-->
-                    <!--Rate-->
-                    <!--<ion-icon name="star" slot="end"></ion-icon>-->
-                <!--</ion-button>-->
+            <!--<ion-button color="tertiary" slot="end">-->
+            <!--Rate-->
+            <!--<ion-icon name="star" slot="end"></ion-icon>-->
+            <!--</ion-button>-->
             <!--</div>-->
             <ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"
                       size="large" color="secondary"></ion-icon>
         </ion-item>
     </ion-virtual-scroll>
 
-    <p *ngIf="" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
+    <p *ngIf="history.length < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
 
     <!--<ion-fab *ngIf="history?.length > 0" right middle>-->
     <!--<button ion-fab (click)="clearHistoryAlert()" color="dark">-->

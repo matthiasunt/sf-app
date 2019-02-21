@@ -24,6 +24,13 @@ export class DeviceService {
         }
     }
 
+    public isDevice(): boolean {
+        if (this.getPlatform() === 'android' || this.getPlatform() === 'ios') {
+            return true;
+        }
+        return false;
+    }
+
     private async fetchInfo() {
         this.info = await Device.getInfo();
     }

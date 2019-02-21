@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Shuttle} from '../../models/shuttle';
 import {NavController} from '@ionic/angular';
-import {ListsService} from '../../services/lists/lists.service';
-import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {ListsService} from '../../services/data/lists/lists.service';
+import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {ElementType} from '../../models/list-element';
 import {List} from 'immutable';
 

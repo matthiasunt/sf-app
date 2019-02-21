@@ -1,12 +1,12 @@
 import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject, from} from 'rxjs';
 import {List, Map} from 'immutable';
-import {Call, CallOrigin, CallOriginName} from '../../models/call';
+import {Call, CallOrigin, CallOriginName} from '../../../models/call';
 import {UserDbService} from '../user-db/user-db.service';
-import {AuthService} from '../auth/auth.service';
-import {HistoryElement} from '../../models/history-element';
+import {AuthService} from '../../auth/auth.service';
+import {HistoryElement} from '../../../models/history-element';
 import {ShuttlesService} from '../shuttles/shuttles.service';
-import {DeviceService} from '../device/device.service';
+import {DeviceService} from '../../device/device.service';
 import {Platform} from '@ionic/angular';
 
 @Injectable({
@@ -43,7 +43,7 @@ export class CallsService {
 
     public handleCall(shuttleId: string, origin: CallOrigin) {
 
-        if (!(this.deviceService.getInfo().platform === 'web')) {
+        if (this.deviceService.isDevice()) {
             let start: Date;
             let end: Date;
 

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {UserDbService} from '../user-db/user-db.service';
 import {BehaviorSubject, from} from 'rxjs';
 import {List} from 'immutable';
-import {ElementType, ListElement} from '../../models/list-element';
+import {ElementType, ListElement} from '../../../models/list-element';
 
 @Injectable({
     providedIn: 'root'

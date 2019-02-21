@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {District} from '../../models/district';
+import {District} from '../../../models/district';
 import {Platform} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {UserDbService} from '../user-db/user-db.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Shuttle} from '../../models/shuttle';
+import {Shuttle} from '../../../models/shuttle';
 
 @Injectable({
     providedIn: 'root'
@@ -103,23 +103,6 @@ export class LocalDataService {
             return this.translate.getBrowserLang();
         }
         return this.lang;
-    }
-
-    // TODO: Add History Item Type
-    public async addShuttleToHistory(shuttle: any) {
-        this.incrementNumberOfCalls();
-        this.history.push({shuttle: shuttle, date: new Date()});
-        await this.saveItem('history', this.history);
-    }
-
-    public async getHistory(): Promise<any[]> {
-        const ret = this.history ? this.history : await this.getItem('history');
-        return ret ? ret : [];
-    }
-
-    public clearShuttleHistory() {
-        this.storage.remove('history');
-        this.history = null;
     }
 
     public shuttleCalledLately(shuttle: any): boolean {
