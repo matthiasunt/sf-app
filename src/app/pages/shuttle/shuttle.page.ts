@@ -3,13 +3,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Shuttle} from '../../models/shuttle';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {CallNumber} from '@ionic-native/call-number/ngx';
-import {LocalDataService} from '../../services/local-data/local-data.service';
+import {LocalDataService} from '../../services/data/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
-import {ShuttlesService} from '../../services/shuttles/shuttles.service';
+import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
-import {CallsService} from '../../services/calls/calls.service';
+import {CallsService} from '../../services/data/calls/calls.service';
 import {ElementType, ListElement} from '../../models/list-element';
-import {ListsService} from '../../services/lists/lists.service';
+import {ListsService} from '../../services/data/lists/lists.service';
 import {AuthService} from '../../services/auth/auth.service';
 import {CallOriginName} from '../../models/call';
 

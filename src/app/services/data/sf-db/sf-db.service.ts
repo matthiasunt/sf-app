@@ -3,11 +3,11 @@ import {HttpClient} from '@angular/common/http';
 
 import PouchDB from 'pouchdb';
 import {LocalDataService} from '../local-data/local-data.service';
-import {GeoService} from '../geo/geo.service';
-import {District} from '../../models/district';
-import {Shuttle} from '../../models/shuttle';
+import {GeoService} from '../../geo/geo.service';
+import {District} from '../../../models/district';
+import {Shuttle} from '../../../models/shuttle';
 import {ENV} from '@env';
-import {getIndexOfShuttle, getIndexOfShuttleInList} from '../../tools/sf-tools';
+import {getIndexOfShuttle, getIndexOfShuttleInList} from '../../../tools/sf-tools';
 import {Subject} from 'rxjs';
 
 @Injectable({
@@ -116,47 +116,4 @@ export class SfDbService {
         }
     }
 
-
-    public async getAllShuttles(): Promise<Shuttle[]> {
-        if (this.allShuttles && this.allShuttles[0] !== undefined) {
-            return this.allShuttles;
-        } else {
-            try {
-                const res = await this.db.query('shuttles/all', {include_docs: true});
-                this.allShuttles = [];
-                return res.rows.map((row) => {
-                    this.allShuttles.push(row.doc);
-                });
-            } catch (err) {
-                console.log(err);
-                // return this.backupData.getAllShuttles();
-            }
-        }
-    }
-
-    public async getMergedShuttles(shuttles: Shuttle[]): Promise<Shuttle[]> {
-        // const s = shuttles.slice(0);
-        // // Save and remove favorites
-        // const favorites = await this.localData.getFavorites();
-        // const favoritesInShuttles: Shuttle[] = [];
-        // for (const fShuttle of favorites) {
-        //     const index = getIndexOfShuttle(s, fShuttle);
-        //     if (index !== -1) {
-        //         favoritesInShuttles.push(s[index]);
-        //         s.splice(index, 1);
-        //     }
-        // }
-        // // Remove blacklisted
-        // const blacklist = await this.localData.getBlacklist();
-        // for (const bShuttle of blacklist) {
-        //     const index = getIndexOfShuttle(s, bShuttle);
-        //     if (index !== -1) {
-        //         s.splice(index, 1);
-        //     }
-        // }
-        // // Sort randomly
-        // s.sort(() => Math.random() - 0.5);
-        // return favoritesInShuttles.concat(s);
-        return shuttles.slice(0);
-    }
 }

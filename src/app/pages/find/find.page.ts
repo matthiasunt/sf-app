@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
-import {SfDbService} from '../../services/sf-db/sf-db.service';
-import {LocalDataService} from '../../services/local-data/local-data.service';
+import {SfDbService} from '../../services/data/sf-db/sf-db.service';
+import {LocalDataService} from '../../services/data/local-data/local-data.service';
 import {GeoService} from '../../services/geo/geo.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {District} from '../../models/district';
@@ -11,10 +11,10 @@ import {ENV} from '@env';
 import {Shuttle} from '../../models/shuttle';
 import {Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
-import {DistrictsService} from '../../services/districts/districts.service';
+import {DistrictsService} from '../../services/data/districts/districts.service';
 import {getContrastColor} from '../../tools/sf-tools';
-import {ShuttlesService} from '../../services/shuttles/shuttles.service';
-import {ListsService} from '../../services/lists/lists.service';
+import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
+import {ListsService} from '../../services/data/lists/lists.service';
 
 @Component({
     selector: 'app-find',

@@ -6,6 +6,7 @@ export interface Shuttle {
     name: string;
     phone: string;
     phoneSecondary?: string;
+    score: number;
     info?: string;
     email?: string;
     facebookUrl?: string;

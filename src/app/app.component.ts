@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
-import {LocalDataService} from './services/local-data/local-data.service';
+import {LocalDataService} from './services/data/local-data/local-data.service';
 import {AuthService} from './services/auth/auth.service';
 import {Plugins} from '@capacitor/core';
-import {ShuttlesService} from './services/shuttles/shuttles.service';
+import {ShuttlesService} from './services/data/shuttles/shuttles.service';
 
 const {SplashScreen} = Plugins;
 const {Device} = Plugins;
