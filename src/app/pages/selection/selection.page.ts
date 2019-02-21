@@ -13,6 +13,8 @@ import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 import {DistrictsService} from '../../services/districts/districts.service';
 import {ListsService} from '../../services/lists/lists.service';
 import {List} from 'immutable';
+import {CallsService} from '../../services/calls/calls.service';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
     selector: 'app-selection',
@@ -28,7 +30,7 @@ export class SelectionPage implements OnInit {
     actualCity: string;
     noValidCityName: boolean;
 
-    coordinates: any;
+    coordinates: Coordinates;
 
     outOfRange: boolean;
     queryResult: any[];
@@ -47,6 +49,8 @@ export class SelectionPage implements OnInit {
                 private translate: TranslateService,
                 private districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
+                private authService: AuthService,
+                private callsService: CallsService,
                 private listsService: ListsService,
                 public localData: LocalDataService,
                 private geo: GeoService,
@@ -72,10 +76,10 @@ export class SelectionPage implements OnInit {
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
             if (coords) {
-                this.coordinates = {
-                    lat: coords.split(',')[0],
-                    lng: coords.split(',')[1],
-                };
+                // this.coordinates = {
+                //     latitude: coords.split(',')[0],
+                //     longitude: coords.split(',')[1],
+                // };
                 this.getShuttlesByCoords();
             }
         }
@@ -135,7 +139,7 @@ export class SelectionPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.localData.addShuttleToHistory(shuttle);
+        this.callsService.handleCall(shuttle._id, this.district._id);
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

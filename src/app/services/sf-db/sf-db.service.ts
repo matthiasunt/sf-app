@@ -55,20 +55,21 @@ export class SfDbService {
     // define type
     public async getShuttlesFromLocation(position: any, radius: number): Promise<any[]> {
         const ret: any[] = [];
-        if (position) {
-            const allShuttles = await this.getAllShuttles();
-            for (const s of allShuttles) {
-                if (s && s.coordinates) {
-                    const distance = this.geoService.getDistance(position, s.coordinates);
-                    if (distance && distance < radius) {
-                        const shuttle: any = s;
-                        shuttle.distance = distance;
-                        ret.push(shuttle);
-                    }
-                }
-            }
-        }
-        return this.buildRankingFromLocation(ret);
+        // if (position) {
+        //     const allShuttles = await this.getAllShuttles();
+        //     for (const s of allShuttles) {
+        //         if (s && s.coordinates) {
+        //             const distance = this.geoService.getDistance(position, s.coordinates);
+        //             if (distance && distance < radius) {
+        //                 const shuttle: any = s;
+        //                 shuttle.distance = distance;
+        //                 ret.push(shuttle);
+        //             }
+        //         }
+        //     }
+        // }
+        // return this.buildRankingFromLocation(ret);
+        return ret;
     }
 
 

@@ -1,5 +1,6 @@
 export interface District {
     _id: string;
+    type: string;
     name: {
         de: string;
         it: string;

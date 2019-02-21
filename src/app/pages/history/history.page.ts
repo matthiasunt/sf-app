@@ -7,6 +7,9 @@ import {Shuttle} from '../../models/shuttle';
 import {getBeautifulTimeString, getBeautifulDateString} from '../../tools/sf-tools';
 import {AlertController, NavController} from '@ionic/angular';
 import {CallNumber} from '@ionic-native/call-number/ngx';
+import {CallsService} from '../../services/calls/calls.service';
+import {HistoryElement} from '../../models/history-element';
+import {ShuttlesService} from '../../services/shuttles/shuttles.service';
 
 @Component({
     selector: 'app-history',
@@ -15,7 +18,7 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
     providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
-    history: any[];
+    history: HistoryElement[];
     locale: string;
 
     constructor(private navCtrl: NavController,
@@ -23,15 +26,19 @@ export class HistoryPage implements OnInit {
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private callNumber: CallNumber,
-                public localData: LocalDataService,
+                private localData: LocalDataService,
+                private callsService: CallsService,
+                private shuttlesService: ShuttlesService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
         this.history = [];
     }
 
     async ngOnInit() {
-        this.history = await this.localData.getHistory();
         this.locale = this.localData.getLocaleFromPrefLang();
+        this.callsService.history.subscribe((history) => {
+            this.history = history.toArray();
+        });
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -47,7 +54,7 @@ export class HistoryPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.localData.addShuttleToHistory(shuttle);
+        this.callsService.handleCall(shuttle._id, 'history');
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

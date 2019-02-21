@@ -52,7 +52,7 @@ export class ShuttlePage implements OnInit {
     }
 
     callClicked(shuttle: Shuttle) {
-        // this.localData.addShuttleToHistory(shuttle);
+        this.callsService.handleCall(shuttle._id, 'shuttle-page');
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

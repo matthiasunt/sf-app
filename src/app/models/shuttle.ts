@@ -2,6 +2,7 @@ import {Address} from './address';
 
 export interface Shuttle {
     _id: string;
+    type: string;
     name: string;
     phone: string;
     phoneSecondary?: string;
