@@ -1,11 +1,12 @@
 import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject, from} from 'rxjs';
 import {List, Map} from 'immutable';
-import {Call} from '../../models/call';
-import {Shuttle} from '../../models/shuttle';
-import {SfDbService} from '../sf-db/sf-db.service';
-import {DistrictsService} from '../districts/districts.service';
-import {ElementType} from '../../models/list-element';
+import {Call, CallOrigin, CallOriginName} from '../../models/call';
+import {Platform} from '@ionic/angular';
+import {UserDbService} from '../user-db/user-db.service';
+import {AuthService} from '../auth/auth.service';
+import {HistoryElement} from '../../models/history-element';
+import {ShuttlesService} from '../shuttles/shuttles.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,10 +14,15 @@ import {ElementType} from '../../models/list-element';
 export class CallsService {
 
     private _calls: BehaviorSubject<List<Call>> = new BehaviorSubject(List([]));
+    private _history: BehaviorSubject<List<HistoryElement>> = new BehaviorSubject(List([]));
+    private afterCall: boolean;
 
-    constructor(private sfDbService: SfDbService,
+    constructor(private userDbService: UserDbService,
+                private shuttlesService: ShuttlesService,
+                private authService: AuthService,
                 public zone: NgZone) {
-        this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+        this.loadInitialData();
+        this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
             if (change.doc.type === 'call') {
                 this.emitCalls();
             }
@@ -28,14 +34,65 @@ export class CallsService {
         return this._calls;
     }
 
-    public addCall(call: Call) {
-        const obs = this.sfDbService.db.put(call);
-        obs.subscribe(
-            res => {
-                this._calls.next(this._calls.getValue().push(call));
-            }
-        );
-        return obs;
+    get history() {
+        return this._history;
+    }
+
+    public handleCall(shuttleId: string, origin: CallOrigin) {
+        let start: Date;
+        let end: Date;
+
+        // this.platform.pause.subscribe(() => {
+        //     console.log('Pause');
+        //     start = new Date();
+        // });
+        // this.platform.resume.subscribe(() => {
+        //     console.log('Resume');
+        //     if (this.afterCall) {
+        //         end = new Date();
+        //         end.setSeconds(end.getSeconds() - 4);
+        //         const type = 'call';
+        //         const userId = this.authService.getUserId();
+        //         const call: Call = {
+        //             _id: `${userId}-${type}-${start}-${shuttleId}`,
+        //             type: type,
+        //             startDate: start,
+        //             endDate: end,
+        //             userId: userId,
+        //             shuttleId: shuttleId,
+        //             origin: origin,
+        //             isHidden: false,
+        //         };
+        //         this.addCall(call);
+        //         this.afterCall = false;
+        //
+        //         this.platform.pause.unsubscribe();
+        //         this.platform.resume.unsubscribe();
+        //     }
+        // });
+
+        const type = 'call';
+        const userId = this.authService.getUserId();
+        const call: Call = {
+            _id: `${userId}-${type}-${new Date().toISOString()}-${shuttleId}`,
+            type: type,
+            startDate: new Date(),
+            endDate: new Date(),
+            userId: userId,
+            shuttleId: shuttleId,
+            origin: origin,
+            isHidden: false,
+        };
+        this.addCall(call);
+    }
+
+    private async addCall(call: Call) {
+        try {
+            const res = await this.userDbService.db.put(call);
+            this._calls.next(this._calls.getValue().push(call));
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     public hideCalls() {
@@ -43,29 +100,48 @@ export class CallsService {
     }
 
     private loadInitialData() {
-        from(this.sfDbService.db.query('calls/all', {include_docs: true}))
+        from(this.userDbService.db.query('calls/all', {include_docs: true}))
             .subscribe(
                 (res: any) => {
-                    let calls: List<Call> = List([]);
-                    res.rows.map(row => {
-                        calls = calls.set(row.doc._id, row.doc);
+                    const calls = res.rows.map(row => {
+                        return row.doc;
                     });
-                    this._calls.next(calls);
+                    console.log(calls);
+                    this._calls.next(List(calls));
+                    this.loadHistory();
                 },
                 err => console.log('Error retrieving Calls')
             );
     }
 
+    private loadHistory() {
+        this.calls.subscribe((calls) => {
+            let history: List<HistoryElement> = List([]);
+            calls.map((call: Call) => {
+                const shuttle = this.shuttlesService.getShuttle(call.shuttleId);
+                const historyElement: HistoryElement = {
+                    shuttle: shuttle,
+                    call: call,
+                    date: call.startDate,
+                };
+                history = history.push(historyElement);
+            });
+            this._history.next(history);
+        });
+    }
+
     private emitCalls() {
         this.zone.run(() => {
-            this.sfDbService.db.query('calls/all').then((data) => {
-                const calls = data.rows.map(row => {
-                    return row.value;
-                });
-                this._calls.next(calls);
-
-            });
-
+            from(this.userDbService.db.query('calls/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        const calls = res.rows.map(row => {
+                            return row.doc;
+                        });
+                        this._calls.next(List(calls));
+                    },
+                    err => console.log('Error retrieving Calls')
+                );
         });
     }
 }

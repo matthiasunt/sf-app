@@ -3,33 +3,33 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll *ngIf="history && history.length > 0" [items]="history" [headerFn]="myHeaderFn">
+    <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn">
         <ion-item-divider *virtualHeader="let header">
             {{header}}
         </ion-item-divider>
-        <ion-item *virtualItem="let e" lines="full" (click)="shuttleClicked(e.shuttle)">
+        <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon
-                        [color]="colorGeneratorService.getShuttleColor(e.shuttle)"></app-sf-shuttle-icon>
+                        [color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>
-                    <h2>{{e?.shuttle?.name}}</h2>
-                    <p>{{getTime(e?.date)}}</p>
+                    <h2>{{historyElement?.shuttle?.name}}</h2>
+                    <p>{{getTime(historyElement?.date)}}</p>
                 </ion-text>
             </ion-label>
-            <div (click)="rateClicked(e.shuttle, $event)" class="add-remove-button-div">
-                <ion-button color="tertiary" slot="end">
-                    Rate
-                    <ion-icon name="star" slot="end"></ion-icon>
-                </ion-button>
-            </div>
-            <ion-icon (click)="callClicked(e.shuttle, $event)" id="call-icon" slot="end" name="call"
+            <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
+                <!--<ion-button color="tertiary" slot="end">-->
+                    <!--Rate-->
+                    <!--<ion-icon name="star" slot="end"></ion-icon>-->
+                <!--</ion-button>-->
+            <!--</div>-->
+            <ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"
                       size="large" color="secondary"></ion-icon>
         </ion-item>
     </ion-virtual-scroll>
 
-    <p *ngIf="!history || history.length< 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
+    <p *ngIf="" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
 
     <!--<ion-fab *ngIf="history?.length > 0" right middle>-->
     <!--<button ion-fab (click)="clearHistoryAlert()" color="dark">-->
