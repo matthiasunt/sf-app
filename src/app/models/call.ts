@@ -11,7 +11,7 @@ export interface Call {
 
 export interface CallOrigin {
     name: CallOriginName;
-    value: string;
+    value: any;
 }
 
 export enum CallOriginName {

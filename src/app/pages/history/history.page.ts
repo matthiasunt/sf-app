@@ -73,7 +73,7 @@ export class HistoryPage implements OnInit {
     myHeaderFn(record, recordIndex, records) {
         if (recordIndex === 0
             || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
-            return getBeautifulDateString(record.date, 'de');
+            return getBeautifulDateString(record.date, this.locale);
         }
         return null;
     }
@@ -90,7 +90,7 @@ export class HistoryPage implements OnInit {
                     handler: () => {
                         this.history = null;
                         // this.sfDb.clearCalls();
-                        this.localData.clearShuttleHistory();
+                        // this.localData.clearShuttleHistory();
                     }
                 }
             ]
