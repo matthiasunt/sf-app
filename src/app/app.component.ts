@@ -6,6 +6,7 @@ import {LocalDataService} from './services/data/local-data/local-data.service';
 import {AuthService} from './services/auth/auth.service';
 import {Plugins} from '@capacitor/core';
 import {ShuttlesService} from './services/data/shuttles/shuttles.service';
+import {DeviceService} from './services/device/device.service';
 
 const {SplashScreen} = Plugins;
 const {Device} = Plugins;
@@ -18,6 +19,7 @@ const {Device} = Plugins;
 export class AppComponent {
     constructor(
         private platform: Platform,
+        private deviceService: DeviceService,
         private statusBar: StatusBar,
         private translate: TranslateService,
         private authService: AuthService,
@@ -28,9 +30,11 @@ export class AppComponent {
         this.setLang();
     }
 
-    async initializeApp() {
+    private async initializeApp() {
         this.platform.ready().then(async () => {
-            SplashScreen.hide();
+            if (this.deviceService.isDevice()) {
+                SplashScreen.hide();
+            }
             this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(false);
             this.statusBar.styleLightContent();

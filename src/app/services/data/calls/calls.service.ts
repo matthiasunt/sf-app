@@ -1,5 +1,4 @@
 import {Injectable, NgZone} from '@angular/core';
-import {Platform} from '@ionic/angular';
 import {BehaviorSubject, from} from 'rxjs';
 import {List} from 'immutable';
 
@@ -10,6 +9,9 @@ import {DeviceService} from '../../device/device.service';
 
 import {Call, CallOrigin} from '../../../models/call';
 import {HistoryElement} from '../../../models/history-element';
+import {Plugins, AppState} from '@capacitor/core';
+
+const {App} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +23,6 @@ export class CallsService {
     private afterCall: boolean;
 
     constructor(private deviceService: DeviceService,
-                private platform: Platform,
                 private userDbService: UserDbService,
                 private shuttlesService: ShuttlesService,
                 private authService: AuthService,
@@ -50,27 +51,29 @@ export class CallsService {
         const userId = this.authService.getUserId();
 
         if (this.deviceService.isDevice()) {
-            this.platform.pause.subscribe(() => {
-                console.log('Pause');
-                callStartDate = new Date();
-            });
-            this.platform.resume.subscribe(() => {
-                console.log('Resume');
-                if (this.afterCall) {
-                    callEndDate = new Date();
-                    callEndDate.setSeconds(callEndDate.getSeconds() - 4);
-                    const call: Call = {
-                        _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
-                        type: type,
-                        startDate: callStartDate,
-                        endDate: callEndDate,
-                        userId: userId,
-                        shuttleId: shuttleId,
-                        origin: origin,
-                        isHidden: false,
-                    };
-                    this.addCall(call);
-                    this.afterCall = false;
+            App.addListener('appStateChange', (state: AppState) => {
+                if (state.isActive) {
+                    console.log('Resume');
+                    if (this.afterCall) {
+                        callEndDate = new Date();
+                        // callEndDate.setSeconds(callEndDate.getSeconds() - 4);
+                        const call: Call = {
+                            _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
+                            type: type,
+                            startDate: callStartDate,
+                            endDate: callEndDate,
+                            userId: userId,
+                            shuttleId: shuttleId,
+                            origin: origin,
+                            isHidden: false,
+                        };
+                        this.addCall(call);
+                        this.afterCall = false;
+                    }
+                } else {
+                    console.log('Pause');
+                    callStartDate = new Date();
+                    this.afterCall = true;
                 }
             });
         } else {

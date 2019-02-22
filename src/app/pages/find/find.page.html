@@ -47,7 +47,7 @@
     <!--</ion-button>-->
     <hr>
     <div id="favorites-div">
-        <ion-row>
+        <ion-row *ngIf="listsService.favorites.getValue().count() > 0">
             <ion-col>
                 <ion-label color="primary" class="section-headline-small">
                     Favoriten
@@ -69,7 +69,9 @@
     <ion-card id="tmm-card">
         <ion-card-content>
             <h2>Wer trinkt</h2>
-            <img src="assets/img/tmm-logo.svg"/>
+            <a href="{{getTMMUrl()}}">
+                <img id="tmm-logo-img" src="assets/img/tmm-logo.svg"/>
+            </a>
             <h2>fährt nicht!</h2>
         </ion-card-content>
     </ion-card>

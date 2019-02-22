@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Plugins} from '@capacitor/core';
 import {getDistance} from 'geolib';
 import {NativeGeocoder, NativeGeocoderReverseResult} from '@ionic-native/native-geocoder/ngx';
 import {DeviceService} from '../device/device.service';
 import {Coordinates} from '../../models/coordinates';
+import {Platform} from '@ionic/angular';
 
-const {Geolocation} = Plugins;
+import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,9 @@ export class GeoService {
 
     constructor(
         private http: HttpClient,
+        private platform: Platform,
         private deviceService: DeviceService,
+        private geolocation: Geolocation,
         private nativeGeocoder: NativeGeocoder,
     ) {
         this.getCurrentPosition();
@@ -29,7 +31,8 @@ export class GeoService {
 
     public async getCurrentPosition() {
         if (this.deviceService.isDevice()) {
-            const res = await Geolocation.getCurrentPosition({enableHighAccuracy: true});
+            // await this.platform.ready();
+            const res = await this.geolocation.getCurrentPosition({enableHighAccuracy: true});
             console.log(res);
             return res.coords;
         } else {

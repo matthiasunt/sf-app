@@ -45,7 +45,6 @@ export class ShuttlePage implements OnInit {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         console.log(this.router.url);
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
-        this.shuttle = this.shuttle;
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
