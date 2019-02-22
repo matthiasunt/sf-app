@@ -1,17 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Shuttle} from '../../models/shuttle';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {CallNumber} from '@ionic-native/call-number/ngx';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
 import {NavController} from '@ionic/angular';
+
 import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
-import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {CallsService} from '../../services/data/calls/calls.service';
-import {ElementType, ListElement} from '../../models/list-element';
 import {ListsService} from '../../services/data/lists/lists.service';
 import {AuthService} from '../../services/auth/auth.service';
+import {LocalDataService} from '../../services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+
+import {Shuttle} from '../../models/shuttle';
 import {CallOriginName} from '../../models/call';
+import {ElementType, ListElement} from '../../models/list-element';
+import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-shuttle',
@@ -41,7 +43,6 @@ export class ShuttlePage implements OnInit {
     }
 
     async ngOnInit() {
-
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         console.log(this.router.url);
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
@@ -52,7 +53,7 @@ export class ShuttlePage implements OnInit {
 
     }
 
-    callClicked(shuttle: Shuttle) {
+    public callClicked(shuttle: Shuttle) {
         this.callsService.handleCall(shuttle._id, {
             name: CallOriginName.District,
             value: '',
@@ -60,12 +61,12 @@ export class ShuttlePage implements OnInit {
         this.callNumber.callNumber(shuttle.phone, true);
     }
 
-    rateClicked(shuttle: Shuttle) {
+    public rateClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.navCtrl.navigateForward(currentUrl + '/rate/' + shuttle._id);
     }
 
-    addToFavorites() {
+    public addToFavorites() {
         const type = ElementType.Favorite;
         const listElement: ListElement = {
             _id: `${this.authService.getUserId()}-${type}-${this.shuttle._id}`,
@@ -78,20 +79,20 @@ export class ShuttlePage implements OnInit {
         this.isFavorite = true;
     }
 
-    removeFromFravorites() {
+    public removeFromFravorites() {
         this.listsService.removeListElementByShuttleId(this.shuttle._id,
             this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
         this.isFavorite = false;
     }
 
-    private getToolbarStyle() {
+    getToolbarStyle() {
         return {
             'background-color': this.shuttleColor,
             'color': getContrastColor(this.shuttleColor)
         };
     }
 
-    private getPhoneNumber(shuttle: Shuttle) {
+    getPhoneNumber(shuttle: Shuttle) {
         if (shuttle) {
             return getFormattedPhoneNumber(shuttle.phone);
         }

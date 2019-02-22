@@ -19,6 +19,7 @@ import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
 import {ENV} from '@env';
 import {getContrastColor} from '../../tools/sf-tools';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-find',
@@ -28,10 +29,10 @@ import {getContrastColor} from '../../tools/sf-tools';
 })
 export class FindPage implements OnInit {
 
-    private allDistricts;
+    allDistricts: List<District> = List([]);
+    favorites: List<Shuttle> = List([]);
     recentDistricts: District[];
     remainingDistricts: District[];
-    favorites: any[];
 
     lang: string;
 
@@ -51,16 +52,18 @@ export class FindPage implements OnInit {
                 private geoService: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
-        this.allDistricts = [];
         this.recentDistricts = [];
         this.remainingDistricts = [];
-        this.favorites = [];
     }
 
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
-        this.allDistricts = this.districtsService.districts.subscribe((districts) => {
-            this.allDistricts = districts.toArray();
+        this.districtsService.districts.subscribe((districts) => {
+            this.allDistricts = districts;
+        });
+
+        this.listsService.favorites.subscribe((favorites) => {
+            this.favorites = this.shuttlesService.getShuttlesFromList(favorites);
         });
         this.localData.getLang().then((lang) => {
             this.lang = lang;
@@ -72,16 +75,26 @@ export class FindPage implements OnInit {
     }
 
     private async updateDistricts() {
-        this.recentDistricts = await this.localData.getRecentDistricts();
-        if (this.allDistricts && this.allDistricts.length > 0) {
-            this.remainingDistricts = this.allDistricts.slice();
-            this.recentDistricts.forEach((d) => {
-                const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
-                if (index > -1) {
-                    this.remainingDistricts.splice(index, 1);
-                }
-            });
+        // this.recentDistricts = await this.localData.getRecentDistricts();
+        // if (this.allDistricts && this.allDistricts.length > 0) {
+        //     this.remainingDistricts = this.allDistricts.slice();
+        //     this.recentDistricts.forEach((d) => {
+        //         const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
+        //         if (index > -1) {
+        //             this.remainingDistricts.splice(index, 1);
+        //         }
+        //     });
+        // }
+    }
+
+    private async districtClicked(district) {
+        if (this.localData.getDirectMode()) {
+            // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
+            // const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
+        } else {
+            this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
         }
+        this.localData.setRecentDistricts(district);
     }
 
     public async gpsClicked() {
@@ -106,26 +119,9 @@ export class FindPage implements OnInit {
 
     }
 
-
-    private async districtClicked(district) {
-        if (this.localData.getDirectMode()) {
-            // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
-            // const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-        } else {
-            this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
-        }
-        this.localData.setRecentDistricts(district);
-    }
-
     public shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
-    }
-
-    public getDistrictColors(district: District) {
-        if (district) {
-            return this.colorGenerator.getDistrictColors(district);
-        }
     }
 
     /* Alerts */
@@ -175,6 +171,11 @@ export class FindPage implements OnInit {
         }
     }
 
+    public getDistrictColors(district: District) {
+        if (district) {
+            return this.colorGenerator.getDistrictColors(district);
+        }
+    }
 
     private getDistrictName(district: any): string {
         if (district && district.name && district.name.de && district.name.it && district.name.de_st) {

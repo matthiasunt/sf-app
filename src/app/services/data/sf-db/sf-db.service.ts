@@ -1,13 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-
 import PouchDB from 'pouchdb';
-import {LocalDataService} from '../local-data/local-data.service';
-import {GeoService} from '../../geo/geo.service';
-import {District} from '../../../models/district';
-import {Shuttle} from '../../../models/shuttle';
 import {ENV} from '@env';
-import {getIndexOfShuttle, getIndexOfShuttleInList} from '../../../tools/sf-tools';
 import {Subject} from 'rxjs';
 
 @Injectable({
@@ -17,26 +10,13 @@ export class SfDbService {
 
     public db: any;
     private remote: string;
-    private details: any;
 
-    private districts: District[];
-    private shuttlesByDistricts: any[];
-    private allShuttles: Shuttle[];
-    private history: any[];
-    private favorites: any[];
-    private blacklist: any[];
-    private settings: any;
+    public syncSubject: Subject<boolean>;
 
-    private syncSubject: Subject<boolean>;
-
-    constructor(
-        private http: HttpClient,
-        private localData: LocalDataService,
-        private geoService: GeoService,
-    ) {
+    constructor() {
 
         this.db = new PouchDB('sf-public');
-        this.syncSubject = new Subject();
+        this.syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
             + ENV.DB_PASS + '@' + ENV.DB_HOST + '/sf-public';
@@ -44,35 +24,11 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true
         }).on('complete', (info) => {
-            console.log(info);
             this.syncSubject.next(true);
-            // this.fetchEverything();
         }).on('error', (err) => {
-            console.error(err.code);
+            console.error(err);
         });
     }
-
-    // define type
-    public async getShuttlesFromLocation(position: any, radius: number): Promise<any[]> {
-        const ret: any[] = [];
-        // if (position) {
-        //     const allShuttles = await this.getAllShuttles();
-        //     for (const s of allShuttles) {
-        //         if (s && s.coordinates) {
-        //             const distance = this.geoService.getDistance(position, s.coordinates);
-        //             if (distance && distance < radius) {
-        //                 const shuttle: any = s;
-        //                 shuttle.distance = distance;
-        //                 ret.push(shuttle);
-        //             }
-        //         }
-        //     }
-        // }
-        // return this.buildRankingFromLocation(ret);
-        return ret;
-    }
-
-
 
 
     private buildRankingFromLocationInRanges(arr: any[], radius: number): any {
@@ -107,13 +63,6 @@ export class SfDbService {
             ]
         };
 
-    }
-
-    // Should be a defined type (id, shuttle[])
-    private getShuttlesFromCache(id: string): any {
-        if (this.shuttlesByDistricts) {
-            return this.shuttlesByDistricts.find((e) => e.districtId === id);
-        }
     }
 
 }

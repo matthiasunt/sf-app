@@ -1,62 +1,43 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
-import {GeoService} from '../../geo/geo.service';
+import {Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserDbService {
 
-    private userId: string;
     public db: any;
     private remote: string;
     private details: any;
-    private history: any[];
-    private favorites: any[];
-    private blacklist: any[];
-    private settings: any;
+    private userId: string;
+    public syncSubject: Subject<boolean>;
 
-    constructor(public http: HttpClient,
-                private geoService: GeoService) {
-
+    constructor(public http: HttpClient) {
         this.db = new PouchDB('sf-private');
+        this.syncSubject = new Subject<boolean>();
     }
 
     init(details) {
         this.userId = details.user_id;
         this.details = details;
         this.remote = details.userDBs.sf;
-        console.log(details);
-        this.db.sync(this.remote, {live: true, retry: true})
-            .on('denied', (err) => {
-                console.log(err);
-            }).on('error', (err) => {
-            console.log(err);
-        });
-    }
-
-    logout() {
-        this.history = null;
-        this.favorites = null;
-        this.blacklist = null;
-        this.settings = null;
-
-        this.db.destroy().then(() => {
-            console.log('database removed');
+        this.db.sync(this.remote, {
+            retry: true
+        }).on('change', function (info) {
+            this.syncSubject.next(true);
+        }).on('paused', function (err) {
+            this.syncSubject.next(true);
+        }).on('complete', (info) => {
+            this.syncSubject.next(true);
+        }).on('error', (err) => {
+            console.error(err);
         });
     }
 
     public async removeDoc(doc: any) {
         const docFromDb = await this.db.get(doc._id);
         return this.db.remove(docFromDb._id, docFromDb._rev);
-    }
-
-    public getUserId() {
-        if (this.details) {
-            return this.details.user_id;
-        } else {
-            console.log('Details not defined');
-        }
     }
 }

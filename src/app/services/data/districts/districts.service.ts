@@ -20,17 +20,18 @@ export class DistrictsService {
     }
 
     loadInitialData() {
-        from(this.sfDbService.db.query('districts/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
-                    const districts: District[] = res.rows.map(row => {
-                        return row.doc;
-                    });
-                    this._districts.next(List(districts));
-                },
-                err => console.log('Error retrieving Districts')
-            );
-
+        this.sfDbService.syncSubject.subscribe(() => {
+            from(this.sfDbService.db.query('districts/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        const districts: District[] = res.rows.map(row => {
+                            return row.doc;
+                        });
+                        this._districts.next(List(districts));
+                    },
+                    err => console.log('Error retrieving Districts')
+                );
+        });
     }
 
     public getDistrict(districtId: string): Observable<District> {

@@ -25,9 +25,10 @@ export class ListsService {
     }
 
     private loadInitialData() {
-        this.loadFavorites();
-        this.loadBlacklist();
-
+        this.userDbService.syncSubject.subscribe(() => {
+            this.loadFavorites();
+            this.loadBlacklist();
+        });
     }
 
     private loadFavorites() {
@@ -55,7 +56,6 @@ export class ListsService {
                         case ElementType.Blacklisted:
                             this._blacklist.next(list);
                     }
-
                 },
                 (err) => {
                     console.error(err);
@@ -79,9 +79,7 @@ export class ListsService {
 
     public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {
         const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
-        console.log(list);
         const listElement = list.find((element) => element.shuttleId === shuttleId);
-        console.log(listElement);
         try {
             const res = await this.userDbService.removeDoc(listElement);
             console.log(res);

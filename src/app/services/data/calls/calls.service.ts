@@ -107,17 +107,19 @@ export class CallsService {
     }
 
     private loadInitialData() {
-        from(this.userDbService.db.query('calls/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
-                    const calls = res.rows.map(row => {
-                        return row.doc;
-                    });
-                    this._calls.next(List(calls));
-                    this.loadHistory();
-                },
-                (err) => console.log('Error retrieving Calls')
-            );
+        this.userDbService.syncSubject.subscribe(() => {
+            from(this.userDbService.db.query('calls/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        const calls = res.rows.map(row => {
+                            return row.doc;
+                        });
+                        this._calls.next(List(calls));
+                        this.loadHistory();
+                    },
+                    (err) => console.log('Error retrieving Calls')
+                );
+        });
     }
 
     private loadHistory() {
@@ -132,7 +134,7 @@ export class CallsService {
                 };
                 history = history.push(historyElement);
             });
-            this._history.next(history);
+            this._history.next(history.reverse());
         });
     }
 

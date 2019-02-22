@@ -17,7 +17,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="shuttles">
+    <ion-virtual-scroll [items]="shuttles" approxItemHeight="60px">
         <ion-item lines="full" *virtualItem="let shuttle" approxItemHeight="59px" (click)="shuttleClicked(shuttle)"
                   [class.alreadyCalledElement]="localData.shuttleCalledLately(shuttle)">
             <ion-thumbnail slot="start">
