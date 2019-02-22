@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
-import {SfDbService} from '../../services/data/sf-db/sf-db.service';
+import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {LocalDataService} from '../../services/data/local-data/local-data.service';
 import {GeoService} from '../../services/geo/geo.service';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
@@ -15,6 +15,7 @@ import {DistrictsService} from '../../services/data/districts/districts.service'
 import {getContrastColor} from '../../tools/sf-tools';
 import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {ListsService} from '../../services/data/lists/lists.service';
+import {DeviceService} from '../../services/device/device.service';
 
 @Component({
     selector: 'app-find',
@@ -23,11 +24,8 @@ import {ListsService} from '../../services/data/lists/lists.service';
     providers: [CallNumber],
 })
 export class FindPage implements OnInit {
-    calledShuttle: any;
-    districtsAvailable: boolean;
 
     private allDistricts;
-    private districts: District[];
     recentDistricts: District[];
     remainingDistricts: District[];
     favorites: any[];
@@ -37,6 +35,8 @@ export class FindPage implements OnInit {
     constructor(private navCtrl: NavController,
                 private router: Router,
                 private http: HttpClientModule,
+                private diagnostic: Diagnostic,
+                private deviceService: DeviceService,
                 private callNumber: CallNumber,
                 private toastCtrl: ToastController,
                 private alertCtrl: AlertController,
@@ -45,7 +45,7 @@ export class FindPage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
                 private localData: LocalDataService,
-                private geo: GeoService,
+                private geoService: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
         this.allDistricts = [];
@@ -56,9 +56,11 @@ export class FindPage implements OnInit {
 
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
-        this.lang = await this.localData.getLang();
         this.allDistricts = this.districtsService.districts.subscribe((districts) => {
             this.allDistricts = districts.toArray();
+        });
+        this.localData.getLang().then((lang) => {
+            this.lang = lang;
         });
     }
 
@@ -79,6 +81,29 @@ export class FindPage implements OnInit {
         }
     }
 
+    public async gpsClicked() {
+        // Device testing
+        if (this.deviceService.isDevice()) {
+            const locationAuthorized: boolean = await this.diagnostic.isLocationAuthorized();
+            if (!locationAuthorized) {
+                await this.diagnostic.requestLocationAuthorization();
+            }
+            const locationEnabled = await this.diagnostic.isLocationEnabled();
+            if (!locationEnabled) {
+                this.presentEnableGpsAlert();
+            } else {
+                const position = await this.geoService.getCurrentPosition();
+                this.navCtrl.navigateForward(`/tabs/find/gps/${position.latitude},${position.longitude}`);
+            }
+            // Browser testing
+        } else {
+            const position = await this.geoService.getCurrentPosition();
+            this.navCtrl.navigateForward(`/tabs/find/gps/${position.latitude},${position.longitude}`);
+        }
+
+    }
+
+
     private async districtClicked(district) {
         if (this.localData.getDirectMode()) {
             // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
@@ -89,102 +114,18 @@ export class FindPage implements OnInit {
         this.localData.setRecentDistricts(district);
     }
 
-    getDistrictStyle(district: District) {
-        if (district) {
-            const colors = this.colorGenerator.getDistrictColors(district);
-            return {
-                'background': colors[0],
-                'color': colors[0]
-            };
-        }
-    }
-
-    private shuttleClicked(shuttle: Shuttle) {
+    public shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
-        // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
-        //   this.presentReallyCallToast(shuttle);
-        // }
-        // else {
-        //   this.toCallPage(shuttle);
-        // }
     }
 
-    private callClicked(shuttle: Shuttle, event) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.localData.addShuttleToHistory(shuttle);
-        this.callNumber.callNumber(shuttle.phone, true);
-    }
-
-    getDistrictColors(district: District) {
+    public getDistrictColors(district: District) {
         if (district) {
             return this.colorGenerator.getDistrictColors(district);
         }
     }
 
-    //
-    // private async toSelectionPage(district) {
-    //     if (this.localData.inDirectMode()) {
-    //         const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
-    //         const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-    //
-    //         // this.navCtrl.push('Call', {shuttles: shuttles, district: district});
-    //     } else {
-    //         // this.navCtrl.push('Selection', {
-    //         //     district: district,
-    //         //     districtColors: this.colorGenerator.getDistrictColors(district)
-    //         // });
-    //     }
-    //     this.localData.setRecentDistricts(district);
-    // }
-
-    public async gpsClicked() {
-        // //Device testing
-        // if (this.util.isDevice()) {
-        //     const locationAuthorized: boolean = await this.diagnostic.isLocationAuthorized();
-        //     if (!locationAuthorized) {
-        //         await this.diagnostic.requestLocationAuthorization();
-        //     }
-        //     const locationEnabled = await this.diagnostic.isLocationEnabled();
-        //     if (!locationEnabled) {
-        //         this.presentEnableGpsAlert();
-        //     } else {
-        //         // Direct Mode
-        //         if (this.localData.inDirectMode()) {
-        //             const pos = await this.geo.getPosition();
-        //
-        //             let shuttlesTemp = await this.sfDb.getShuttlesFromLocation(pos, 25000);
-        //             if (shuttlesTemp.length < 3) {
-        //                 shuttlesTemp = await this.sfDb.getShuttlesFromLocation(pos, 30000);
-        //             }
-        //             if (shuttlesTemp.length < 1) {
-        //                 this.presentNoShuttleFoundToast();
-        //             } else {
-        //                 const shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
-        //                 console.log(shuttles);
-        //                 // this.navCtrl.push('Call', {shuttles: shuttles});
-        //             }
-        //             // Standard Mode
-        //         } else {
-        //             // this.navCtrl.push('Selection', {viaGps: true});
-        //         }
-        //     }
-        //     // Browser testing
-        // } else {
-        //     if (this.localData.inDirectMode()) {
-        //         const shuttlesTemp = await this.sfDb.getShuttlesFromLocation(
-        //             this.geo.getRandomPosition(), 25000);
-        //         const shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
-        //         // this.navCtrl.push("Call", {shuttles: shuttles});
-        //
-        //     } else {
-        //         // this.navCtrl.push("Selection", {viaGps: true});
-        //     }
-        // }
-        this.navCtrl.navigateForward('/tabs/find/gps/46.4983,11.3548');
-    }
-
+    /* Alerts */
     private async presentEnableGpsAlert() {
         const alert = await this.alertCtrl.create({
             header: this.translate.instant('departure.msg.ENABLE_GPS'),
@@ -201,6 +142,7 @@ export class FindPage implements OnInit {
         await alert.present();
     }
 
+    /* Toasts */
     private async presentConnectionToast() {
         const toast = await this.toastCtrl.create({
             message: this.translate.instant('VERIFY_CONNECTION'),

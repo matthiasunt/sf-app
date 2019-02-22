@@ -15,7 +15,7 @@ export interface Shuttle {
     customColor?: string;
 
     address?: Address;
-    coordinates?: Coordinates;
+    location?: Coordinates;
 
     lastName?: string;
     firstName?: string;

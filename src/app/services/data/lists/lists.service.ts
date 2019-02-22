@@ -50,7 +50,6 @@ export class ListsService {
                     });
                     switch (type) {
                         case ElementType.Favorite:
-                            console.log(list);
                             this._favorites.next(list);
                             break;
                         case ElementType.Blacklisted:

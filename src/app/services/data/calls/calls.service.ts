@@ -1,13 +1,15 @@
 import {Injectable, NgZone} from '@angular/core';
+import {Platform} from '@ionic/angular';
 import {BehaviorSubject, from} from 'rxjs';
-import {List, Map} from 'immutable';
-import {Call, CallOrigin, CallOriginName} from '../../../models/call';
+import {List} from 'immutable';
+
 import {UserDbService} from '../user-db/user-db.service';
 import {AuthService} from '../../auth/auth.service';
-import {HistoryElement} from '../../../models/history-element';
 import {ShuttlesService} from '../shuttles/shuttles.service';
 import {DeviceService} from '../../device/device.service';
-import {Platform} from '@ionic/angular';
+
+import {Call, CallOrigin} from '../../../models/call';
+import {HistoryElement} from '../../../models/history-element';
 
 @Injectable({
     providedIn: 'root'
@@ -42,27 +44,26 @@ export class CallsService {
     }
 
     public handleCall(shuttleId: string, origin: CallOrigin) {
+        let callStartDate: Date;
+        let callEndDate: Date;
+        const type = 'call';
+        const userId = this.authService.getUserId();
 
         if (this.deviceService.isDevice()) {
-            let start: Date;
-            let end: Date;
-
             this.platform.pause.subscribe(() => {
                 console.log('Pause');
-                start = new Date();
+                callStartDate = new Date();
             });
             this.platform.resume.subscribe(() => {
                 console.log('Resume');
                 if (this.afterCall) {
-                    end = new Date();
-                    end.setSeconds(end.getSeconds() - 4);
-                    const type = 'call';
-                    const userId = this.authService.getUserId();
+                    callEndDate = new Date();
+                    callEndDate.setSeconds(callEndDate.getSeconds() - 4);
                     const call: Call = {
-                        _id: `${userId}-${type}-${start}-${shuttleId}`,
+                        _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
                         type: type,
-                        startDate: start,
-                        endDate: end,
+                        startDate: callStartDate,
+                        endDate: callEndDate,
                         userId: userId,
                         shuttleId: shuttleId,
                         origin: origin,
@@ -73,26 +74,25 @@ export class CallsService {
                 }
             });
         } else {
-            const type = 'call';
-            const userId = this.authService.getUserId();
-            const call: Call = {
-                _id: `${userId}-${type}-${new Date().toISOString()}-${shuttleId}`,
+            callStartDate = new Date();
+            callEndDate = new Date();
+            this.addCall({
+                _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
                 type: type,
-                startDate: new Date(),
-                endDate: new Date(),
+                startDate: callStartDate,
+                endDate: callEndDate,
                 userId: userId,
                 shuttleId: shuttleId,
                 origin: origin,
                 isHidden: false,
-            };
-            this.addCall(call);
+            });
         }
     }
 
     private async addCall(call: Call) {
         try {
-            const res = await this.userDbService.db.put(call);
             this._calls.next(this._calls.getValue().push(call));
+            const res = await this.userDbService.db.put(call);
             console.log(res);
         } catch (err) {
             console.error(err);
@@ -110,11 +110,10 @@ export class CallsService {
                     const calls = res.rows.map(row => {
                         return row.doc;
                     });
-                    console.log(calls);
                     this._calls.next(List(calls));
                     this.loadHistory();
                 },
-                err => console.log('Error retrieving Calls')
+                (err) => console.log('Error retrieving Calls')
             );
     }
 

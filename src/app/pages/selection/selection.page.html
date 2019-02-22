@@ -7,10 +7,10 @@
             <ng-container *ngIf="district">{{getDistrictName(district)}}
                 <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
             </ng-container>
-            <ng-container *ngIf="actualCity">{{actualCity}}
+            <ng-container *ngIf="currentLocality">{{currentLocality}}
                 <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
             </ng-container>
-            <ion-spinner color="light" *ngIf="coordinates && !actualCity && !noValidCityName && !outOfRange" name="dots"
+            <ion-spinner color="light" *ngIf="coordinates && !currentLocality && !noValidLocalityName && !outOfRange" name="dots"
                          duration="900"></ion-spinner>
         </ion-title>
     </ion-toolbar>
@@ -18,31 +18,31 @@
 
 <ion-content>
     <ion-virtual-scroll [items]="shuttles">
-        <ion-item lines="full" *virtualItem="let s" approxItemHeight="59px" (click)="shuttleClicked(s)"
-                  [class.alreadyCalledElement]="localData.shuttleCalledLately(s)">
+        <ion-item lines="full" *virtualItem="let shuttle" approxItemHeight="59px" (click)="shuttleClicked(shuttle)"
+                  [class.alreadyCalledElement]="localData.shuttleCalledLately(shuttle)">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(s)">
+                <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>
-                    <h2>{{ s?.name }}
-                        <ion-icon *ngIf="s?.verified" name="checkmark-circle" slot="end" color="secondary"></ion-icon>
+                    <h2>{{ shuttle?.name }}
+                        <ion-icon *ngIf="shuttle?.verified" name="checkmark-circle" slot="end" color="secondary"></ion-icon>
                     </h2>
                     <p>
-                        <ion-badge *ngIf="coordinates && s?.address?.locality?.de && s?.address?.locality?.it"
+                        <ion-badge *ngIf="coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
                                    color="secondary">
-                            {{ getLocalityName(s) }}
+                            {{ getLocalityName(shuttle) }}
                         </ion-badge>
-                        <ion-badge *ngIf="!coordinates && s?.address?.locality?.de && s?.address?.locality?.it
+                        <ion-badge *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it
                                    && districtColors" [style.background-color]="districtColors[0]"
                                    [style.color]="districtColors[1]">
-                            {{ getLocalityName(s) }}
+                            {{ getLocalityName(shuttle) }}
                         </ion-badge>
                     </p>
                 </ion-text>
             </ion-label>
-            <ion-icon (click)="callClicked(s, $event)" name="call" size="large" slot="end" color="secondary"></ion-icon>
+            <ion-icon (click)="callClicked(shuttle, $event)" name="call" size="large" slot="end" color="secondary"></ion-icon>
         </ion-item>
     </ion-virtual-scroll>
     <div *ngIf="coordinates && outOfRange">

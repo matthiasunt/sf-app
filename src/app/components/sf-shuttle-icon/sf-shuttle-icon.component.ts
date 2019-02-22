@@ -9,7 +9,7 @@ import {shadeHexColor} from '../../tools/sf-tools';
 export class SfShuttleIconComponent implements OnInit {
 
     @Input()
-    color: string;
+    color = '#99CC33';
 
     constructor() {
     }

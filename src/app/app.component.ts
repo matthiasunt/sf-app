@@ -30,11 +30,7 @@ export class AppComponent {
 
     async initializeApp() {
         this.platform.ready().then(async () => {
-            const info = await Device.getInfo();
-            console.log(info);
-            if (info.platform !== 'web') {
-                SplashScreen.hide();
-            }
+            SplashScreen.hide();
             this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(false);
             this.statusBar.styleLightContent();

@@ -6,13 +6,14 @@ import {List, Map} from 'immutable';
 import {DistrictsService} from '../districts/districts.service';
 import {ListElement} from '../../../models/list-element';
 import {GeoService} from '../../geo/geo.service';
+import {Coordinates} from '../../../models/coordinates';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ShuttlesService {
     private _allShuttles: BehaviorSubject<Map<string, Shuttle>> = new BehaviorSubject(Map({}));
-    private _shuttlesByDistrict: Map<string, any> = Map({});
+    private shuttlesByDistrict: Map<string, any> = Map({});
 
     constructor(private sfDbService: SfDbService,
                 private geoService: GeoService,
@@ -26,16 +27,18 @@ export class ShuttlesService {
         return this._allShuttles;
     }
 
-    public getShuttlesByDistrict(districtId: string) {
-        return this._shuttlesByDistrict.get(districtId);
+    public getShuttlesByDistrict(districtId: string): List<Shuttle> {
+        return this.shuttlesByDistrict.get(districtId);
     }
 
-    public async getShuttlesFromLocation(coordinates: Coordinates, radius: number) {
+    // TODO: Rename location to coordinates
+    public async getShuttlesFromPosition(coordinates: Coordinates, radius: number) {
         let ret: Map<string, any> = Map();
+        console.log(coordinates);
         if (coordinates) {
             this._allShuttles.getValue().map((shuttle: Shuttle) => {
-                if (shuttle && shuttle.coordinates) {
-                    const distance = this.geoService.getDistance(coordinates, shuttle.coordinates);
+                if (shuttle && shuttle.location) {
+                    const distance = this.geoService.getDistance(coordinates, shuttle.location);
                     if (distance && distance < radius) {
                         ret = ret.set(shuttle._id, {
                             shuttle: shuttle,
@@ -45,7 +48,7 @@ export class ShuttlesService {
                 }
             });
         }
-        return this.buildRankingFromLocation(ret);
+        return this.buildRankingFromLocation(ret.toList());
     }
 
     public mergeShuttles(shuttles: List<Shuttle>, favorites: List<ListElement>, blacklist: List<ListElement>): List<Shuttle> {
@@ -69,7 +72,7 @@ export class ShuttlesService {
         return ret;
     }
 
-    private buildRankingFromLocation(map: Map<string, any>) {
+    private buildRankingFromLocation(map: List<Shuttle>) {
         return map;
         // const a1: string[] = [];
         // const a2: string[] = [];
@@ -108,10 +111,10 @@ export class ShuttlesService {
                 this.sfDbService.db.query('shuttles/by_district', {
                     include_docs: true, key: district._id
                 }).then((res) => {
-                    const shuttles: Shuttle[] = res.rows.map(row => {
+                    const shuttles: List<Shuttle> = res.rows.map(row => {
                         return row.doc;
                     });
-                    this._shuttlesByDistrict = this._shuttlesByDistrict.set(district._id, shuttles);
+                    this.shuttlesByDistrict = this.shuttlesByDistrict.set(district._id, shuttles);
                 });
             });
         });

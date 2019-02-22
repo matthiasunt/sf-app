@@ -4,7 +4,7 @@ ion-content {
 
 #gps-row {
   display: flex;
-  margin-top: 22px;
+  margin-top: 15px;
 }
 
 #gps-button {
@@ -31,19 +31,25 @@ ion-chip > ion-avatar {
   background-color: white;
 }
 
-#district-chip-row {
-  text-align: center;
+#district-chip-row > ion-label {
+  padding: 0 4px;
+}
 
-  ion-chip {
-    height: 40px;
-    border-radius: 23px;
-    margin: 6px 3px;
+@media screen and (min-width: 321px) {
 
-    ion-label {
-      padding: 0 4px;
+  #district-chip-row {
+    text-align: center;
+
+    ion-chip {
+      height: 40px;
+      border-radius: 23px;
+      margin: 4px 3px;
+
+
     }
   }
 }
+
 
 #remaining-districts-chip-row {
   text-align: center;
@@ -60,6 +66,25 @@ ion-chip > ion-avatar {
 
     width: 80%;
     margin: 10px auto auto auto;
+  }
+}
+
+#tmm-card {
+  border-radius: 40px;
+  //width: 80%;
+  margin-top: 30px;
+  //position: absolute;
+  //bottom: 10px;
+  ion-card-content > h2 {
+    display: inline-block;
+    //display: flex;
+    //align-items: center;
+  }
+
+  ion-card-content > img {
+    display: inline-block;
+    width: 40px;
+    margin: -13px 11px;
   }
 }
 

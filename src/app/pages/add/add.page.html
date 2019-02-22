@@ -8,7 +8,7 @@
         </ion-title>
     </ion-toolbar>
     <ion-searchbar [showCancelButton]="false" (ionInput)="getQueryResult($event)"
-                   placeholder="{{ 'add.NAME_OR_PHONE' | translate }}" animated="true">
+                   placeholder="{{ 'add.NAME_OR_PHONE' | translate }}" animated="true" debounce="500">
     </ion-searchbar>
 </ion-header>
 
