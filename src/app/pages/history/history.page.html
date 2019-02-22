@@ -3,7 +3,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn">
+    <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="60px">
         <ion-item-divider *virtualHeader="let header">
             {{header}}
         </ion-item-divider>

@@ -5,11 +5,11 @@ import {TranslateService} from '@ngx-translate/core';
 import {LocalDataService} from './services/data/local-data/local-data.service';
 import {AuthService} from './services/auth/auth.service';
 import {Plugins} from '@capacitor/core';
-import {ShuttlesService} from './services/data/shuttles/shuttles.service';
 import {DeviceService} from './services/device/device.service';
+import {SfDbService} from './services/data/sf-db/sf-db.service';
+import {UserDbService} from './services/data/user-db/user-db.service';
 
 const {SplashScreen} = Plugins;
-const {Device} = Plugins;
 
 
 @Component({
@@ -20,11 +20,12 @@ export class AppComponent {
     constructor(
         private platform: Platform,
         private deviceService: DeviceService,
+        private sfDbService: SfDbService,
+        private userDbService: UserDbService,
         private statusBar: StatusBar,
         private translate: TranslateService,
         private authService: AuthService,
         private localDataService: LocalDataService,
-        private shuttlesService: ShuttlesService,
     ) {
         this.initializeApp();
         this.setLang();

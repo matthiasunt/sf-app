@@ -3,9 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {District} from '../../../models/district';
 import {Platform} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
-import {UserDbService} from '../user-db/user-db.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Shuttle} from '../../../models/shuttle';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +24,6 @@ export class LocalDataService {
         private translate: TranslateService,
         private platform: Platform,
         private storage: Storage,
-        private userDb: UserDbService,
     ) {
         this.fetchData();
     }
