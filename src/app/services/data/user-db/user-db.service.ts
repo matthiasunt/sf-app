@@ -12,11 +12,11 @@ export class UserDbService {
     private remote: string;
     private details: any;
     private userId: string;
-    public syncSubject: Subject<boolean>;
+    private _syncSubject: Subject<boolean>;
 
     constructor(public http: HttpClient) {
         this.db = new PouchDB('sf-private');
-        this.syncSubject = new Subject<boolean>();
+        this._syncSubject = new Subject<boolean>();
     }
 
     init(details) {
@@ -24,16 +24,20 @@ export class UserDbService {
         this.details = details;
         this.remote = details.userDBs.sf;
         this.db.sync(this.remote, {
-            retry: true
-        }).on('change', function (info) {
-            this.syncSubject.next(true);
-        }).on('paused', function (err) {
-            this.syncSubject.next(true);
+            retry: true, live: true
+        }).on('change', (info) => {
+            this._syncSubject.next(true);
+        }).on('paused', (err) => {
+            this._syncSubject.next(true);
         }).on('complete', (info) => {
-            this.syncSubject.next(true);
+            this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
         });
+    }
+
+    get syncSubject() {
+        return this._syncSubject;
     }
 
     public async removeDoc(doc: any) {

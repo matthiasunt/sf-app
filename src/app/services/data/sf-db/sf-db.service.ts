@@ -11,12 +11,12 @@ export class SfDbService {
     public db: any;
     private remote: string;
 
-    public syncSubject: Subject<boolean>;
+    private _syncSubject: Subject<boolean>;
 
     constructor() {
 
         this.db = new PouchDB('sf-public');
-        this.syncSubject = new Subject<boolean>();
+        this._syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
             + ENV.DB_PASS + '@' + ENV.DB_HOST + '/sf-public';
@@ -24,12 +24,15 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true
         }).on('complete', (info) => {
-            this.syncSubject.next(true);
+            this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
         });
     }
 
+    get syncSubject() {
+        return this._syncSubject;
+    }
 
     private buildRankingFromLocationInRanges(arr: any[], radius: number): any {
         const range1: string[] = [];

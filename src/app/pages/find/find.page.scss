@@ -69,22 +69,35 @@ ion-chip > ion-avatar {
   }
 }
 
+#tmm-card-div {
+  position: fixed;
+  bottom: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+@media screen and (max-width: 320px) {
+  #tmm-card-div {
+    bottom: -15px;
+  }
+  #tmm-card {
+  }
+}
+
 #tmm-card {
+  display: inline-block;
+  width: 250px;
   border-radius: 40px;
-  //width: 80%;
-  margin-top: 30px;
-  //position: absolute;
-  //bottom: 10px;
-  ion-card-content > h2 {
+  background-color: white;
+
+  ion-card-content > h3 {
     display: inline-block;
-    //display: flex;
-    //align-items: center;
   }
 }
 
 #tmm-logo-img {
   display: inline-block;
-  width: 40px;
+  width: 33px;
   margin: -13px 11px;
 }
 
