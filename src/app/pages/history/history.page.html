@@ -3,32 +3,56 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="history" approxItemHeight="72px">
-        <!--<ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="72px">-->
-        <!--<ion-item-divider *virtualHeader="let header">-->
-            <!--{{header}}-->
-        <!--</ion-item-divider>-->
-        <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
-            <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon
-                        [color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>
-            </ion-thumbnail>
-            <ion-label text-wrap>
-                <ion-text>
-                    <h2>{{historyElement?.shuttle?.name}}</h2>
-                    <p>{{getTime(historyElement?.date)}}</p>
-                </ion-text>
-            </ion-label>
-            <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
-            <!--<ion-button color="tertiary" slot="end">-->
-            <!--Rate-->
-            <!--<ion-icon name="star" slot="end"></ion-icon>-->
-            <!--</ion-button>-->
-            <!--</div>-->
-            <ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"
-                      size="large" color="secondary"></ion-icon>
-        </ion-item>
-    </ion-virtual-scroll>
+    <ion-list>
+        <ng-container *ngFor="let dateGroup of history">
+            <ion-item-divider>
+                <ion-label>{{getDate(dateGroup[0].date)}}</ion-label>
+            </ion-item-divider>
+            <ion-item *ngFor="let historyElement of dateGroup" lines="full">
+                <ion-thumbnail slot="start">
+                    <app-sf-shuttle-icon
+                            [color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>
+                </ion-thumbnail>
+                <ion-label text-wrap>
+                    <ion-text>
+                        <h2>{{historyElement?.shuttle?.name}}</h2>
+                        <p>{{getTime(historyElement?.date)}}</p>
+                    </ion-text>
+                </ion-label>
+                <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
+                <!--<ion-button color="tertiary" slot="end">-->
+                <!--Rate-->
+                <!--<ion-icon name="star" slot="end"></ion-icon>-->
+                <!--</ion-button>-->
+                <!--</div>-->
+            </ion-item>
+        </ng-container>
+    </ion-list>
+    <!--<ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="72px">-->
+    <!--<ion-item-divider *virtualHeader="let header">-->
+    <!--{{header}}-->
+    <!--</ion-item-divider>-->
+    <!--<ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">-->
+    <!--<ion-thumbnail slot="start">-->
+    <!--<app-sf-shuttle-icon-->
+    <!--[color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>-->
+    <!--</ion-thumbnail>-->
+    <!--<ion-label text-wrap>-->
+    <!--<ion-text>-->
+    <!--<h2>{{historyElement?.shuttle?.name}}</h2>-->
+    <!--<p>{{getTime(historyElement?.date)}}</p>-->
+    <!--</ion-text>-->
+    <!--</ion-label>-->
+    <!--&lt;!&ndash;<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-button color="tertiary" slot="end">&ndash;&gt;-->
+    <!--&lt;!&ndash;Rate&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-icon name="star" slot="end"></ion-icon>&ndash;&gt;-->
+    <!--&lt;!&ndash;</ion-button>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--<ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"-->
+    <!--size="large" color="secondary"></ion-icon>-->
+    <!--</ion-item>-->
+    <!--</ion-virtual-scroll>-->
 
     <p *ngIf="history.length < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
 
