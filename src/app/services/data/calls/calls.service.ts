@@ -104,7 +104,15 @@ export class CallsService {
     }
 
     public hideCalls() {
-
+        this._calls.getValue().map((call) => {
+            call.isHidden = true;
+            try {
+                const res = this.userDbService.updateDoc(call);
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
     }
 
     private loadInitialData() {
@@ -113,7 +121,9 @@ export class CallsService {
                 .subscribe(
                     (res: any) => {
                         const calls = res.rows.map(row => {
-                            return row.doc;
+                            if (!row.doc.isHidden) {
+                                return row.doc;
+                            }
                         });
                         this._calls.next(List(calls));
                         this.loadHistory();
@@ -127,13 +137,15 @@ export class CallsService {
         this.calls.subscribe((calls) => {
             let history: List<HistoryElement> = List([]);
             calls.map((call: Call) => {
-                const shuttle = this.shuttlesService.getShuttle(call.shuttleId);
-                const historyElement: HistoryElement = {
-                    shuttle: shuttle,
-                    call: call,
-                    date: call.startDate,
-                };
-                history = history.push(historyElement);
+                if (call && call.shuttleId) {
+                    const shuttle = this.shuttlesService.getShuttle(call.shuttleId);
+                    const historyElement: HistoryElement = {
+                        shuttle: shuttle,
+                        call: call,
+                        date: call.startDate,
+                    };
+                    history = history.push(historyElement);
+                }
             });
             this._history.next(history.reverse());
         });
@@ -145,7 +157,9 @@ export class CallsService {
                 .subscribe(
                     (res: any) => {
                         const calls = res.rows.map(row => {
-                            return row.doc;
+                            if (!row.doc.isHidden) {
+                                return row.doc;
+                            }
                         });
                         this._calls.next(List(calls));
                     },
