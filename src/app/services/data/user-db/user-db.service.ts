@@ -46,4 +46,10 @@ export class UserDbService {
         const docFromDb = await this.db.get(doc._id);
         return this.db.remove(docFromDb._id, docFromDb._rev);
     }
+
+    public async updateDoc(doc: any) {
+        const docFromDb = await this.db.get(doc._id);
+        doc._rev = docFromDb._rev;
+        return this.db.put(doc);
+    }
 }

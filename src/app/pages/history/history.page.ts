@@ -20,7 +20,7 @@ import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-too
     providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
-    history: HistoryElement[][];
+    history: HistoryElement[];
     locale: string;
 
     constructor(private navCtrl: NavController,
@@ -37,8 +37,7 @@ export class HistoryPage implements OnInit {
     async ngOnInit() {
         this.locale = this.localData.getLocaleFromPrefLang();
         this.callsService.history.subscribe((history) => {
-            this.history = this.getGroupedHistory(history.toArray());
-            // this.history = history.toArray()
+            this.history = history.toArray();
         });
     }
 
@@ -78,30 +77,6 @@ export class HistoryPage implements OnInit {
         return null;
     }
 
-    // TODO: Refactor
-    private getGroupedHistory(history: any[]): any[][] {
-        const ret: any[][] = [];
-        let j = 0;
-        let k = 0;
-        for (let i = 0; i < history.length; i++) {
-            if (i === 0) {
-                ret[j] = [];
-                ret[j][k] = history[i];
-            } else {
-                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
-                    j++;
-                    ret[j] = [];
-                    k = 0;
-                } else {
-                    k++;
-                }
-                ret[j][k] = history[i];
-            }
-        }
-        return ret;
-    }
-
-
     async clearHistoryAlert() {
         const alert = await this.alertCtrl.create({
             header: '',
@@ -111,9 +86,8 @@ export class HistoryPage implements OnInit {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
-                        this.history = null;
-                        // this.sfDb.clearCalls();
-                        // this.localData.clearShuttleHistory();
+                        this.history = [];
+                        this.callsService.hideCalls();
                     }
                 }
             ]

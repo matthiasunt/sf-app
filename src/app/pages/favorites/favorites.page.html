@@ -3,6 +3,7 @@
 </ion-header>
 
 <ion-content>
+    <p *ngIf="listsService.favorites.getValue().size < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
     <ion-list>
         <ion-item *ngFor="let shuttle of favoriteShuttles" lines="full"
                   (click)="shuttleClicked(shuttle)">
@@ -32,7 +33,6 @@
     <!--</ion-button>-->
     <!--</ion-item>-->
     <!--</ion-virtual-scroll>-->
-    <p *ngIf="listsService.favorites.getValue().size < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
     <ion-fab vertical="center" horizontal="end" slot="fixed">
         <ion-fab-button (click)="addClicked()" color="secondary" type="button">
             <ion-icon name="add"></ion-icon>
