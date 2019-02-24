@@ -1,16 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
 import {Router} from '@angular/router';
-import {Shuttle} from '../../models/shuttle';
-import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
 import {AlertController, NavController} from '@ionic/angular';
 import {CallNumber} from '@ionic-native/call-number/ngx';
+
 import {CallsService} from '../../services/data/calls/calls.service';
+import {LocalDataService} from '../../services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+
 import {HistoryElement} from '../../models/history-element';
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {CallOriginName} from '../../models/call';
+import {Shuttle} from '../../models/shuttle';
+import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-history',
@@ -29,7 +30,6 @@ export class HistoryPage implements OnInit {
                 private callNumber: CallNumber,
                 private localData: LocalDataService,
                 private callsService: CallsService,
-                private shuttlesService: ShuttlesService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
         this.history = [];

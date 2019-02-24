@@ -142,7 +142,7 @@ export class FindPage implements OnInit {
     }
 
     /* Toasts */
-    private async presentConnectionToast() {
+    public async presentConnectionToast() {
         const toast = await this.toastCtrl.create({
             message: this.translate.instant('VERIFY_CONNECTION'),
             showCloseButton: true,
@@ -153,7 +153,7 @@ export class FindPage implements OnInit {
     }
 
 
-    private async presentNoShuttleFoundToast() {
+    public async presentNoShuttleFoundToast() {
         const toast = await this.toastCtrl.create({
             message: this.translate.instant('NO_SHUTTLE_FOUND'),
             showCloseButton: true,
@@ -163,7 +163,7 @@ export class FindPage implements OnInit {
         await toast.present();
     }
 
-    private getTMMUrl() {
+    public getTMMUrl() {
         if (this.translate.currentLang === 'it') {
             return 'http://bit.ly/zero-compromessi';
         } else {
@@ -177,7 +177,7 @@ export class FindPage implements OnInit {
         }
     }
 
-    private getDistrictName(district: any): string {
+    public getDistrictName(district: any): string {
         if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
             switch (this.lang) {
                 case 'de_st':

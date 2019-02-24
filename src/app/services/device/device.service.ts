@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Plugins} from '@capacitor/core';
+import {DeviceInfo, Plugins} from '@capacitor/core';
 
 const {Device} = Plugins;
 
@@ -8,13 +8,13 @@ const {Device} = Plugins;
 })
 export class DeviceService {
 
-    private info: any;
+    private info: DeviceInfo;
 
     constructor() {
         this.fetchInfo();
     }
 
-    public getInfo() {
+    public getInfo(): DeviceInfo {
         return this.info;
     }
 
@@ -22,6 +22,10 @@ export class DeviceService {
         if (this.info) {
             return this.info.platform;
         }
+    }
+
+    public getAppVersion(): string {
+        return this.info.appVersion;
     }
 
     public isDevice(): boolean {

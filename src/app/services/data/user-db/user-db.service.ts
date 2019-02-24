@@ -15,7 +15,9 @@ export class UserDbService {
     private _syncSubject: Subject<boolean>;
 
     constructor(public http: HttpClient) {
-        this.db = new PouchDB('sf-private');
+        this.db = new PouchDB('sf-private', {
+            auto_compaction: true,
+        });
         this._syncSubject = new Subject<boolean>();
     }
 

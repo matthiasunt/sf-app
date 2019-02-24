@@ -3,10 +3,11 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="60px">
-        <ion-item-divider *virtualHeader="let header">
-            {{header}}
-        </ion-item-divider>
+    <ion-virtual-scroll [items]="history" approxItemHeight="72px">
+        <!--<ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="72px">-->
+        <!--<ion-item-divider *virtualHeader="let header">-->
+            <!--{{header}}-->
+        <!--</ion-item-divider>-->
         <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon
