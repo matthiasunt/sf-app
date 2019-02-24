@@ -42,25 +42,25 @@ export class ListsService {
     private loadListData(type: ElementType) {
         const designDoc = type === ElementType.Favorite ?
             'favorites/all' : 'blacklist/all';
-            from(this.userDbService.db.query(designDoc, {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        let list: List<ListElement> = List();
-                        res.rows.map(row => {
-                            list = list.push(row.doc);
-                        });
-                        switch (type) {
-                            case ElementType.Favorite:
-                                this._favorites.next(list);
-                                break;
-                            case ElementType.Blacklisted:
-                                this._blacklist.next(list);
-                        }
-                    },
-                    (err) => {
-                        console.error(err);
+        from(this.userDbService.db.query(designDoc, {include_docs: true}))
+            .subscribe(
+                (res: any) => {
+                    let list: List<ListElement> = List();
+                    res.rows.map(row => {
+                        list = list.push(row.doc);
+                    });
+                    switch (type) {
+                        case ElementType.Favorite:
+                            this._favorites.next(list);
+                            break;
+                        case ElementType.Blacklisted:
+                            this._blacklist.next(list);
                     }
-                );
+                },
+                (err) => {
+                    console.error(err);
+                }
+            );
     }
 
     public async addListElement(listElement: ListElement) {
@@ -79,7 +79,6 @@ export class ListsService {
 
     public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {
         const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
-        console.log(list);
         const listElement = list.find((element) => element.shuttleId === shuttleId);
         try {
             const res = await this.userDbService.removeDoc(listElement);

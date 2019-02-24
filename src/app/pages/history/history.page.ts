@@ -20,7 +20,7 @@ import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-too
     providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
-    history: HistoryElement[];
+    history: HistoryElement[][];
     locale: string;
 
     constructor(private navCtrl: NavController,
@@ -32,13 +32,13 @@ export class HistoryPage implements OnInit {
                 private callsService: CallsService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
-        this.history = [];
     }
 
     async ngOnInit() {
         this.locale = this.localData.getLocaleFromPrefLang();
         this.callsService.history.subscribe((history) => {
-            this.history = history.toArray();
+            this.history = this.getGroupedHistory(history.toArray());
+            // this.history = history.toArray()
         });
     }
 
@@ -76,6 +76,29 @@ export class HistoryPage implements OnInit {
             return getBeautifulDateString(record.date, 'de');
         }
         return null;
+    }
+
+    // TODO: Refactor
+    private getGroupedHistory(history: any[]): any[][] {
+        const ret: any[][] = [];
+        let j = 0;
+        let k = 0;
+        for (let i = 0; i < history.length; i++) {
+            if (i === 0) {
+                ret[j] = [];
+                ret[j][k] = history[i];
+            } else {
+                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
+                    j++;
+                    ret[j] = [];
+                    k = 0;
+                } else {
+                    k++;
+                }
+                ret[j][k] = history[i];
+            }
+        }
+        return ret;
     }
 
 
