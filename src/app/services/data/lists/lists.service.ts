@@ -79,6 +79,7 @@ export class ListsService {
 
     public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {
         const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
+        console.log(list);
         const listElement = list.find((element) => element.shuttleId === shuttleId);
         try {
             const res = await this.userDbService.removeDoc(listElement);

@@ -8,6 +8,8 @@ import {Plugins} from '@capacitor/core';
 import {DeviceService} from './services/device/device.service';
 import {SfDbService} from './services/data/sf-db/sf-db.service';
 import {UserDbService} from './services/data/user-db/user-db.service';
+import {CallsService} from './services/data/calls/calls.service';
+import {ListsService} from './services/data/lists/lists.service';
 
 const {SplashScreen} = Plugins;
 
@@ -22,6 +24,8 @@ export class AppComponent {
         private deviceService: DeviceService,
         private sfDbService: SfDbService,
         private userDbService: UserDbService,
+        private callsService: CallsService,
+        public listsService: ListsService,
         private statusBar: StatusBar,
         private translate: TranslateService,
         private authService: AuthService,

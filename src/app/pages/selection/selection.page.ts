@@ -10,7 +10,6 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {DistrictsService} from '../../services/data/districts/districts.service';
 import {ListsService} from '../../services/data/lists/lists.service';
-import {List} from 'immutable';
 import {CallsService} from '../../services/data/calls/calls.service';
 import {AuthService} from '../../services/auth/auth.service';
 import {CallOrigin, CallOriginName} from '../../models/call';
@@ -18,8 +17,6 @@ import {CallOrigin, CallOriginName} from '../../models/call';
 import {District} from '../../models/district';
 import {Shuttle} from '../../models/shuttle';
 import {Coordinates} from '../../models/coordinates';
-import {c} from 'tar';
-import {ignore} from 'selenium-webdriver/testing';
 
 @Component({
     selector: 'app-selection',
@@ -39,6 +36,7 @@ export class SelectionPage implements OnInit {
 
     shuttles: Shuttle[];
     lang: string;
+
     shuttlesInRanges: any;
 
     actualShuttleIndex: number;
@@ -70,13 +68,9 @@ export class SelectionPage implements OnInit {
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
             const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
-
-
-            // @ts-ignore
-            this.shuttles = shuttlesTemp;
-            // this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-            //     this.listsService.favorites.getValue(),
-            //     this.listsService.blacklist.getValue());
+            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+                this.listsService.favorites.getValue(),
+                this.listsService.blacklist.getValue()).toArray();
             // Via GPS
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
@@ -110,15 +104,8 @@ export class SelectionPage implements OnInit {
         if (!shuttlesTemp || shuttlesTemp.count() < 1) {
             this.outOfRange = true;
         } else {
-            this.shuttles = shuttlesTemp.map((element) => {
-                // @ts-ignore
-                return element.shuttle;
-            }).toArray();
-            console.log(this.shuttles);
+            this.shuttles = shuttlesTemp.toArray();
         }
-        // else {
-        //     this.shuttles = await this.sfDb.getMergedShuttles(shuttlesTemp);
-        // }
     }
 
     public shuttleClicked(shuttle: Shuttle) {
@@ -132,7 +119,7 @@ export class SelectionPage implements OnInit {
         // }
     }
 
-    private callClicked(shuttle: Shuttle, event) {
+    public callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
         let callOrigin: CallOrigin;
@@ -149,25 +136,6 @@ export class SelectionPage implements OnInit {
         }
         this.callsService.handleCall(shuttle._id, callOrigin);
         this.callNumber.callNumber(shuttle.phone, true);
-    }
-
-
-    private async presentReallyCallToast(shuttle) {
-        const alert = await this.alertCtrl.create({
-            header: '',
-            subHeader: this.translate.instant('selection.REALLY_CALL_1')
-                + ' <b color=\'#8BC34A\'>' + shuttle.name + '</b>'
-                + this.translate.instant('selection.REALLY_CALL_2'),
-            buttons: [
-                {text: this.translate.instant('NO')},
-                {
-                    text: this.translate.instant('YES'),
-                    handler: () => {
-                    }
-                }
-            ]
-        });
-        await alert.present();
     }
 
     getToolbarStyle() {

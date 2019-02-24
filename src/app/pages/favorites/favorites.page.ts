@@ -14,14 +14,20 @@ import {List} from 'immutable';
 })
 export class FavoritesPage implements OnInit {
 
+    public favoriteShuttles: Shuttle[];
+
     constructor(private navCtrl: NavController,
                 public shuttlesService: ShuttlesService,
                 public listsService: ListsService,
                 public colorGeneratorService: ColorGeneratorService
     ) {
+        this.favoriteShuttles = [];
     }
 
-    async ngOnInit() {
+    ngOnInit() {
+        this.listsService.favorites.subscribe((favorites) => {
+            this.favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites).toArray();
+        });
     }
 
     public shuttleClicked(shuttle: Shuttle) {

@@ -32,48 +32,40 @@ export class ShuttlesService {
     }
 
     // TODO: Rename location to coordinates
-    public async getShuttlesFromPosition(coordinates: Coordinates, radius: number) {
-        let ret: Map<string, any> = Map();
+    public getShuttlesFromPosition(coordinates: Coordinates, radius: number): List<Shuttle> {
+        const ret: List<Shuttle> = List([]);
         console.log(coordinates);
         if (coordinates) {
             this._allShuttles.getValue().map((shuttle: Shuttle) => {
                 if (shuttle && shuttle.location) {
                     const distance = this.geoService.getDistance(coordinates, shuttle.location);
                     if (distance && distance < radius) {
-                        ret = ret.set(shuttle._id, {
-                            shuttle: shuttle,
-                            distance: distance
-                        });
+                        ret.push(shuttle);
                     }
                 }
             });
         }
-        return this.buildRankingFromLocation(ret.toList());
+        return this.buildRankingFromLocation(ret);
     }
 
     public mergeShuttles(shuttles: List<Shuttle>, favorites: List<ListElement>, blacklist: List<ListElement>): List<Shuttle> {
         let ret: List<Shuttle> = shuttles;
         favorites.map((favorite) => {
-            // const index = ret.findIndex((shuttle) => shuttle._id === favorite.shuttleId);
-            // ret = ret.delete(index);
-            ret = ret.filter((shuttle) => {
+            ret.filter((shuttle) => {
                 return favorite.shuttleId !== shuttle._id;
             });
         });
         ret = this.getShuttlesFromList(favorites).merge(ret);
-        // blacklist.map((blacklisted) => {
-        //     // const index = ret.findIndex((shuttle) => shuttle._id === blacklisted.shuttleId);
-        //     // ret = ret.delete(index);
-        //     ret = ret.filter((shuttle) => {
-        //         return blacklisted.shuttleId !== shuttle._id;
-        //     });
-        // });
-        console.log(ret);
+        blacklist.map((blacklisted) => {
+            ret.filter((shuttle) => {
+                return blacklisted.shuttleId !== shuttle._id;
+            });
+        });
         return ret;
     }
 
-    private buildRankingFromLocation(map: List<Shuttle>) {
-        return map;
+    private buildRankingFromLocation(list: List<Shuttle>) {
+        return list;
         // const a1: string[] = [];
         // const a2: string[] = [];
         // const a3: string[] = [];
@@ -99,7 +91,9 @@ export class ShuttlesService {
         let shuttles: List<Shuttle> = List([]);
         if (list) {
             list.map((element) => {
-                shuttles = shuttles.push(this._allShuttles.getValue().get(element.shuttleId));
+                if (element && element.shuttleId) {
+                    shuttles = shuttles.push(this._allShuttles.getValue().get(element.shuttleId));
+                }
             });
         }
         return shuttles;

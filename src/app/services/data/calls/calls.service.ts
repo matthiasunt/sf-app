@@ -44,6 +44,7 @@ export class CallsService {
         return this._history;
     }
 
+    // TODO: Fix Handler!!
     public handleCall(shuttleId: string, origin: CallOrigin) {
         let callStartDate: Date;
         let callEndDate: Date;
