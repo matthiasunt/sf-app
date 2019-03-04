@@ -1,8 +1,5 @@
 export interface Address {
-    street: {
-        de: string;
-        it: string;
-    };
+    street: string;
     houseNumber: string;
     postalCode: string;
     locality: {

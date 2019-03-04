@@ -78,6 +78,7 @@ export class HistoryPage implements OnInit {
     }
 
     async clearHistoryAlert() {
+        console.log('present alert');
         const alert = await this.alertCtrl.create({
             header: '',
             subHeader: this.translate.instant('history.msg.DELETE_ALL'),
@@ -86,7 +87,6 @@ export class HistoryPage implements OnInit {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
-                        this.history = [];
                         this.callsService.hideCalls();
                     }
                 }

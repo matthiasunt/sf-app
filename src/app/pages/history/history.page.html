@@ -19,12 +19,12 @@
                         <p>{{getTime(historyElement?.date)}}</p>
                     </ion-text>
                 </ion-label>
-                <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
-                <!--<ion-button color="tertiary" slot="end">-->
-                <!--Rate-->
-                <!--<ion-icon name="star" slot="end"></ion-icon>-->
-                <!--</ion-button>-->
-                <!--</div>-->
+                <div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">
+                    <ion-button color="tertiary" slot="end">
+                        Rate
+                        <ion-icon name="star" slot="end"></ion-icon>
+                    </ion-button>
+                </div>
                 <ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"
                           size="large" color="secondary"></ion-icon>
             </ion-item>

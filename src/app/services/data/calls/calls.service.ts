@@ -104,15 +104,23 @@ export class CallsService {
     }
 
     public hideCalls() {
-        this._calls.getValue().map((call) => {
-            call.isHidden = true;
+        const callsToHide = this._calls.getValue();
+        this._calls.next(List([]));
+        this._history.next(List([]));
+
+        console.log(callsToHide);
+        callsToHide.map((call: Call) => {
+            if (call) {
+                call.isHidden = true;
+            }
             try {
-                const res = this.userDbService.updateDoc(call);
-                console.log(res);
+                // const res = this.userDbService.updateDoc(call);
+                // console.log(res);
             } catch (err) {
                 console.error(err);
             }
         });
+
     }
 
     private loadInitialData() {
