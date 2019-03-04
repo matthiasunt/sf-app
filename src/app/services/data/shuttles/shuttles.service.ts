@@ -1,12 +1,12 @@
 import {Injectable, NgZone} from '@angular/core';
 import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from} from 'rxjs';
-import {Shuttle} from '../../../models/shuttle';
+import {Shuttle} from '@models/shuttle';
 import {List, Map} from 'immutable';
 import {DistrictsService} from '../districts/districts.service';
-import {ListElement} from '../../../models/list-element';
+import {ListElement} from '@models/list-element';
 import {GeoService} from '../../geo/geo.service';
-import {Coordinates} from '../../../models/coordinates';
+import {Coordinates} from '@models/coordinates';
 
 @Injectable({
     providedIn: 'root'
@@ -28,24 +28,24 @@ export class ShuttlesService {
     }
 
     public getShuttlesByDistrict(districtId: string): List<Shuttle> {
-        return this.shuttlesByDistrict.get(districtId);
+        return this.rankShuttlesByScore(
+            this.shuttlesByDistrict.get(districtId)
+        );
     }
 
-    // TODO: Rename location to coordinates
     public getShuttlesFromPosition(coordinates: Coordinates, radius: number): List<Shuttle> {
-        const ret: List<Shuttle> = List([]);
-        console.log(coordinates);
+        let ret: List<Shuttle> = List([]);
         if (coordinates) {
             this._allShuttles.getValue().map((shuttle: Shuttle) => {
                 if (shuttle && shuttle.location) {
                     const distance = this.geoService.getDistance(coordinates, shuttle.location);
                     if (distance && distance < radius) {
-                        ret.push(shuttle);
+                        ret = ret.push(shuttle);
                     }
                 }
             });
         }
-        return this.buildRankingFromLocation(ret);
+        return ret;
     }
 
     public mergeShuttles(shuttles: List<Shuttle>, favorites: List<ListElement>, blacklist: List<ListElement>): List<Shuttle> {
@@ -64,12 +64,23 @@ export class ShuttlesService {
         return ret;
     }
 
+    private rankShuttlesByScore(list: List<Shuttle>): List<Shuttle> {
+        let ret: List<Shuttle>;
+        ret = list.sort((a, b) => {
+            return b.score - a.score;
+        });
+        let chunk: List<Shuttle>;
+        for (let i = 0; i < ret.count(); i++) {
+
+        }
+        return ret;
+    }
+
     private buildRankingFromLocation(list: List<Shuttle>) {
-        return list;
         // const a1: string[] = [];
         // const a2: string[] = [];
         // const a3: string[] = [];
-        // arr.forEach((e) => {
+        // list.forEach((e) => {
         //     if (e.distance) {
         //         if (e.distance < 12000) {
         //             a1.push(e);
@@ -104,34 +115,26 @@ export class ShuttlesService {
             // Fetch Shuttles by Districts
             this.districtsService.districts.subscribe((districts) => {
                 districts.map(async (district) => {
-                    try {
-                        const res = await this.sfDbService.db.query('shuttles/by_district', {
-                            include_docs: true, key: district._id,
-                        });
-                        const shuttles: List<Shuttle> = res.rows.map(row => {
-                            return row.doc;
-                        });
-                        this.shuttlesByDistrict = this.shuttlesByDistrict.set(district._id, shuttles);
-                    } catch (err) {
-                        console.error(err);
-                    }
+                    const res = await this.sfDbService.db.query('shuttles/by_district', {
+                        include_docs: true, key: district._id,
+                    });
+                    const shuttles: List<Shuttle> = res.rows.map(row => {
+                        return row.doc;
+                    });
+                    this.shuttlesByDistrict = this.shuttlesByDistrict.set(district._id, shuttles);
                 });
             });
-            try {
-                from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-                    .subscribe(
-                        (res: any) => {
-                            let shuttles: Map<string, Shuttle> = Map();
-                            res.rows.map(row => {
-                                shuttles = shuttles.set(row.doc._id, row.doc);
-                            });
-                            this._allShuttles.next(shuttles);
-                        },
-                        err => console.log('Error retrieving Shuttles')
-                    );
-            } catch (err) {
-                console.error(err);
-            }
+            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        let shuttles: Map<string, Shuttle> = Map();
+                        res.rows.map(row => {
+                            shuttles = shuttles.set(row.doc._id, row.doc);
+                        });
+                        this._allShuttles.next(shuttles);
+                    },
+                    err => console.log('Error retrieving Shuttles')
+                );
         });
     }
 

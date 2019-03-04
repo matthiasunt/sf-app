@@ -2,7 +2,7 @@
   "name": "sf-app",
   "version": "0.0.1",
   "author": "Matthias Unterfrauner",
-  "homepage": "http://ionicframework.com/",
+  "homepage": "https://shuttlefinder.app",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

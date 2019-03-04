@@ -18,7 +18,6 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {getContrastColor} from '../../tools/sf-tools';
-import {List} from 'immutable';
 
 @Component({
     selector: 'app-find',
@@ -28,10 +27,7 @@ import {List} from 'immutable';
 })
 export class FindPage implements OnInit {
 
-    allDistricts: List<District> = List([]);
-    favorites: List<Shuttle> = List([]);
-    recentDistricts: District[];
-    remainingDistricts: District[];
+    favorites: Shuttle[];
 
     lang: string;
 
@@ -51,39 +47,16 @@ export class FindPage implements OnInit {
                 private geoService: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
-        this.recentDistricts = [];
-        this.remainingDistricts = [];
     }
 
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
-        this.districtsService.districts.subscribe((districts) => {
-            this.allDistricts = districts;
-        });
-
         this.listsService.favorites.subscribe((favorites) => {
-            this.favorites = this.shuttlesService.getShuttlesFromList(favorites);
+            this.favorites = this.shuttlesService.getShuttlesFromList(favorites).toArray();
         });
         this.localData.getLang().then((lang) => {
             this.lang = lang;
         });
-    }
-
-    private async ionViewWillEnter() {
-        this.updateDistricts();
-    }
-
-    private async updateDistricts() {
-        // this.recentDistricts = await this.localData.getRecentDistricts();
-        // if (this.allDistricts && this.allDistricts.length > 0) {
-        //     this.remainingDistricts = this.allDistricts.slice();
-        //     this.recentDistricts.forEach((d) => {
-        //         const index = this.remainingDistricts.findIndex((t) => t._id === d._id);
-        //         if (index > -1) {
-        //             this.remainingDistricts.splice(index, 1);
-        //         }
-        //     });
-        // }
     }
 
     private async districtClicked(district) {

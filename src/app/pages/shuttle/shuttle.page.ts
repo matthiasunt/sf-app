@@ -95,7 +95,7 @@ export class ShuttlePage implements OnInit {
         const toast = await this.toastController.create({
             message: 'Shuttle added to Favorites!',
             showCloseButton: true,
-            closeButtonText: 'Schließen',
+            closeButtonText: 'Ok',
             position: 'top',
             duration: 2000,
             color: 'secondary',
@@ -115,7 +115,7 @@ export class ShuttlePage implements OnInit {
         const toast = await this.toastController.create({
             message: 'Shuttle removed from Favorites!',
             showCloseButton: true,
-            closeButtonText: 'Schließen',
+            closeButtonText: 'Ok',
             position: 'top',
             duration: 2000,
             color: 'danger',
