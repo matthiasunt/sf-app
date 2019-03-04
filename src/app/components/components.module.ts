@@ -11,7 +11,7 @@ import {SfSkeletonListComponent} from './sf-skeleton-list/sf-skeleton-list.compo
     declarations: [
         SfShuttleIconComponent,
         SfToolbarComponent,
-        SfSkeletonListComponent
+        SfSkeletonListComponent,
     ],
     imports: [
         CommonModule,
@@ -21,7 +21,7 @@ import {SfSkeletonListComponent} from './sf-skeleton-list/sf-skeleton-list.compo
     exports: [
         SfShuttleIconComponent,
         SfToolbarComponent,
-        SfSkeletonListComponent
+        SfSkeletonListComponent,
     ]
 })
 export class ComponentsModule {

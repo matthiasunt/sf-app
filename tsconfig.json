@@ -21,6 +21,18 @@
     "paths": {
       "@env": [
         "environments/environment"
+      ],
+      "@components/*": [
+        "app/components/*"
+      ],
+      "@models/*": [
+        "app/models/*"
+      ],
+      "@services/*": [
+        "app/services/*"
+      ],
+      "@pages/*": [
+        "app/pages/*"
       ]
     }
   }

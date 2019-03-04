@@ -160,6 +160,7 @@ export class GeoService {
             'in Passiria',
             'Venosta',
             'an der Weinstraße',
+            'am Schlern',
             'in Gröden',
             'im Vinschgau',
             'in Passeier'

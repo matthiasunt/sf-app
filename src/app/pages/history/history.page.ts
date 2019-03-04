@@ -4,13 +4,13 @@ import {Router} from '@angular/router';
 import {AlertController, NavController} from '@ionic/angular';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 
-import {CallsService} from '../../services/data/calls/calls.service';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+import {CallsService} from '@services/data/calls/calls.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 
-import {HistoryElement} from '../../models/history-element';
-import {CallOriginName} from '../../models/call';
-import {Shuttle} from '../../models/shuttle';
+import {HistoryElement} from '@models/history-element';
+import {CallOriginName} from '@models/call';
+import {Shuttle} from '@models/shuttle';
 import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
 
 @Component({
@@ -78,7 +78,6 @@ export class HistoryPage implements OnInit {
     }
 
     async clearHistoryAlert() {
-        console.log('present alert');
         const alert = await this.alertCtrl.create({
             header: '',
             subHeader: this.translate.instant('history.msg.DELETE_ALL'),

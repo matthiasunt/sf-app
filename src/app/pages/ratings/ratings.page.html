@@ -1,9 +1,36 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>ratings</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="tertiary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            Ratings {{shuttle?.name}}
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+    <ion-card id="rating-card">
+        <ion-card-header>
+            <ion-card-subtitle>Anonym, 12.12.2019</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <p>
+                <span>Service</span>
+                <ion-badge color="tertiary">3,7 von 5</ion-badge>
+            </p>
+            <p>
+                <span>Reliability</span>
+                <ion-badge color="tertiary">4,2 von 5</ion-badge>
+            </p>
+            <p>
+                <span>Price</span>
+                <ion-badge color="tertiary">5,0 von 5</ion-badge>
+            </p>
+            <hr>
+            <p>
+                <i>"Super Shuttel nia probleme kop hihi"</i>
+            </p>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
