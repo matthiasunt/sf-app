@@ -1,19 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
-import {NavController} from '@ionic/angular';
+import {NavController, PopoverController, ToastController} from '@ionic/angular';
 
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
-import {CallsService} from '../../services/data/calls/calls.service';
-import {ListsService} from '../../services/data/lists/lists.service';
-import {AuthService} from '../../services/auth/auth.service';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {CallsService} from '@services/data/calls/calls.service';
+import {ListsService} from '@services/data/lists/lists.service';
+import {AuthService} from '@services/auth/auth.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 
-import {Shuttle} from '../../models/shuttle';
-import {CallOriginName} from '../../models/call';
-import {ElementType, ListElement} from '../../models/list-element';
+import {Shuttle} from '@models/shuttle';
+import {CallOriginName} from '@models/call';
+import {ElementType, ListElement} from '@models/list-element';
 import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
+import {GeoService} from '@services/geo/geo.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -26,8 +27,12 @@ export class ShuttlePage implements OnInit {
     shuttle: Shuttle;
     shuttleColor: string;
     isFavorite: boolean;
+    lang: string;
 
     constructor(private navCtrl: NavController,
+                private toastController: ToastController,
+                private popoverController: PopoverController,
+                private geoService: GeoService,
                 private callNumber: CallNumber,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
@@ -43,6 +48,7 @@ export class ShuttlePage implements OnInit {
     }
 
     async ngOnInit() {
+        this.lang = await this.localData.getLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         console.log(this.router.url);
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
@@ -53,17 +59,22 @@ export class ShuttlePage implements OnInit {
 
     }
 
-    public callClicked(shuttle: Shuttle) {
-        this.callsService.handleCall(shuttle._id, {
+    public callClicked() {
+        this.callsService.handleCall(this.shuttle._id, {
             name: CallOriginName.District,
             value: '',
         });
-        this.callNumber.callNumber(shuttle.phone, true);
+        this.callNumber.callNumber(this.shuttle.phone, true);
     }
 
-    public rateClicked(shuttle: Shuttle) {
+    public rateClicked() {
         const currentUrl = this.router.url;
-        this.navCtrl.navigateForward(currentUrl + '/rate/' + shuttle._id);
+        this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle._id);
+    }
+
+    public toRatingsPage() {
+        const currentUrl = this.router.url;
+        this.navCtrl.navigateForward(currentUrl + '/ratings/' + this.shuttle._id);
     }
 
     public addToFavorites() {
@@ -77,12 +88,40 @@ export class ShuttlePage implements OnInit {
         };
         this.listsService.addListElement(listElement);
         this.isFavorite = true;
+        this.presentAddedToFavoritesToast();
+    }
+
+    private async presentAddedToFavoritesToast() {
+        const toast = await this.toastController.create({
+            message: 'Shuttle added to Favorites!',
+            showCloseButton: true,
+            closeButtonText: 'Schließen',
+            position: 'top',
+            duration: 2000,
+            color: 'secondary',
+            translucent: true,
+        });
+        toast.present();
     }
 
     public removeFromFravorites() {
         this.listsService.removeListElementByShuttleId(this.shuttle._id,
             this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
         this.isFavorite = false;
+        this.presentRemovedFromFavoritesToast();
+    }
+
+    private async presentRemovedFromFavoritesToast() {
+        const toast = await this.toastController.create({
+            message: 'Shuttle removed from Favorites!',
+            showCloseButton: true,
+            closeButtonText: 'Schließen',
+            position: 'top',
+            duration: 2000,
+            color: 'danger',
+            translucent: true,
+        });
+        toast.present();
     }
 
     getToolbarStyle() {
@@ -98,18 +137,18 @@ export class ShuttlePage implements OnInit {
         }
     }
 
-    public async getLocalityName(): Promise<string> {
+    public getLocalityName(): string {
+        let ret: string;
         if (this.shuttle && this.shuttle.address && this.shuttle.address.locality) {
             const locality = this.shuttle.address.locality;
-            switch (await this.localData.getLang()) {
-                case 'de_st':
-                    return locality.de;
+            switch (this.lang) {
                 case 'it':
-                    return locality.it;
+                    ret = locality.it;
+                    break;
                 default:
-                    return locality.de;
+                    ret = locality.de;
             }
-
+            return this.geoService.getBeatifulCityName(ret);
         }
     }
 

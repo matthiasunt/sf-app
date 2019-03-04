@@ -18,3 +18,22 @@
 .add-remove-button-div {
   padding: 14px 8px;
 }
+
+#rating-card {
+  ion-card-header {
+    padding-bottom: 12px;
+  }
+  ion-card-content {
+    padding-bottom: 8px;
+
+    p {
+      display: flex;
+      align-items: center;
+      padding-bottom: 3px;
+
+      span {
+        margin-right: 8px;
+      }
+    }
+  }
+}

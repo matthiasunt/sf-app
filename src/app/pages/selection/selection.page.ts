@@ -162,15 +162,17 @@ export class SelectionPage implements OnInit {
 
 
     public getLocalityName(shuttle: Shuttle): string {
+        let ret: string;
         if (shuttle && shuttle.address && shuttle.address.locality) {
             const locality = shuttle.address.locality;
             switch (this.lang) {
                 case 'it':
-                    return locality.it;
+                    ret = locality.it;
+                    break;
                 default:
-                    return locality.de;
+                    ret = locality.de;
             }
-
+            return this.geoService.getBeatifulCityName(ret);
         }
     }
 

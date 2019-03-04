@@ -21,9 +21,9 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
-        ShuttlePageRoutingModule,
-        RouterModule.forChild(routes),
         ComponentsModule,
+        ShuttlePageRoutingModule,
+        RouterModule.forChild(routes)
     ],
     declarations: [ShuttlePage]
 })

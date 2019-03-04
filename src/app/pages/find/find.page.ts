@@ -6,17 +6,16 @@ import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 
+import {DistrictsService} from '@services/data/districts/districts.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {GeoService} from '@services/geo/geo.service';
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {ListsService} from '@services/data/lists/lists.service';
+import {DeviceService} from '@services/device/device.service';
 
-import {DistrictsService} from '../../services/data/districts/districts.service';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {GeoService} from '../../services/geo/geo.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
-import {ListsService} from '../../services/data/lists/lists.service';
-import {DeviceService} from '../../services/device/device.service';
-
-import {District} from '../../models/district';
-import {Shuttle} from '../../models/shuttle';
+import {District} from '@models/district';
+import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {getContrastColor} from '../../tools/sf-tools';
 import {List} from 'immutable';
@@ -88,12 +87,7 @@ export class FindPage implements OnInit {
     }
 
     private async districtClicked(district) {
-        if (this.localData.getDirectMode()) {
-            // const shuttlesByDistrict = await this.sfDb.getShuttlesByDistrict(district);
-            // const shuttles = await this.sfDb.getMergedShuttles(shuttlesByDistrict);
-        } else {
-            this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
-        }
+        this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
         this.localData.setRecentDistricts(district);
     }
 
