@@ -25,8 +25,11 @@
                         <ion-icon name="star" slot="end"></ion-icon>
                     </ion-button>
                 </div>
-                <ion-icon (click)="callClicked(historyElement.shuttle, $event)" id="call-icon" slot="end" name="call"
-                          size="large" color="secondary"></ion-icon>
+                <div class="call-icon-div" (click)="callClicked(historyElement.shuttle, $event)">
+                    <ion-icon id="call-icon" slot="end" name="call"
+                              size="large" color="secondary"></ion-icon>
+                </div>
+
             </ion-item>
         </ion-virtual-scroll>
     </ng-container>

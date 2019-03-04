@@ -23,17 +23,11 @@ export class GeoService {
         private geolocation: Geolocation,
         private nativeGeocoder: NativeGeocoder,
     ) {
-        this.getCurrentPosition();
-        if (this.deviceService.getPlatform() !== 'web') {
-
-        }
     }
 
     public async getCurrentPosition() {
         if (this.deviceService.isDevice()) {
-            // await this.platform.ready();
             const res = await this.geolocation.getCurrentPosition({enableHighAccuracy: true});
-            console.log(res);
             return res.coords;
         } else {
             return this.getRandomPosition();
@@ -56,40 +50,6 @@ export class GeoService {
             return '';
         }
     }
-
-    // public async getGeocodedCityName(coordinates: Coordinates, lang: string): Promise<string> {
-    //     const data = await this.http.get(`https://maps.google.com/maps/api/geocode/json?`
-    //         + `latlng=${coordinates.latitude},${coordinates.longitude}`
-    //         + `&language=${lang}`
-    //         + `&key=${ENV.GEOCODE_API_KEY}`).toPromise();
-    //     const name: string = this.getLocalityName(data['results']);
-    //     this.geocodedCityName = {
-    //         name: name,
-    //         lang: lang,
-    //     };
-    //     console.log(name);
-    //     return this.getBeatifulCityName(name);
-    // }
-
-
-    // private getLocalityName(apiResults: any[]): any {
-    //     if (apiResults) {
-    //         for (const r of apiResults) {
-    //             if (r.types.indexOf('administrative_area_level_3') > -1
-    //                 && r.types.indexOf('political') > -1) {
-    //                 for (const c of r.address_components) {
-    //                     if (c.types.indexOf('administrative_area_level_3') > -1
-    //                         && c.types.indexOf('political') > -1) {
-    //                         return c.short_name;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     } else {
-    //         console.log('Google API result undefined');
-    //     }
-    // }
-
 
     /*
       Takes two positions and returns the distance in meters
@@ -117,8 +77,7 @@ export class GeoService {
         const rLng = this.getRandom(1007811939, 1279174244) * Math.pow(10, -8);
         this.position = {
             latitude: rLat,
-            longitude: rLng,
-            timestamp: new Date().getTime(),
+            longitude: rLng
         };
         return this.position;
 
@@ -128,25 +87,6 @@ export class GeoService {
         const ret = Math.floor(Math.random() * (max - min) + min);
         return ret;
     }
-
-    // public async getPosition(): Promise<any> {
-    //     // // if position already here and not older than 3 minutes
-    //     // if (this.position
-    //     //     && (new Date().getTime() - this.position.timestamp) < 1000 * 60 * 2) {
-    //     //     return this.position;
-    //     // }
-    //     // const res = await this.geolocation.getCurrentPosition(
-    //     //     {enableHighAccuracy: true}
-    //     // );
-    //     //
-    //     // this.position = {
-    //     //     latitude: res.coords.latitude,
-    //     //     longitude: res.coords.longitude,
-    //     //     timestamp: new Date().getTime(),
-    //     // };
-    //     // return this.position;
-    //
-    // }
 
     public getBeatifulCityName(name: string): string {
         let ret = name;

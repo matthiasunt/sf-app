@@ -1,22 +1,22 @@
 import {Component, OnInit} from '@angular/core';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
-import {GeoService} from '../../services/geo/geo.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
+import {GeoService} from '@services/geo/geo.service';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-
-import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
-import {DistrictsService} from '../../services/data/districts/districts.service';
-import {ListsService} from '../../services/data/lists/lists.service';
-import {CallsService} from '../../services/data/calls/calls.service';
-import {AuthService} from '../../services/auth/auth.service';
-import {CallOrigin, CallOriginName} from '../../models/call';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import {District} from '../../models/district';
-import {Shuttle} from '../../models/shuttle';
-import {Coordinates} from '../../models/coordinates';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {DistrictsService} from '@services/data/districts/districts.service';
+import {ListsService} from '@services/data/lists/lists.service';
+import {CallsService} from '@services/data/calls/calls.service';
+import {AuthService} from '@services/auth/auth.service';
+
+import {CallOrigin, CallOriginName} from '@models/call';
+import {District} from '@models/district';
+import {Shuttle} from '@models/shuttle';
+import {Coordinates} from '@models/coordinates';
 
 @Component({
     selector: 'app-selection',
@@ -34,7 +34,7 @@ export class SelectionPage implements OnInit {
     noValidLocalityName: boolean;
     outOfRange: boolean;
 
-    shuttles: Shuttle[];
+    shuttles: Shuttle[] = [];
     lang: string;
 
     constructor(private navCtrl: NavController,
@@ -95,9 +95,9 @@ export class SelectionPage implements OnInit {
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
         }
-        let shuttlesTemp = await this.shuttlesService.getShuttlesFromPosition(this.coordinates, 22000);
+        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 18000);
         if (shuttlesTemp.count() < 3) {
-            shuttlesTemp = await this.shuttlesService.getShuttlesFromPosition(this.coordinates, 28000);
+            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 26000);
         }
         if (!shuttlesTemp || shuttlesTemp.count() < 1) {
             this.outOfRange = true;

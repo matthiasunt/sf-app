@@ -41,8 +41,8 @@ export class AppComponent {
                 SplashScreen.hide();
             }
             this.authService.doSoftLogin();
-            this.statusBar.overlaysWebView(false);
-            this.statusBar.styleLightContent();
+            this.statusBar.overlaysWebView(true);
+            this.statusBar.styleBlackOpaque();
         });
     }
 

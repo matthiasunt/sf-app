@@ -5,10 +5,10 @@
         </ion-buttons>
         <ion-title>
             <ng-container *ngIf="district">{{getDistrictName(district)}}
-                <ng-container *ngIf="shuttles?.lenght > 0"> ({{shuttles?.count()}})</ng-container>
+                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
             </ng-container>
             <ng-container *ngIf="currentLocality">{{currentLocality}}
-                <ng-container *ngIf="shuttles?.lenght > 0"> ({{shuttles?.count()}})</ng-container>
+                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
             </ng-container>
             <ion-spinner color="light" *ngIf="coordinates && !currentLocality && !noValidLocalityName && !outOfRange"
                          name="dots"
@@ -48,8 +48,10 @@
                     </p>
                 </ion-text>
             </ion-label>
-            <ion-icon (click)="callClicked(shuttle, $event)" name="call" size="large" slot="end"
-                      color="secondary"></ion-icon>
+            <div class="call-icon-div" (click)="callClicked(shuttle, $event)">
+                <ion-icon name="call" size="large" slot="end"
+                          color="secondary"></ion-icon>
+            </div>
         </ion-item>
     </ion-virtual-scroll>
     <div *ngIf="coordinates && outOfRange">
