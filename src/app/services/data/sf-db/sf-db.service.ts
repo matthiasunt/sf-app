@@ -15,15 +15,22 @@ export class SfDbService {
 
     constructor() {
 
-        this.db = new PouchDB('sf-public');
+        this.db = new PouchDB('shuttle-finder-public');
         this._syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
-            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/sf-public';
+            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/shuttle-finder-public';
 
         this.db.replicate.from(this.remote, {
-            retry: true
+            retry: true, live: true
+        }).on('change', (info) => {
+            console.log(info);
+            this._syncSubject.next(true);
+        }).on('paused', (err) => {
+            console.log(err);
+            this._syncSubject.next(true);
         }).on('complete', (info) => {
+            console.log(info);
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);

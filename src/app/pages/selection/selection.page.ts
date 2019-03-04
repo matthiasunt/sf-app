@@ -37,10 +37,6 @@ export class SelectionPage implements OnInit {
     shuttles: Shuttle[];
     lang: string;
 
-    shuttlesInRanges: any;
-
-    actualShuttleIndex: number;
-
     constructor(private navCtrl: NavController,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -57,13 +53,15 @@ export class SelectionPage implements OnInit {
                 public colorGenerator: ColorGeneratorService,
     ) {
         this.districtColors = ['#99CC33', '#FFFFFF'];
+
     }
 
     async ngOnInit() {
+        this.lang = await this.localData.getLang();
         const districtId = this.activatedRoute.snapshot.paramMap.get('id');
         // Via District
         if (districtId) {
-            this.districtsService.getDistrict(districtId).subscribe((district) => {
+            this.districtsService.getDistrict(districtId).subscribe((district: District) => {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
@@ -111,12 +109,6 @@ export class SelectionPage implements OnInit {
     public shuttleClicked(shuttle: Shuttle) {
         const currentUrl = this.router.url;
         this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
-        // if (this.util.isAndroid() && this.localData.getNumberOfCalls() == 0) {
-        //   this.presentReallyCallToast(shuttle);
-        // }
-        // else {
-        //   this.toCallPage(shuttle);
-        // }
     }
 
     public callClicked(shuttle: Shuttle, event) {
@@ -148,7 +140,7 @@ export class SelectionPage implements OnInit {
     }
 
     // Tool
-    private getDistrictName(district: any): string {
+    public getDistrictName(district: District): string {
         if (
             district &&
             district.name
@@ -169,12 +161,10 @@ export class SelectionPage implements OnInit {
     }
 
 
-    public async getLocalityName(shuttle: Shuttle): Promise<string> {
+    public getLocalityName(shuttle: Shuttle): string {
         if (shuttle && shuttle.address && shuttle.address.locality) {
             const locality = shuttle.address.locality;
-            switch (await this.localData.getLang()) {
-                case 'de_st':
-                    return locality.de;
+            switch (this.lang) {
                 case 'it':
                     return locality.it;
                 default:

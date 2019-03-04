@@ -103,29 +103,35 @@ export class ShuttlesService {
         this.sfDbService.syncSubject.subscribe(() => {
             // Fetch Shuttles by Districts
             this.districtsService.districts.subscribe((districts) => {
-                districts.map((district) => {
-                    this.sfDbService.db.query('shuttles/by_district', {
-                        include_docs: true, key: district._id
-                    }).then((res) => {
+                districts.map(async (district) => {
+                    try {
+                        const res = await this.sfDbService.db.query('shuttles/by_district', {
+                            include_docs: true, key: district._id,
+                        });
                         const shuttles: List<Shuttle> = res.rows.map(row => {
                             return row.doc;
                         });
                         this.shuttlesByDistrict = this.shuttlesByDistrict.set(district._id, shuttles);
-                    });
+                    } catch (err) {
+                        console.error(err);
+                    }
                 });
             });
-
-            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        let shuttles: Map<string, Shuttle> = Map();
-                        res.rows.map(row => {
-                            shuttles = shuttles.set(row.doc._id, row.doc);
-                        });
-                        this._allShuttles.next(shuttles);
-                    },
-                    err => console.log('Error retrieving Shuttles')
-                );
+            try {
+                from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+                    .subscribe(
+                        (res: any) => {
+                            let shuttles: Map<string, Shuttle> = Map();
+                            res.rows.map(row => {
+                                shuttles = shuttles.set(row.doc._id, row.doc);
+                            });
+                            this._allShuttles.next(shuttles);
+                        },
+                        err => console.log('Error retrieving Shuttles')
+                    );
+            } catch (err) {
+                console.error(err);
+            }
         });
     }
 
