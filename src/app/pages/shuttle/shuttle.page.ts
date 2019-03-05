@@ -99,7 +99,6 @@ export class ShuttlePage implements OnInit {
             position: 'top',
             duration: 2000,
             color: 'secondary',
-            translucent: true,
         });
         toast.present();
     }
@@ -119,7 +118,6 @@ export class ShuttlePage implements OnInit {
             position: 'top',
             duration: 2000,
             color: 'danger',
-            translucent: true,
         });
         toast.present();
     }

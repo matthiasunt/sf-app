@@ -66,13 +66,10 @@ export class ShuttlesService {
 
     private rankShuttlesByScore(list: List<Shuttle>): List<Shuttle> {
         let ret: List<Shuttle>;
-        ret = list.sort((a, b) => {
+        ret = list.sort(() => Math.random() - 0.5);
+        ret = ret.sort((a, b) => {
             return b.score - a.score;
         });
-        let chunk: List<Shuttle>;
-        for (let i = 0; i < ret.count(); i++) {
-
-        }
         return ret;
     }
 
