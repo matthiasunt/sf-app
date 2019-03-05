@@ -3,5 +3,10 @@ export interface Rating {
     type: string;
     userId: string;
     date: string;
-    review: string;
+    review: ReviewElement[];
+}
+
+export interface ReviewElement {
+    name: string;
+    value: string;
 }
