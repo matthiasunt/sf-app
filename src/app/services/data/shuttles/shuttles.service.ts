@@ -1,12 +1,13 @@
 import {Injectable, NgZone} from '@angular/core';
-import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from} from 'rxjs';
-import {Shuttle} from '@models/shuttle';
 import {List, Map} from 'immutable';
-import {DistrictsService} from '../districts/districts.service';
-import {ListElement} from '@models/list-element';
-import {GeoService} from '../../geo/geo.service';
+
+import {SfDbService} from '@services/data/sf-db/sf-db.service';
+import {DistrictsService} from '@services/data/districts/districts.service';
+import {GeoService} from '@services/geo/geo.service';
 import {Coordinates} from '@models/coordinates';
+import {ListElement} from '@models/list-element';
+import {Shuttle} from '@models/shuttle';
 
 @Injectable({
     providedIn: 'root'

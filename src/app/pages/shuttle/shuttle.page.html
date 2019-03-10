@@ -76,24 +76,28 @@
     </ion-card>
     <ion-card id="rating-card" (click)="toRatingsPage()">
         <ion-card-header>
-            <ion-card-subtitle>Ratings (12)</ion-card-subtitle>
+            <ion-card-subtitle>Ratings ({{ratingsFromShuttle.length}})</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
             <p>
                 <span>Service</span>
-                <ion-badge color="tertiary">3,7 von 5</ion-badge>
+                <ion-badge color="tertiary">3 von 5</ion-badge>
             </p>
             <p>
-                <span>Reliability</span>
-                <ion-badge color="tertiary">4,2 von 5</ion-badge>
+                <span>Reliability & Punctuality</span>
+                <ion-badge color="tertiary">3 von 5</ion-badge>
+            </p>
+            <p>
+                <span>Driving Style & Security</span>
+                <ion-badge color="tertiary">4 von 5</ion-badge>
             </p>
             <p>
                 <span>Price</span>
-                <ion-badge color="tertiary">5,0 von 5</ion-badge>
+                <ion-badge color="tertiary">3 von 5</ion-badge>
             </p>
             <hr>
             <p>
-                <i>"Super Shuttel nia probleme kop hihi"</i>
+                <i>"Super shuttle hihi"</i>
             </p>
         </ion-card-content>
     </ion-card>

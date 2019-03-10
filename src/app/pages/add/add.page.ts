@@ -80,7 +80,7 @@ export class AddPage implements OnInit {
             this.favorites;
         const type = this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted;
         const listElement: ListElement = {
-            _id: `${this.authService.getUserId()}-${type}-${shuttle._id}`,
+            _id: `${this.authService.getUserId()}--${type}--${shuttle._id}`,
             userId: this.authService.getUserId(),
             shuttleId: shuttle._id,
             date: new Date().toISOString(),

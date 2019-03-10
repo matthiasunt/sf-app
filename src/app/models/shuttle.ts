@@ -1,4 +1,5 @@
 import {Address} from './address';
+import {Coordinates} from './coordinates';
 
 export interface Shuttle {
     _id: string;

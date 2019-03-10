@@ -9,28 +9,34 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-    <ion-card id="rating-card">
+<ion-content>
+    <ion-card *ngFor="let rating of ratings" id="rating-card">
         <ion-card-header>
-            <ion-card-subtitle>Anonym, 12.12.2019</ion-card-subtitle>
+            <ion-card-subtitle>Anonymous, {{getDate(rating.date)}}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
             <p>
                 <span>Service</span>
-                <ion-badge color="tertiary">3,7 von 5</ion-badge>
+                <ion-badge color="tertiary">{{rating.service}} von 5</ion-badge>
             </p>
             <p>
-                <span>Reliability</span>
-                <ion-badge color="tertiary">4,2 von 5</ion-badge>
+                <span>Reliability & Punctuality</span>
+                <ion-badge color="tertiary">{{rating.reliabilityAndPunctuality}} von 5</ion-badge>
+            </p>
+            <p>
+                <span>Driving Style & Security</span>
+                <ion-badge color="tertiary">{{rating.drivingStyleAndSecurity}} von 5</ion-badge>
             </p>
             <p>
                 <span>Price</span>
-                <ion-badge color="tertiary">5,0 von 5</ion-badge>
+                <ion-badge color="tertiary">{{rating.price}} von 5</ion-badge>
             </p>
             <hr>
             <p>
-                <i>"Super Shuttel nia probleme kop hihi"</i>
+                <i>"{{rating.review}}"</i>
             </p>
         </ion-card-content>
     </ion-card>
+
+    <p *ngIf="ratings.length < 1" class="no-data-p"> No ratings :(</p>
 </ion-content>
