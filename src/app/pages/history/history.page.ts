@@ -34,7 +34,7 @@ export class HistoryPage implements OnInit {
     ) {
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.locale = this.localData.getLocaleFromPrefLang();
         this.callsService.history.subscribe((history) => {
             this.history = history.toArray();

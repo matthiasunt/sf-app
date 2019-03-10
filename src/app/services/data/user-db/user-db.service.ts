@@ -47,9 +47,25 @@ export class UserDbService {
         return this.db.remove(docFromDb._id, docFromDb._rev);
     }
 
+    public async putDoc(doc: any) {
+        try {
+            const res = this.db.put(doc);
+            console.log(res);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     public async updateDoc(doc: any) {
-        const docFromDb = await this.db.get(doc._id);
-        doc._rev = docFromDb._rev;
-        return this.db.put(doc);
+        try {
+            const docFromDb = await this.db.get(doc._id);
+            if (docFromDb) {
+                doc._rev = docFromDb._rev;
+            }
+            const res = this.db.put(doc);
+            console.log(res);
+        } catch (err) {
+            console.error(err);
+        }
     }
 }

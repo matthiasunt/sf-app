@@ -2,10 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {Shuttle} from '../../models/shuttle';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
-import {NgForm} from '@angular/forms';
 import {NavController} from '@ionic/angular';
 import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
 import {getContrastColor} from '../../tools/sf-tools';
+import {Rating} from '@models/rating';
+import {RatingsService} from '@services/data/ratings/ratings.service';
+import {ListElement} from '@models/list-element';
+import {AuthService} from '@services/auth/auth.service';
 
 @Component({
     selector: 'app-rate',
@@ -17,25 +20,52 @@ export class RatePage implements OnInit {
 
     shuttle: Shuttle;
     shuttleColor: string;
-
-    rating = {
-        service: 0,
-        reliability: 0,
-        price: 0,
-        ownMusic: false,
-        review: ''
+    alreadyRatedByUser = false;
+    ratingForm: any = {
+        service: '3',
+        reliabilityAndPunctuality: '3',
+        drivingStyleAndSecurity: '3',
+        price: '3',
+        review: '',
     };
 
     constructor(private navCtrl: NavController,
                 private activatedRoute: ActivatedRoute,
+                private authService: AuthService,
+                private ratingService: RatingsService,
                 private shuttlesService: ShuttlesService,
-                private colorGenerator: ColorGeneratorService) {
+                private colorGenerator: ColorGeneratorService,
+    ) {
     }
 
     ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
+        this.fetchRatingByUser(shuttleId);
+    }
+
+    onSubmit() {
+        console.log(this.ratingForm);
+        const type = 'rating';
+        const rating: Rating = {
+            _id: `${this.shuttle._id}--${type}--${this.authService.getUserId()}`,
+            userId: this.authService.getUserId(),
+            shuttleId: this.shuttle._id,
+            date: new Date().toISOString(),
+            service: this.ratingForm.service,
+            reliabilityAndPunctuality: this.ratingForm.reliabilityAndPunctuality,
+            drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
+            price: this.ratingForm.price,
+            review: this.ratingForm.review,
+            type: type,
+        };
+        if (this.alreadyRatedByUser) {
+            this.ratingService.updateRating(rating);
+        } else {
+            this.ratingService.putRating(rating);
+        }
+        this.navCtrl.pop();
     }
 
     getToolbarStyle() {
@@ -45,9 +75,18 @@ export class RatePage implements OnInit {
         };
     }
 
-    onSubmit(f: NgForm) {
-        console.log(this.rating);
-        this.navCtrl.navigateBack('tabs/history');
+    private fetchRatingByUser(shuttleId: string) {
+        const rating = this.ratingService.getRatingByUserForShuttle(shuttleId);
+        if (rating) {
+            this.alreadyRatedByUser = true;
+            this.ratingForm.service = rating.service;
+            this.ratingForm.reliabilityAndPunctuality = rating.reliabilityAndPunctuality;
+            this.ratingForm.drivingStyleAndSecurity = rating.drivingStyleAndSecurity;
+            this.ratingForm.price = rating.price;
+            this.ratingForm.review = rating.review;
+            console.log(rating);
+        }
     }
+
 
 }

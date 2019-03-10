@@ -15,6 +15,8 @@ import {CallOriginName} from '@models/call';
 import {ElementType, ListElement} from '@models/list-element';
 import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {GeoService} from '@services/geo/geo.service';
+import {Rating} from '@models/rating';
+import {RatingsService} from '@services/data/ratings/ratings.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -29,6 +31,9 @@ export class ShuttlePage implements OnInit {
     isFavorite: boolean;
     lang: string;
 
+    userRating: Rating;
+    ratingsFromShuttle: Rating[] = [];
+
     constructor(private navCtrl: NavController,
                 private toastController: ToastController,
                 private popoverController: PopoverController,
@@ -42,6 +47,7 @@ export class ShuttlePage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 public callsService: CallsService,
                 private colorGenerator: ColorGeneratorService,
+                private ratingsService: RatingsService,
     ) {
         this.shuttleColor = '#99CC33';
         this.isFavorite = false;
@@ -55,8 +61,9 @@ export class ShuttlePage implements OnInit {
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
-
-
+        this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+        const allRatings = this.ratingsService.getRatingsFromShuttle(shuttleId);
+        this.ratingsFromShuttle = allRatings ? allRatings.toArray() : [];
     }
 
     public callClicked() {
