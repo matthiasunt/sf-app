@@ -38,7 +38,7 @@ export class AppComponent {
     private async initializeApp() {
         this.platform.ready().then(async () => {
             if (this.deviceService.isDevice()) {
-                SplashScreen.hide();
+                // SplashScreen.hide();
             }
             this.authService.doSoftLogin();
             this.statusBar.overlaysWebView(true);

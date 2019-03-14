@@ -51,7 +51,7 @@
             <ion-row>
                 <ion-col>
                     <ion-label color="primary" class="section-headline-small">
-                        Favoriten
+                        {{"page_titles.FAVORITES" | translate}}
                     </ion-label>
                 </ion-col>
             </ion-row>
@@ -70,11 +70,11 @@
     <div id="tmm-card-div">
         <ion-card id="tmm-card">
             <ion-card-content>
-                <h3>Wer trinkt</h3>
+                <h3> {{"departure.WHO_DRIVES" | translate}}</h3>
                 <a href="{{getTMMUrl()}}">
                     <img id="tmm-logo-img" src="assets/img/tmm-logo.svg"/>
                 </a>
-                <h3>fährt nicht!</h3>
+                <h3>{{"departure.DOESNT_DRINK" | translate}}</h3>
             </ion-card-content>
         </ion-card>
     </div>

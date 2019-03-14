@@ -30,7 +30,7 @@
                 <ion-button
                         color="{{addToFavorites? 'success' : 'dark'}}"
                         slot="end" shape="round" size="small">
-                    {{addToFavorites ? 'Add' : 'Block'}}
+                    {{addToFavorites ? ("ADD" | translate) : ("BLOCK" | translate)}}
                     <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
                 </ion-button>
             </div>
@@ -38,7 +38,7 @@
                 <ion-button
                         color="{{addToFavorites? 'danger' : 'success'}}"
                         slot="end" shape="round" size="small">
-                    {{addToFavorites ? 'Remove' : 'Unblock'}}
+                    {{addToFavorites ? ("REMOVE" | translate) : ("UNBLOCK" | translate)}}
                     <ion-icon name="{{addToFavorites? 'close' : 'checkmark-circle'}}" slot="end"></ion-icon>
                 </ion-button>
             </div>

@@ -5,11 +5,14 @@
   "YES": "Yes",
   "ERROR": "Error",
   "ADD": "Add",
+  "REMOVE": "Remove",
+  "BLOCK": "Block",
+  "UNBLOCK": "Unblock",
   "BACK": "Back",
   "NO_SHUTTLE_FOUND": "No shuttles found :(",
   "VERIFY_CONNECTION": "Please check your internet connection.",
   "NO_CONNECTION": "No connection.",
-  "NOT_AVAILABLE":"Shuttle Finder is currently not available, retry later.",
+  "NOT_AVAILABLE": "Shuttle Finder is currently not available, retry later.",
   "page_titles": {
     "SELECTION": "Choose a shuttle",
     "HISTORY": "Call history",
@@ -19,12 +22,6 @@
     "IMPRINT": "Imprint",
     "PRIVACY": "Privacy"
   },
-
-  "home": {
-    "CALLED_LAST": "Called last: ",
-    "TELL_A_FRIEND": "Tell a friend"
-  },
-
   "departure": {
     "WHERE_ARE_YOU": "Where are you?",
     "RECENTLY_USED": "Recently used",
@@ -33,37 +30,43 @@
     "msg": {
       "CHECK_CONNECTION": "Please check your connection :)",
       "ENABLE_GPS": "Please enable the location services in your system settings 😊"
-    }
+    },
+    "WHO_DRIVES": "Wer trinkt",
+    "DOESNT_DRINK": "fährt nicht!"
   },
-
   "selection": {
     "REALLY_CALL_1": "Do you really want to call",
     "REALLY_CALL_2": "?",
     "ALL_SHUTTLES": "All shuttles"
   },
-
+  "rate": {
+    "RATE": "Rate",
+    "RELIABILITY_AND_PUNCTUALITY": "Reliability & Punctuality",
+    "DRIVING_STYLE_AND_SECURITY": "Driving Style & Security",
+    "PRICE": "Price",
+    "REVIEW": "Review"
+  },
+  "ratings": {
+    "RATINGS": "Ratings",
+    "NO_RATINGS": "No ratings :("
+  },
   "call": {
     "msg": {
       "DIALER_ERROR": "I wasn't able to open your dialer, please try again.",
-
       "CALLING_1": "Calling ",
       "CALLING_2": "",
-
       "TRY_ANOTHER_SHUTTLE_1": "Try another shuttle?",
       "TRY_ANOTHER_SHUTTLE_2": "?",
-
       "SORRY": "Sorry",
       "LAST_SHUTTLE_NUMBER": "That was my last number :("
     }
   },
-
   "history": {
     "EMPTY": "Your history is empty.",
     "msg": {
       "DELETE_ALL": "Do you really want to delete your full history?"
     }
   },
-
   "settings": {
     "LANGUAGE": "Language",
     "DIRECT_MODE": "Direct Mode",
@@ -76,14 +79,12 @@
     "SHARE_DATA": "Send anonymous usage statistics",
     "SHARE_DATA_DESCRIPTION": ""
   },
-
   "favorites": {
     "EMPTY": "You don't have favorites."
   },
   "blacklist": {
     "EMPTY": "Your blacklist is empty."
   },
-
   "add": {
     "ADD_FAVORITE": "Add favorites",
     "LOCK_SHUTTLE": "Block shuttle",
@@ -111,9 +112,7 @@
     }
   },
   "imprint": {
-
   },
   "privacy": {
-
   }
 }

@@ -1,13 +1,13 @@
 import {Address} from './address';
 import {Coordinates} from './coordinates';
+import {AvgRating} from '@models/avg-rating';
 
 export interface Shuttle {
     _id: string;
     type: string;
     name: string;
     phone: string;
-    phoneSecondary?: string;
-    score: number;
+    rankingScore: number;
     info?: string;
     email?: string;
     facebookUrl?: string;
@@ -16,7 +16,7 @@ export interface Shuttle {
     customColor?: string;
 
     address?: Address;
-    location?: Coordinates;
+    coordinates?: Coordinates;
 
     lastName?: string;
     firstName?: string;
@@ -24,5 +24,5 @@ export interface Shuttle {
     districtIds: string[];
     verified?: boolean;
 
-
+    avgRating: AvgRating;
 }

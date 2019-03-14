@@ -1,26 +1,29 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {Routes, RouterModule} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {IonicModule} from '@ionic/angular';
 
-import { IonicModule } from '@ionic/angular';
-
-import { RatePage } from './rate.page';
+import {RatePage} from './rate.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: RatePage
-  }
+    {
+        path: '',
+        component: RatePage
+    }
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [RatePage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+
+    ],
+    declarations: [RatePage]
 })
-export class RatePageModule {}
+export class RatePageModule {
+}

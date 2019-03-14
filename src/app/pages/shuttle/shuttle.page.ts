@@ -17,6 +17,7 @@ import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-shuttle',
@@ -35,6 +36,7 @@ export class ShuttlePage implements OnInit {
     ratingsFromShuttle: Rating[] = [];
 
     constructor(private navCtrl: NavController,
+                public translate: TranslateService,
                 private toastController: ToastController,
                 private popoverController: PopoverController,
                 private geoService: GeoService,
