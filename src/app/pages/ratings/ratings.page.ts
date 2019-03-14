@@ -6,6 +6,7 @@ import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {getBeautifulDateString} from '../../tools/sf-tools';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-ratings',
@@ -19,6 +20,7 @@ export class RatingsPage implements OnInit {
     locale: string;
 
     constructor(private activatedRoute: ActivatedRoute,
+                public translate: TranslateService,
                 private localData: LocalDataService,
                 private shuttlesService: ShuttlesService,
                 private ratingsService: RatingsService,

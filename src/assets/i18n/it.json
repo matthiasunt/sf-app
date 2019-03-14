@@ -5,12 +5,14 @@
   "YES": "Si",
   "ERROR": "Errore",
   "ADD": "Aggiungi",
+  "REMOVE": "Rimuovi",
+  "BLOCK": "Blocca",
+  "UNBLOCK": "Sblocca",
   "BACK": "Indietro",
   "NO_SHUTTLE_FOUND": "Nessun shuttle trovato :(",
   "VERIFY_CONNECTION": "Controlla la tua connessione internet.",
   "NO_CONNECTION": "Nessuna connessione.",
-  "NOT_AVAILABLE":"Shuttle Finder è attualmente non disponibile, riprova più tardi.",
-
+  "NOT_AVAILABLE": "Shuttle Finder è attualmente non disponibile, riprova più tardi.",
   "page_titles": {
     "SELECTION": "Seleziona uno shuttle",
     "HISTORY": "Cronologia",
@@ -20,12 +22,6 @@
     "IMPRINT": "Info legale",
     "PRIVACY": "Informativa sulla privacy"
   },
-
-  "home": {
-    "CALLED_LAST": "L'ultimo chiamato:",
-    "TELL_A_FRIEND": "Condividi"
-  },
-
   "departure": {
     "WHERE_ARE_YOU": "Dove sei?",
     "RECENTLY_USED": "Usato per ultimo",
@@ -34,38 +30,43 @@
     "msg": {
       "CHECK_CONNECTION": "Controlla la tua connessione :)",
       "ENABLE_GPS": "Attiva la geolocalizzazione nelle impostazioni 😊"
-    }
+    },
+    "WHO_DRIVES": "Wer trinkt",
+    "DOESNT_DRINK": "fährt nicht!"
   },
-
   "selection": {
     "REALLY_CALL_1": "Vuoi veramente chiamare",
     "REALLY_CALL_2": "?",
     "ALL_SHUTTLES": "Tutti i shuttle"
   },
-
+  "rate": {
+    "RATE": "Valuta",
+    "RELIABILITY_AND_PUNCTUALITY": "Affidabilità e puntualità",
+    "DRIVING_STYLE_AND_SECURITY": "Stile di guida e sicurezza",
+    "PRICE": "Prezzo",
+    "REVIEW": "Recensione"
+  },
+  "ratings": {
+    "RATINGS": "Valutazioni",
+    "NO_RATINGS": "0 valutazioni :("
+  },
   "call": {
     "msg": {
       "DIALER_ERROR": "Non ho potuto aprire l'app dialer, riprova.",
-
       "CALLING_1": "Chiamo ",
       "CALLING_2": "",
-
       "TRY_ANOTHER_SHUTTLE_1": "Vuoi provare un altro shuttle?",
       "TRY_ANOTHER_SHUTTLE_2": "?",
-
       "SORRY": "Scusami",
       "LAST_SHUTTLE_NUMBER": "Non ho piú numeri :("
     }
   },
-
   "history": {
     "EMPTY": "La tua cronologia é vuota.",
     "msg": {
       "DELETE_ALL": "Vuoi veramente cancellare la tua cronologia?"
     }
   },
-
-
   "settings": {
     "LANGUAGE": "Lingua",
     "DIRECT_MODE": "Direct Mode",
@@ -78,14 +79,12 @@
     "SHARE_DATA": "Condividere dati di utilizzo anonimi",
     "SHARE_DATA_DESCRIPTION": ""
   },
-
   "favorites": {
     "EMPTY": "Non hai preferiti."
   },
   "blacklist": {
     "EMPTY": "La tua blacklist é vuota."
   },
-
   "add": {
     "ADD_FAVORITE": "Aggiungi preferiti",
     "LOCK_SHUTTLE": "Blocca shuttle",
@@ -98,7 +97,6 @@
       "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Rimuovilo dai tuoi preferiti, per aggiungerlo alla tua blacklist."
     }
   },
-
   "about": {
     "VERSION": "Versione",
     "TEXT": "L'app per shuttle e taxi in Alto Adige.",
@@ -114,9 +112,7 @@
     }
   },
   "imprint": {
-
   },
   "privacy": {
-
   }
 }

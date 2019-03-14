@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Shuttle} from '../../models/shuttle';
+import {Shuttle} from '@models/shuttle';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
+import {TranslateService} from '@ngx-translate/core';
+
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {NavController} from '@ionic/angular';
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {getContrastColor} from '../../tools/sf-tools';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
@@ -31,6 +33,7 @@ export class RatePage implements OnInit {
 
     constructor(private navCtrl: NavController,
                 private activatedRoute: ActivatedRoute,
+                public translate: TranslateService,
                 private authService: AuthService,
                 private ratingService: RatingsService,
                 private shuttlesService: ShuttlesService,

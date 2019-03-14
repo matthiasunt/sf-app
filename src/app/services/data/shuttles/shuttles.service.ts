@@ -38,8 +38,8 @@ export class ShuttlesService {
         let ret: List<Shuttle> = List([]);
         if (coordinates) {
             this._allShuttles.getValue().map((shuttle: Shuttle) => {
-                if (shuttle && shuttle.location) {
-                    const distance = this.geoService.getDistance(coordinates, shuttle.location);
+                if (shuttle && shuttle.coordinates) {
+                    const distance = this.geoService.getDistance(coordinates, shuttle.coordinates);
                     if (distance && distance < radius) {
                         ret = ret.push(shuttle);
                     }
@@ -69,7 +69,7 @@ export class ShuttlesService {
         let ret: List<Shuttle>;
         ret = list.sort(() => Math.random() - 0.5);
         ret = ret.sort((a, b) => {
-            return b.score - a.score;
+            return b.rankingScore - a.rankingScore;
         });
         return ret;
     }

@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>Rate {{shuttle?.name}}</ion-title>
+        <ion-title>{{"rate.RATE" | translate}} {{shuttle?.name}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -18,7 +18,9 @@
             <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-            <ion-label position="stacked" color="primary">Reliability & Punctuality</ion-label>
+            <ion-label position="stacked" color="primary">
+                {{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}
+            </ion-label>
             <ion-range [(ngModel)]="ratingForm.reliabilityAndPunctuality" name="reliabilityAndPunctuality"
                        min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
             </ion-range>
@@ -26,7 +28,9 @@
             <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-            <ion-label position="stacked" color="primary">Driving Style & Security</ion-label>
+            <ion-label position="stacked" color="primary">
+                {{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}
+            </ion-label>
             <ion-range [(ngModel)]="ratingForm.drivingStyleAndSecurity" name="drivingStyleAndSecurity"
                        min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
             </ion-range>
@@ -34,7 +38,9 @@
             <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-            <ion-label position="stacked" color="primary">Price</ion-label>
+            <ion-label position="stacked" color="primary">
+                {{"rate.PRICE" | translate}}
+            </ion-label>
             <ion-range [(ngModel)]="ratingForm.price" name="price"
                        min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
             </ion-range>
@@ -42,11 +48,10 @@
             <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-            <ion-label position="stacked" color="primary">Review</ion-label>
-            <ion-textarea [(ngModel)]="ratingForm.review" name="review" required="true" maxlength="400"
-                          rows="5"
-                          placeholder="Super Shuttle!"></ion-textarea>
+            <ion-label position="stacked" color="primary">{{"rate.REVIEW" | translate}}</ion-label>
+            <ion-textarea [(ngModel)]="ratingForm.review" name="review"
+                          required="true" maxlength="400" rows="5"></ion-textarea>
         </ion-item>
-        <ion-button type="submit" expand="block" color="tertiary">Rate</ion-button>
+        <ion-button type="submit" expand="block" color="tertiary">{{"rate.RATE" | translate}}</ion-button>
     </form>
 </ion-content>

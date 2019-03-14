@@ -5,10 +5,10 @@ export interface Rating {
     shuttleId: string;
     date: string;
 
-    service: string;
-    reliabilityAndPunctuality: string;
-    drivingStyleAndSecurity: string;
-    price: string;
+    service: number;
+    reliabilityAndPunctuality: number;
+    drivingStyleAndSecurity: number;
+    price: number;
 
     review: string;
 }

@@ -5,12 +5,14 @@
   "YES": "Ja",
   "ERROR": "Fehler",
   "ADD": "Hinzufügen",
+  "REMOVE": "Entfernen",
+  "BLOCK": "Blockieren",
+  "UNBLOCK": "Blockierung aufheben",
   "BACK": "Zurück",
   "NO_SHUTTLE_FOUND": "Keinen Shuttle gefunden :(",
   "VERIFY_CONNECTION": "Bitte überprüfe deine Internetverbindung.",
   "NO_CONNECTION": "Keine Verbindung.",
-  "NOT_AVAILABLE":"Shuttle Finder ist zurzeit nicht verfügbar, versuche es später erneut.",
-
+  "NOT_AVAILABLE": "Shuttle Finder ist zurzeit nicht verfügbar, versuche es später erneut.",
   "page_titles": {
     "SELECTION": "Wähle einen Shuttle",
     "HISTORY": "Verlauf",
@@ -20,12 +22,6 @@
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung"
   },
-
-  "home": {
-    "CALLED_LAST": "Zuletzt angerufen: ",
-    "TELL_A_FRIEND": "Teilen"
-  },
-
   "departure": {
     "WHERE_ARE_YOU": "Wo bist du?",
     "RECENTLY_USED": "Zuletzt verwendet",
@@ -34,35 +30,46 @@
     "msg": {
       "CHECK_CONNECTION": "Bitte überprüfe deine Internet Verbindung :)",
       "ENABLE_GPS": "Bitte aktiviere die Ortungsdienste in deinen Einstellungen 😊"
-    }
+    },
+    "WHO_DRIVES": "Wer trinkt",
+    "DOESNT_DRINK": "fährt nicht!"
   },
   "selection": {
     "REALLY_CALL_1": "Möchtest du wirklich",
     "REALLY_CALL_2": " anrufen?",
     "ALL_SHUTTLES": "Alle Shuttles"
   },
+  "shuttle": {
+    "SHUTTLE_ADDED_TO_FAVORITES": "Shuttle würde zu deinen Favoriten hinzugefügt"
+  },
+  "rate": {
+    "RATE": "Bewerte",
+    "RELIABILITY_AND_PUNCTUALITY": "Verlässlichkeit & Pünktlichkeit",
+    "DRIVING_STYLE_AND_SECURITY": "Fahrstil & Sicherheit",
+    "PRICE": "Preis",
+    "REVIEW": "Rezension"
+  },
+  "ratings": {
+    "RATINGS": "Bewertungen",
+    "NO_RATINGS": "Keine Bewertungen :("
+  },
   "call": {
     "msg": {
       "DIALER_ERROR": "Ich konnte deine Anruf-App nicht öffnen, bitte versuche es noch einmal.",
-
       "CALLING_1": "Rufe ",
       "CALLING_2": "an",
-
       "TRY_ANOTHER_SHUTTLE_1": "Einen anderen Shuttle probieren?",
       "TRY_ANOTHER_SHUTTLE_2": "probieren?",
-
       "SORRY": "Sorry",
       "LAST_SHUTTLE_NUMBER": "Das war meine letzte Nummer :("
     }
   },
-
   "history": {
     "EMPTY": "Dein Verlauf ist leer.",
     "msg": {
       "DELETE_ALL": "Möchten Sie wirklich den gesamten Verlauf löschen?"
     }
   },
-
   "settings": {
     "LANGUAGE": "Sprache",
     "DIRECT_MODE": "Direct Mode",
@@ -75,14 +82,12 @@
     "SHARE_DATA": "Anonyme Nutzungsdaten senden",
     "SHARE_DATA_DESCRIPTION": ""
   },
-
   "favorites": {
     "EMPTY": "Du hast keine Favoriten."
   },
   "blacklist": {
     "EMPTY": "Deine Blacklist ist leer."
   },
-
   "add": {
     "ADD_FAVORITE": "Favoriten hinzufügen",
     "LOCK_SHUTTLE": "Shuttle sperren",
@@ -95,7 +100,6 @@
       "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Entferne ihn von deinen Favoriten, um ihn zu deiner Blacklist hinzuzufügen."
     }
   },
-
   "about": {
     "VERSION": "Version",
     "TEXT": "Südtirols Shuttle & Taxi App.",
@@ -104,18 +108,14 @@
     "MISSING_MAIL_SUBJECT": "Fehlender Shuttle",
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung",
-
     "SUPPORTED_BY": "Mit freundlicher Unterstützung von",
-
     "share": {
       "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Über 200 Shuttles & Taxis in einer App.",
       "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - Südtirol"
     }
   },
   "imprint": {
-
   },
   "privacy": {
-
   }
 }

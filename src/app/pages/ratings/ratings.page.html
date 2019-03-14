@@ -4,7 +4,7 @@
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-            Ratings {{shuttle?.name}}
+            {{"ratings.RATINGS" | translate}} {{shuttle?.name}}
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -20,15 +20,15 @@
                 <ion-badge color="tertiary">{{rating.service}} von 5</ion-badge>
             </p>
             <p>
-                <span>Reliability & Punctuality</span>
+                <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
                 <ion-badge color="tertiary">{{rating.reliabilityAndPunctuality}} von 5</ion-badge>
             </p>
             <p>
-                <span>Driving Style & Security</span>
+                <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
                 <ion-badge color="tertiary">{{rating.drivingStyleAndSecurity}} von 5</ion-badge>
             </p>
             <p>
-                <span>Price</span>
+                <span>{{"rate.PRICE" | translate}}</span>
                 <ion-badge color="tertiary">{{rating.price}} von 5</ion-badge>
             </p>
             <hr>
@@ -38,5 +38,5 @@
         </ion-card-content>
     </ion-card>
 
-    <p *ngIf="ratings.length < 1" class="no-data-p"> No ratings :(</p>
+    <p *ngIf="ratings.length < 1" class="no-data-p">{{"ratings.NO_RATINGS" | translate}}</p>
 </ion-content>

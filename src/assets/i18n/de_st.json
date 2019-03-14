@@ -5,12 +5,14 @@
   "YES": "Jo",
   "ERROR": "Fahlor",
   "ADD": "Hinzufügn",
+  "REMOVE": "Entfernen",
+  "BLOCK": "Blockiern",
+  "UNBLOCK": "Blockierung auhebn",
   "BACK": "Zrug",
   "NO_SHUTTLE_FOUND": "Koan Shuttle gfunden :(",
   "VERIFY_CONNECTION": "Bitte überprüf deine Internetverbindung.",
   "NO_CONNECTION": "Koane Verbindung :/",
-  "NOT_AVAILABLE":"Shuttle Finder isch grod net verfügbor, ci scusiamo per il disagio.",
-
+  "NOT_AVAILABLE": "Shuttle Finder isch grod net verfügbor, ci scusiamo per il disagio.",
   "page_titles": {
     "SELECTION": "Suach dor an Shuttle aus",
     "HISTORY": "Unruafliste",
@@ -20,52 +22,51 @@
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung"
   },
-
-  "home": {
-    "CALLED_LAST": "Zulescht ungleitet: ",
-    "TELL_A_FRIEND": "Toaln"
-  },
-
   "departure": {
     "WHERE_ARE_YOU": "Wo bisch?",
     "RECENTLY_USED": "Zulescht verwendet",
     "ALL": "Olle",
     "GPS": "GPS",
-
     "msg": {
       "CHECK_CONNECTION": "Bitte schaug ob dein Internet ingscholten hosch :)",
       "ENABLE_GPS": "Bitte aktivier die Ortungsdianste 🙈"
-    }
+    },
+    "WHO_DRIVES": "Wer trinkt",
+    "DOESNT_DRINK": "fährt nicht!"
   },
-
   "selection": {
     "REALLY_CALL_1": "Willsch wirklich",
     "REALLY_CALL_2": " unriafen?",
     "ALL_SHUTTLES": "Olle Shutles"
   },
-
+  "rate": {
+    "RATE": "Bewert",
+    "RELIABILITY_AND_PUNCTUALITY": "Verlässlichkeit & Pünktlichkeit",
+    "DRIVING_STYLE_AND_SECURITY": "Fohrstil & Sicherheit",
+    "PRICE": "Preis",
+    "REVIEW": "Rezension"
+  },
+  "ratings": {
+    "RATINGS": "bewertungen",
+    "NO_RATINGS": "Koane Bewertungen :("
+  },
   "call": {
     "msg": {
       "DIALER_ERROR": "Hon die Telefön-App net autian gekennt, probiers noamol.",
-
       "CALLING_1": "I riaf ",
       "CALLING_2": "un",
-
       "TRY_ANOTHER_SHUTTLE_1": "Soll i an ondern Shuttle probieren?",
       "TRY_ANOTHER_SHUTTLE_2": " probiern?",
-
       "SORRY": "Tuat mor load",
       "LAST_SHUTTLE_NUMBER": "Des wor meine letzte Nummer :("
     }
   },
-
   "history": {
     "EMPTY": "Dein Verlauf isch laar.",
     "msg": {
       "DELETE_ALL": "Willsch wirklich in gonzen Verlauf löschen?"
     }
   },
-
   "settings": {
     "LANGUAGE": "Sproch",
     "DIRECT_MODE": "Direct Mode",
@@ -78,14 +79,12 @@
     "SHARE_DATA": "Anonyme Nutzngsdaten senden",
     "SHARE_DATA_DESCRIPTION": ""
   },
-
   "favorites": {
     "EMPTY": "Du hosch koane Favoriten."
   },
   "blacklist": {
     "EMPTY": "Deine Blacklist isch laar."
   },
-
   "add": {
     "ADD_FAVORITE": "Favoriten hinzufügen",
     "LOCK_SHUTTLE": "Shuttle spörren",
@@ -98,7 +97,6 @@
       "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Entfern nen sem, um nen af deine Blacklist zu tian."
     }
   },
-
   "about": {
     "VERSION": "Version",
     "TEXT": "Südtirols Shuttle & Taxi App.",
@@ -108,16 +106,13 @@
     "SUPPORTED_BY": "Mit freindlicher Unterstützung von",
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung",
-
     "share": {
       "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Lods dor or, schnell!!",
       "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - Südtirol"
     }
   },
   "imprint": {
-
   },
   "privacy": {
-
   }
 }
