@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
-import {NavController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {getContrastColor} from '../../tools/sf-tools';
 import {Rating} from '@models/rating';
@@ -30,7 +30,10 @@ export class RatePage implements OnInit {
         review: '',
     };
 
+    private userRating: Rating;
+
     constructor(private navCtrl: NavController,
+                private alertCtrl: AlertController,
                 private activatedRoute: ActivatedRoute,
                 public translate: TranslateService,
                 private authService: AuthService,
@@ -59,7 +62,7 @@ export class RatePage implements OnInit {
             reliabilityAndPunctuality: this.ratingForm.reliabilityAndPunctuality,
             drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
             price: this.ratingForm.price,
-            review: this.ratingForm.review,
+            review: this.ratingForm.review.trim(),
             type: type,
         };
         if (this.alreadyRatedByUser) {
@@ -71,13 +74,7 @@ export class RatePage implements OnInit {
     }
 
     public deleteClicked() {
-        console.log('Really delete?');
-    }
-
-    adjustTextarea(event: any): void {
-        const textarea: any = event.target;
-        textarea.rows = textarea.value.split('\n').length;
-        return;
+        this.deleteRatingAlert();
     }
 
     getToolbarStyle() {
@@ -88,15 +85,36 @@ export class RatePage implements OnInit {
     }
 
     private fetchRatingByUser(shuttleId: string) {
-        const rating = this.ratingService.getRatingByUserForShuttle(shuttleId);
-        if (rating) {
+        this.userRating = this.ratingService.getRatingByUserForShuttle(shuttleId);
+        if (this.userRating) {
             this.alreadyRatedByUser = true;
-            this.ratingForm.service = rating.service;
-            this.ratingForm.reliabilityAndPunctuality = rating.reliabilityAndPunctuality;
-            this.ratingForm.drivingStyleAndSecurity = rating.drivingStyleAndSecurity;
-            this.ratingForm.price = rating.price;
-            this.ratingForm.review = rating.review;
+            this.ratingForm = {
+                service: this.userRating.service,
+                reliabilityAndPunctuality: this.userRating.reliabilityAndPunctuality,
+                drivingStyleAndSecurity: this.userRating.drivingStyleAndSecurity,
+                price: this.userRating.price,
+                review: this.userRating.review,
+            };
         }
+    }
+
+    async deleteRatingAlert() {
+        const alert = await this.alertCtrl.create({
+            header: '',
+            subHeader: this.translate.instant('history.msg.DELETE_ALL'),
+            buttons: [
+                {text: this.translate.instant('NO')},
+                {
+                    text: this.translate.instant('YES'),
+                    handler: () => {
+                        if (this.userRating) {
+                            this.ratingService.deleteRating(this.userRating);
+                        }
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
 

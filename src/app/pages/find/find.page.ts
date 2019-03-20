@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
@@ -31,7 +31,8 @@ export class FindPage implements OnInit {
 
     lang: string;
 
-    constructor(private navCtrl: NavController,
+    constructor(private zone: NgZone,
+                private navCtrl: NavController,
                 private router: Router,
                 private http: HttpClientModule,
                 private diagnostic: Diagnostic,
@@ -52,10 +53,11 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.listsService.favorites.subscribe((favorites) => {
-            const favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites);
-            if (favoriteShuttles && favoriteShuttles.count() > 0) {
+            this.zone.run(() => {
+                const favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites);
                 this.favorites = favoriteShuttles.toArray();
-            }
+                console.log(this.favorites);
+            });
         });
         this.localData.getLang().then((lang) => {
             this.lang = lang;

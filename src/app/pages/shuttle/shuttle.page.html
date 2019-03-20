@@ -42,7 +42,7 @@
         <ion-col>
             <ion-button (click)="rateClicked()" expand="block" color="tertiary" size="large">
                 <ion-icon name="star" slot="start"></ion-icon>
-                {{userRating ? 'Edit' : ("rate.RATE" | translate)}}
+                {{"rate.RATE" | translate}}
             </ion-button>
         </ion-col>
     </ion-row>
@@ -75,13 +75,46 @@
         </ion-item>
     </ion-card>
 
-    <ng-container *ngIf="shuttle?.avgRating?.ratingsCount > 0">
-        <ion-card id="rating-card" (click)="toRatingsPage()">
+    <ng-container *ngIf="userRating">
+        <ion-card class="rating-card" (click)="rateClicked()">
             <ion-card-header>
-                <ion-card-subtitle>{{"ratings.RATINGS" | translate}} ({{shuttle?.avgRating?.ratingsCount}})
-                </ion-card-subtitle>
+                <ion-card-subtitle>Meine Bewertung</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
+                <p><span>Service</span>
+                    <ion-badge color="tertiary">{{userRating?.service}} von 5</ion-badge>
+                </p>
+                <p><span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{userRating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{userRating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.PRICE" | translate}}</span>
+                    <ion-badge color="tertiary">{{userRating?.price}} von 5</ion-badge>
+                </p>
+                <ng-container *ngIf="userRating?.review">
+                    <hr>
+                    <p><i>"{{userRating?.review}}"</i></p>
+                </ng-container>
+            </ion-card-content>
+        </ion-card>
+    </ng-container>
+
+    <ng-container *ngIf="shuttle?.avgRating?.ratingsCount > 0">
+        <ion-card class="rating-card" (click)="toRatingsPage()">
+            <ion-card-header>
+                <ion-card-title>{{"ratings.RATINGS" | translate}} ({{shuttle?.avgRating?.ratingsCount}})
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <p>
+                    <span><b>Insgesamt</b></span>
+                    <ion-badge color="tertiary"><b>{{shuttle?.avgRating?.totalAvg}} von 5</b></ion-badge>
+                </p>
+                <hr>
                 <p>
                     <span>Service</span>
                     <ion-badge color="tertiary">{{shuttle?.avgRating?.service}} von 5</ion-badge>
@@ -98,10 +131,10 @@
                     <span>{{"rate.PRICE" | translate}}</span>
                     <ion-badge color="tertiary">{{shuttle?.avgRating?.price}} von 5</ion-badge>
                 </p>
-                <hr>
-                <p *ngFor="let review of shuttle?.avgRating?.reviews">
-                    <i>"{{review}}"</i>
-                </p>
+                <!--<hr>-->
+                <!--<p *ngFor="let review of shuttle?.avgRating?.reviews">-->
+                <!--<i>"{{review}}"</i>-->
+                <!--</p>-->
             </ion-card-content>
         </ion-card>
     </ng-container>

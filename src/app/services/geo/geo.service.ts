@@ -70,7 +70,7 @@ export class GeoService {
         }
     }
 
-    private getRandomPosition() {
+    private getRandomPosition(): Coordinates {
         const rLat = this.getRandom(4596669237, 4702921307) * Math.pow(10, -8);
         const rLng = this.getRandom(1007811939, 1279174244) * Math.pow(10, -8);
         this.position = {
