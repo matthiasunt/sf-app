@@ -51,12 +51,17 @@ export class ShuttlesService {
 
     public mergeShuttles(shuttles: List<Shuttle>, favorites: List<ListElement>, blacklist: List<ListElement>): List<Shuttle> {
         let ret: List<Shuttle> = shuttles;
+        let favoriteShuttlesInList: List<ListElement> = List([]);
         favorites.map((favorite) => {
             ret.filter((shuttle) => {
-                return favorite.shuttleId !== shuttle._id;
+                const found = favorite.shuttleId === shuttle._id;
+                if (found) {
+                    favoriteShuttlesInList = favoriteShuttlesInList.push(favorite);
+                }
+                return !found;
             });
         });
-        ret = this.getShuttlesFromList(favorites).merge(ret);
+        ret = this.getShuttlesFromList(favoriteShuttlesInList).merge(ret);
         blacklist.map((blacklisted) => {
             ret.filter((shuttle) => {
                 return blacklisted.shuttleId !== shuttle._id;

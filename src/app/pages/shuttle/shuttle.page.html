@@ -42,7 +42,7 @@
         <ion-col>
             <ion-button (click)="rateClicked()" expand="block" color="tertiary" size="large">
                 <ion-icon name="star" slot="start"></ion-icon>
-                Rate
+                {{userRating ? 'Edit' : ("rate.RATE" | translate)}}
             </ion-button>
         </ion-col>
     </ion-row>
@@ -74,33 +74,37 @@
             </ion-label>
         </ion-item>
     </ion-card>
-    <ion-card id="rating-card" (click)="toRatingsPage()">
-        <ion-card-header>
-            <ion-card-subtitle>Ratings ({{ratingsFromShuttle.length}})</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-            <p>
-                <span>Service</span>
-                <ion-badge color="tertiary">3 von 5</ion-badge>
-            </p>
-            <p>
-                <span>Reliability & Punctuality</span>
-                <ion-badge color="tertiary">3 von 5</ion-badge>
-            </p>
-            <p>
-                <span>Driving Style & Security</span>
-                <ion-badge color="tertiary">4 von 5</ion-badge>
-            </p>
-            <p>
-                <span>Price</span>
-                <ion-badge color="tertiary">3 von 5</ion-badge>
-            </p>
-            <hr>
-            <p>
-                <i>"Super shuttle hihi"</i>
-            </p>
-        </ion-card-content>
-    </ion-card>
+    
+    <ng-container *ngIf="shuttle?.avgRating?.ratingsCount > 0">
+        <ion-card id="rating-card" (click)="toRatingsPage()">
+            <ion-card-header>
+                <ion-card-subtitle>{{"ratings.RATINGS" | translate}} ({{shuttle?.avgRating?.ratingsCount}})
+                </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <p>
+                    <span>Service</span>
+                    <ion-badge color="tertiary">{{shuttle?.avgRating?.service}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{shuttle?.avgRating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{shuttle?.avgRating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.PRICE" | translate}}</span>
+                    <ion-badge color="tertiary">{{shuttle?.avgRating?.price}} von 5</ion-badge>
+                </p>
+                <hr>
+                <p *ngFor="let review of shuttle?.avgRating?.reviews">
+                    <i>"{{review}}"</i>
+                </p>
+            </ion-card-content>
+        </ion-card>
+    </ng-container>
     <!--<ion-card>-->
     <!--<ion-card-content>-->
     <!--<ion-card-content>-->

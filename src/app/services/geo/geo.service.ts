@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {getDistance} from 'geolib';
 import {NativeGeocoder, NativeGeocoderReverseResult} from '@ionic-native/native-geocoder/ngx';
-import {DeviceService} from '../device/device.service';
-import {Coordinates} from '../../models/coordinates';
-import {Platform} from '@ionic/angular';
-
 import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {DeviceService} from '@services/device/device.service';
+import {Coordinates} from '@models/coordinates';
+
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +17,6 @@ export class GeoService {
 
     constructor(
         private http: HttpClient,
-        private platform: Platform,
         private deviceService: DeviceService,
         private geolocation: Geolocation,
         private nativeGeocoder: NativeGeocoder,

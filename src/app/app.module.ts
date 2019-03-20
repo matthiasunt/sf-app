@@ -11,12 +11,15 @@ import {AppComponent} from './app.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
+import {Diagnostic} from '@ionic-native/diagnostic/ngx';
+
 @NgModule({
     declarations: [
         AppComponent,
     ],
-    entryComponents: [
-    ],
+    entryComponents: [],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),
@@ -35,6 +38,9 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
         StatusBar,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         UniqueDeviceID,
+        Geolocation,
+        NativeGeocoder,
+        Diagnostic
     ],
     bootstrap: [AppComponent]
 })

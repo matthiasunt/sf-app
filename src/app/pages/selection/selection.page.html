@@ -31,9 +31,11 @@
                         <ion-icon *ngIf="!shuttle?.verified" name="checkmark-circle" slot="end"
                                   color="secondary"></ion-icon>
                     </h2>
+                    <h4>{{shuttle?.rankingScore}}</h4>
                     <p>
-                        <ion-badge color="tertiary">
-                            ★ 4,2
+                        <ion-badge *ngIf="shuttle?.avgRating?.totalAvg && shuttle?.avgRating?.totalAvg > 0"
+                                   color="tertiary">
+                            ★ {{shuttle?.avgRating?.totalAvg}}
                         </ion-badge>
                         <ion-badge
                                 *ngIf="coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"

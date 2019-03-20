@@ -10,33 +10,44 @@
 </ion-header>
 
 <ion-content>
-    <ion-card *ngFor="let rating of ratings" id="rating-card">
-        <ion-card-header>
-            <ion-card-subtitle>Anonymous, {{getDate(rating.date)}}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-            <p>
-                <span>Service</span>
-                <ion-badge color="tertiary">{{rating.service}} von 5</ion-badge>
-            </p>
-            <p>
-                <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                <ion-badge color="tertiary">{{rating.reliabilityAndPunctuality}} von 5</ion-badge>
-            </p>
-            <p>
-                <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                <ion-badge color="tertiary">{{rating.drivingStyleAndSecurity}} von 5</ion-badge>
-            </p>
-            <p>
-                <span>{{"rate.PRICE" | translate}}</span>
-                <ion-badge color="tertiary">{{rating.price}} von 5</ion-badge>
-            </p>
-            <hr>
-            <p>
-                <i>"{{rating.review}}"</i>
-            </p>
-        </ion-card-content>
-    </ion-card>
+    <ng-container *ngIf="ratings.length > 0">
+        <ion-item>
+            <ion-label></ion-label>
+            <ion-select (ionChange)="orderByChanged($event)" interface="popover" value="date_dsc">
+                <ion-select-option value="date_dsc">↓ Date</ion-select-option>
+                <ion-select-option value="date_asc">↑ Date</ion-select-option>
+                <ion-select-option value="rating_dsc">↓ Rating</ion-select-option>
+                <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-card *ngFor="let rating of ratings" id="rating-card">
+            <ion-card-header>
+                <ion-card-subtitle>Anonymous, {{getDate(rating?.date)}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <p>
+                    <span>Service</span>
+                    <ion-badge color="tertiary">{{rating?.service}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{rating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+                    <ion-badge color="tertiary">{{rating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.PRICE" | translate}}</span>
+                    <ion-badge color="tertiary">{{rating?.price}} von 5</ion-badge>
+                </p>
+                <hr>
+                <p *ngIf="rating?.review?.length > 0">
+                    <i>"{{rating?.review}}"</i>
+                </p>
+            </ion-card-content>
+        </ion-card>
+    </ng-container>
 
     <p *ngIf="ratings.length < 1" class="no-data-p">{{"ratings.NO_RATINGS" | translate}}</p>
 </ion-content>
