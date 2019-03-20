@@ -4,6 +4,11 @@
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>{{"rate.RATE" | translate}} {{shuttle?.name}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="deleteClicked()" *ngIf="alreadyRatedByUser">
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 

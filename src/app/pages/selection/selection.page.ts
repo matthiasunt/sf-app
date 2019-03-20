@@ -59,7 +59,7 @@ export class SelectionPage implements OnInit {
     async ngOnInit() {
         this.lang = await this.localData.getLang();
         const districtId = this.activatedRoute.snapshot.paramMap.get('id');
-        // Via District
+        /* Via District */
         if (districtId) {
             this.districtsService.getDistrict(districtId).subscribe((district: District) => {
                 this.district = district;
@@ -69,7 +69,7 @@ export class SelectionPage implements OnInit {
             this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
                 this.listsService.favorites.getValue(),
                 this.listsService.blacklist.getValue()).toArray();
-            // Via GPS
+        /* Via GPS */
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
             if (coords) {

@@ -52,31 +52,31 @@ export class CallsService {
         const userId = this.authService.getUserId();
 
         if (this.deviceService.isDevice()) {
-            App.addListener('appStateChange', (state: AppState) => {
-                if (state.isActive) {
-                    console.log('Resume');
-                    if (this.afterCall) {
-                        callEndDate = new Date();
-                        // callEndDate.setSeconds(callEndDate.getSeconds() - 4);
-                        const call: Call = {
-                            _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
-                            type: type,
-                            startDate: callStartDate,
-                            endDate: callEndDate,
-                            userId: userId,
-                            shuttleId: shuttleId,
-                            origin: origin,
-                            isHidden: false,
-                        };
-                        this.addCall(call);
-                        this.afterCall = false;
-                    }
-                } else {
-                    console.log('Pause');
-                    callStartDate = new Date();
-                    this.afterCall = true;
-                }
-            });
+            // App.addListener('appStateChange', (state: AppState) => {
+            //     if (state.isActive) {
+            //         console.log('Resume');
+            //         if (this.afterCall) {
+            //             callEndDate = new Date();
+            //             // callEndDate.setSeconds(callEndDate.getSeconds() - 4);
+            //             const call: Call = {
+            //                 _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
+            //                 type: type,
+            //                 startDate: callStartDate,
+            //                 endDate: callEndDate,
+            //                 userId: userId,
+            //                 shuttleId: shuttleId,
+            //                 origin: origin,
+            //                 isHidden: false,
+            //             };
+            //             this.addCall(call);
+            //             this.afterCall = false;
+            //         }
+            //     } else {
+            //         console.log('Pause');
+            //         callStartDate = new Date();
+            //         this.afterCall = true;
+            //     }
+            // });
         } else {
             callStartDate = new Date();
             callEndDate = new Date();
@@ -160,7 +160,7 @@ export class CallsService {
     }
 
     private emitCalls() {
-        this.zone.run(() => {
+        // this.zone.run(() => {
             from(this.userDbService.db.query('calls/all', {include_docs: true}))
                 .subscribe(
                     (res: any) => {
@@ -173,6 +173,6 @@ export class CallsService {
                     },
                     err => console.log('Error retrieving Calls')
                 );
-        });
+        // });
     }
 }
