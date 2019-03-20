@@ -34,6 +34,7 @@ export class RatingsService {
         try {
             const res = await this.userDbService.putDoc(rating);
             console.log(res);
+
             this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
         } catch (err) {
             console.error(err);
@@ -57,10 +58,10 @@ export class RatingsService {
                     const res = await this.sfDbService.db.query('ratings/by_shuttle', {
                         include_docs: true, key: shuttle._id,
                     });
-                    const ratings: List<Rating> = res.rows.map(row => {
+                    const ratings: Rating[] = res.rows.map(row => {
                         return row.doc;
                     });
-                    this.ratingsByShuttles = this.ratingsByShuttles.set(shuttle._id, ratings);
+                    this.ratingsByShuttles = this.ratingsByShuttles.set(shuttle._id, List(ratings));
                 } catch (err) {
                     console.error(err);
                 }

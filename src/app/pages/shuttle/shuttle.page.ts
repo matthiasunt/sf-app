@@ -18,6 +18,7 @@ import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-shuttle',
@@ -32,8 +33,9 @@ export class ShuttlePage implements OnInit {
     isFavorite: boolean;
     lang: string;
 
+    ratingToDisplay: Rating;
     userRating: Rating;
-    ratingsFromShuttle: Rating[] = [];
+    ratingsFromShuttle: Rating[];
 
     constructor(private navCtrl: NavController,
                 public translate: TranslateService,
@@ -53,6 +55,7 @@ export class ShuttlePage implements OnInit {
     ) {
         this.shuttleColor = '#99CC33';
         this.isFavorite = false;
+        this.ratingsFromShuttle = [];
     }
 
     async ngOnInit() {
@@ -63,9 +66,18 @@ export class ShuttlePage implements OnInit {
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
+
+        // TODO: Display User Rating immediately here
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-        const allRatings = this.ratingsService.getRatingsFromShuttle(shuttleId);
-        this.ratingsFromShuttle = allRatings ? allRatings.toArray() : [];
+
+        // this.ratingToDisplay = this.userRating ? this.userRating : this.shuttle.avgRating;
+
+        /* Update Shuttle Ratings if Shuttles changed */
+        this.shuttlesService.allShuttles.subscribe(() => {
+            console.log('triggered');
+            this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+        });
+        console.log(this.shuttle);
     }
 
     public callClicked() {
@@ -100,6 +112,7 @@ export class ShuttlePage implements OnInit {
         this.presentAddedToFavoritesToast();
     }
 
+    /* Toasts & Alerts */
     private async presentAddedToFavoritesToast() {
         const toast = await this.toastController.create({
             message: 'Shuttle added to Favorites!',

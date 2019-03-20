@@ -35,6 +35,39 @@ export class RatingsPage implements OnInit {
         this.ratings = ratings ? ratings.toArray() : [];
     }
 
+    public orderByChanged(event) {
+        if (this.ratings.length > 1) {
+            switch (event.detail.value) {
+                case 'date_dsc':
+                    this.ratings.sort((a, b) => {
+                            return (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0);
+                        }
+                    );
+                    break;
+                case 'date_asc':
+                    this.ratings.sort((a, b) => {
+                            return (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0);
+                        }
+                    );
+                    break;
+                // case 'rating_dsc':
+                //     this.ratings.sort((a, b) => {
+                //             return (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0);
+                //         }
+                //     );
+                //     break;
+                // case 'rating_dsc':
+                //     this.ratings.sort((a, b) => {
+                //             return (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0);
+                //         }
+                //     );
+                //     break;
+                default:
+                    break;
+            }
+        }
+    }
+
     getDate(date: string) {
         return getBeautifulDateString(date, this.locale);
     }

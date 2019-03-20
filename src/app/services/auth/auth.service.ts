@@ -17,6 +17,7 @@ export class AuthService {
     private headers: HttpHeaders;
     private deviceInfo: any;
     private userId: string;
+
     constructor(
         private http: HttpClient,
         private uniqueDeviceID: UniqueDeviceID,
@@ -42,7 +43,8 @@ export class AuthService {
             username: id,
             email: id + '@shuttlefinder.it',
             password: 'softlogin',
-            confirmPassword: 'softlogin'
+            confirmPassword: 'softlogin',
+            uuid: uuid,
         };
         try {
             const loginRes = await this.login(user);

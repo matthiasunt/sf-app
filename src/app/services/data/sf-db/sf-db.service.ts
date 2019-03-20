@@ -24,13 +24,10 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
-            console.log(info);
-            this._syncSubject.next(true);
+            console.log('change');
+            // this._syncSubject.next(true);
         }).on('paused', (err) => {
-            console.log(err);
-            this._syncSubject.next(true);
-        }).on('complete', (info) => {
-            console.log(info);
+            console.log('pause');
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);

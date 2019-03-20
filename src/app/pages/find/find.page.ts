@@ -52,7 +52,10 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.listsService.favorites.subscribe((favorites) => {
-            this.favorites = this.shuttlesService.getShuttlesFromList(favorites).toArray();
+            const favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites);
+            if (favoriteShuttles && favoriteShuttles.count() > 0) {
+                this.favorites = favoriteShuttles.toArray();
+            }
         });
         this.localData.getLang().then((lang) => {
             this.lang = lang;

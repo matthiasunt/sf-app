@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
 import {Subject} from 'rxjs';
+import {ENV} from '@env';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +25,7 @@ export class UserDbService {
     init(details) {
         this.userId = details.user_id;
         this.details = details;
-        this.remote = details.userDBs.sf;
+        this.remote = ENV.production ? details.userDBs.sf : details.userDBs.dev_sf;
         this.db.sync(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {

@@ -9,7 +9,6 @@ import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {getContrastColor} from '../../tools/sf-tools';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
-import {ListElement} from '@models/list-element';
 import {AuthService} from '@services/auth/auth.service';
 
 @Component({
@@ -24,10 +23,10 @@ export class RatePage implements OnInit {
     shuttleColor: string;
     alreadyRatedByUser = false;
     ratingForm: any = {
-        service: '3',
-        reliabilityAndPunctuality: '3',
-        drivingStyleAndSecurity: '3',
-        price: '3',
+        service: 3,
+        reliabilityAndPunctuality: 3,
+        drivingStyleAndSecurity: 3,
+        price: 3,
         review: '',
     };
 
@@ -71,6 +70,12 @@ export class RatePage implements OnInit {
         this.navCtrl.pop();
     }
 
+    adjustTextarea(event: any): void {
+        const textarea: any = event.target;
+        textarea.rows = textarea.value.split('\n').length;
+        return;
+    }
+
     getToolbarStyle() {
         return {
             'background-color': this.shuttleColor,
@@ -87,7 +92,6 @@ export class RatePage implements OnInit {
             this.ratingForm.drivingStyleAndSecurity = rating.drivingStyleAndSecurity;
             this.ratingForm.price = rating.price;
             this.ratingForm.review = rating.review;
-            console.log(rating);
         }
     }
 
