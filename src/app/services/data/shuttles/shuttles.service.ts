@@ -53,7 +53,7 @@ export class ShuttlesService {
         let ret: List<Shuttle> = shuttles;
         let favoriteShuttlesInList: List<ListElement> = List([]);
         favorites.map((favorite) => {
-            ret.filter((shuttle) => {
+            ret = ret.filter((shuttle) => {
                 const found = favorite.shuttleId === shuttle._id;
                 if (found) {
                     favoriteShuttlesInList = favoriteShuttlesInList.push(favorite);
@@ -63,7 +63,7 @@ export class ShuttlesService {
         });
         ret = this.getShuttlesFromList(favoriteShuttlesInList).merge(ret);
         blacklist.map((blacklisted) => {
-            ret.filter((shuttle) => {
+            ret = ret.filter((shuttle) => {
                 return blacklisted.shuttleId !== shuttle._id;
             });
         });
@@ -71,11 +71,13 @@ export class ShuttlesService {
     }
 
     private rankShuttlesByScore(list: List<Shuttle>): List<Shuttle> {
-        let ret: List<Shuttle>;
-        ret = list.sort(() => Math.random() - 0.5);
-        ret = ret.sort((a, b) => {
-            return b.rankingScore - a.rankingScore;
-        });
+        let ret: List<Shuttle> = List([]);
+        if (list) {
+            ret = list.sort(() => Math.random() - 0.5);
+            ret = ret.sort((a, b) => {
+                return b.rankingScore - a.rankingScore;
+            });
+        }
         return ret;
     }
 

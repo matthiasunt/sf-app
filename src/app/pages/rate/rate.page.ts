@@ -70,6 +70,10 @@ export class RatePage implements OnInit {
         this.navCtrl.pop();
     }
 
+    public deleteClicked() {
+        console.log('Really delete?');
+    }
+
     adjustTextarea(event: any): void {
         const textarea: any = event.target;
         textarea.rows = textarea.value.split('\n').length;

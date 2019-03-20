@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {NavController, PopoverController, ToastController} from '@ionic/angular';
@@ -37,7 +37,8 @@ export class ShuttlePage implements OnInit {
     userRating: Rating;
     ratingsFromShuttle: Rating[];
 
-    constructor(private navCtrl: NavController,
+    constructor(public zone: NgZone,
+                private navCtrl: NavController,
                 public translate: TranslateService,
                 private toastController: ToastController,
                 private popoverController: PopoverController,
@@ -75,7 +76,9 @@ export class ShuttlePage implements OnInit {
         /* Update Shuttle Ratings if Shuttles changed */
         this.shuttlesService.allShuttles.subscribe(() => {
             console.log('triggered');
-            this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+            this.zone.run(() => {
+                this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+            });
         });
         console.log(this.shuttle);
     }
