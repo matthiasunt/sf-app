@@ -33,11 +33,10 @@ export class ShuttlePage implements OnInit {
     isFavorite: boolean;
     lang: string;
 
-    ratingToDisplay: Rating;
     userRating: Rating;
     ratingsFromShuttle: Rating[];
 
-    constructor(public zone: NgZone,
+    constructor(private zone: NgZone,
                 private navCtrl: NavController,
                 public translate: TranslateService,
                 private toastController: ToastController,
@@ -51,7 +50,7 @@ export class ShuttlePage implements OnInit {
                 private listsService: ListsService,
                 private shuttlesService: ShuttlesService,
                 public callsService: CallsService,
-                private colorGenerator: ColorGeneratorService,
+                public colorGenerator: ColorGeneratorService,
                 private ratingsService: RatingsService,
     ) {
         this.shuttleColor = '#99CC33';
@@ -67,17 +66,14 @@ export class ShuttlePage implements OnInit {
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
-
-        // TODO: Display User Rating immediately here
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-
-        // this.ratingToDisplay = this.userRating ? this.userRating : this.shuttle.avgRating;
 
         /* Update Shuttle Ratings if Shuttles changed */
         this.shuttlesService.allShuttles.subscribe(() => {
-            console.log('triggered');
+            // console.log('triggered');
             this.zone.run(() => {
                 this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
             });
         });
         console.log(this.shuttle);

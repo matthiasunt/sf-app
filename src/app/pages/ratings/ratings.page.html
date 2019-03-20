@@ -20,7 +20,7 @@
                 <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
             </ion-select>
         </ion-item>
-        <ion-card *ngFor="let rating of ratings" id="rating-card">
+        <ion-card *ngFor="let rating of ratings" class="rating-card">
             <ion-card-header>
                 <ion-card-subtitle>Anonymous, {{getDate(rating?.date)}}</ion-card-subtitle>
             </ion-card-header>

@@ -54,8 +54,8 @@
         </ion-item>
         <ion-item lines="none">
             <ion-label position="stacked" color="primary">{{"rate.REVIEW" | translate}}</ion-label>
-            <ion-textarea [(ngModel)]="ratingForm.review" (change)="adjustTextarea($event)" name="review"
-                          required="true" maxlength="400" rows="5"></ion-textarea>
+            <ion-textarea [(ngModel)]="ratingForm.review" name="review"
+                          required="true" maxlength="400" rows="6"></ion-textarea>
         </ion-item>
         <ion-button type="submit" expand="block" color="tertiary">{{"rate.RATE" | translate}}</ion-button>
     </form>

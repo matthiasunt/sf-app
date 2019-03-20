@@ -33,6 +33,7 @@ export class RatingsPage implements OnInit {
         this.shuttle = this.shuttlesService.getShuttle(shuttleId);
         const ratings = this.ratingsService.getRatingsFromShuttle(shuttleId);
         this.ratings = ratings ? ratings.toArray() : [];
+        console.log(this.ratings);
     }
 
     public orderByChanged(event) {

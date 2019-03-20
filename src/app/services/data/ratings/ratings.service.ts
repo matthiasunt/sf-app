@@ -34,7 +34,6 @@ export class RatingsService {
         try {
             const res = await this.userDbService.putDoc(rating);
             console.log(res);
-
             this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
         } catch (err) {
             console.error(err);
@@ -46,6 +45,16 @@ export class RatingsService {
             const res = await this.userDbService.updateDoc(rating);
             console.log(res);
             this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    public async deleteRating(rating: Rating) {
+        try {
+            const res = await this.userDbService.removeDoc(rating);
+            console.log(res);
+            this.ratingsFromUser.remove(rating.shuttleId);
         } catch (err) {
             console.error(err);
         }

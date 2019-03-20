@@ -28,10 +28,10 @@
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ shuttle?.name }}
-                        <ion-icon *ngIf="!shuttle?.verified" name="checkmark-circle" slot="end"
+                        <ion-icon *ngIf="shuttle?.verified" name="checkmark-circle" slot="end"
                                   color="secondary"></ion-icon>
                     </h2>
-                    <h4>{{shuttle?.rankingScore}}</h4>
+                    <!--<h4>{{shuttle?.rankingScore}}</h4>-->
                     <p>
                         <ion-badge *ngIf="shuttle?.avgRating?.totalAvg && shuttle?.avgRating?.totalAvg > 0"
                                    color="tertiary">

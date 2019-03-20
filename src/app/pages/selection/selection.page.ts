@@ -97,7 +97,7 @@ export class SelectionPage implements OnInit {
         }
         let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 18000);
         if (shuttlesTemp.count() < 3) {
-            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 26000);
+            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 25000);
         }
         if (!shuttlesTemp || shuttlesTemp.count() < 1) {
             this.outOfRange = true;
