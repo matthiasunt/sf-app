@@ -15,7 +15,8 @@
         </ion-col>
     </ion-row>
     <div id="district-chip-row">
-        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districtsService.districts | async"
+        <!--<ion-chip (click)="districtClicked(d)" *ngFor="let d of districtsService.districts | async"-->
+        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
                   [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
                   [style.color]="colorGenerator.getDistrictColors(d)[1]">
             <ion-label>{{getDistrictName(d)}}</ion-label>

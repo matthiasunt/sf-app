@@ -59,10 +59,11 @@ export class ShuttlePage implements OnInit {
     }
 
     async ngOnInit() {
+        console.log('On init');
         this.lang = await this.localData.getLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         console.log(this.router.url);
-        this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
@@ -71,9 +72,10 @@ export class ShuttlePage implements OnInit {
         /* Update Shuttle Ratings if Shuttles changed */
         this.shuttlesService.allShuttles.subscribe(() => {
             // console.log('triggered');
-            this.zone.run(() => {
-                this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+            this.zone.run(async () => {
+                this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
                 this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+                console.log(this.userRating);
             });
         });
         console.log(this.shuttle);

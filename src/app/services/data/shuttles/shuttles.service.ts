@@ -143,7 +143,12 @@ export class ShuttlesService {
         });
     }
 
-    public getShuttle(shuttleId: string): Shuttle {
-        return this._allShuttles.value.get(shuttleId);
+    public async getShuttle(shuttleId: string): Promise<Shuttle> {
+        const shuttle = this._allShuttles.value.get(shuttleId);
+        if (shuttle) {
+            return shuttle;
+        } else {
+            return this.sfDbService.getDoc(shuttleId);
+        }
     }
 }

@@ -5,6 +5,7 @@ export interface Rating {
     shuttleId: string;
     date: string;
 
+    totalAvg: number;
     service: number;
     reliabilityAndPunctuality: number;
     drivingStyleAndSecurity: number;

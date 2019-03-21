@@ -10,6 +10,7 @@ import {getContrastColor} from '../../tools/sf-tools';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
+import {DocType} from '@models/doctype';
 
 @Component({
     selector: 'app-rate',
@@ -43,27 +44,31 @@ export class RatePage implements OnInit {
     ) {
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttle = this.shuttlesService.getShuttle(shuttleId);
+        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.fetchRatingByUser(shuttleId);
     }
 
-    onSubmit() {
-        console.log(this.ratingForm);
-        const type = 'rating';
+    rateClicked() {
+        const totalAvg = (this.ratingForm.service
+            + this.ratingForm.reliabilityAndPunctuality
+            + this.ratingForm.drivingStyleAndSecurity
+            + this.ratingForm.price) / 4;
+
         const rating: Rating = {
-            _id: `${this.shuttle._id}--${type}--${this.authService.getUserId()}`,
+            _id: `${this.shuttle._id}--${DocType.Rating}--${this.authService.getUserId()}`,
             userId: this.authService.getUserId(),
             shuttleId: this.shuttle._id,
             date: new Date().toISOString(),
+            totalAvg: totalAvg,
             service: this.ratingForm.service,
             reliabilityAndPunctuality: this.ratingForm.reliabilityAndPunctuality,
             drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
             price: this.ratingForm.price,
             review: this.ratingForm.review.trim(),
-            type: type,
+            type: DocType.Rating,
         };
         if (this.alreadyRatedByUser) {
             this.ratingService.updateRating(rating);
@@ -110,6 +115,7 @@ export class RatePage implements OnInit {
                         if (this.userRating) {
                             this.ratingService.deleteRating(this.userRating);
                         }
+                        this.navCtrl.pop();
                     }
                 }
             ]

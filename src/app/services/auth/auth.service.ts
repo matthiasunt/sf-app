@@ -35,7 +35,7 @@ export class AuthService {
         //     uuid = await this.uniqueDeviceID.get();
         //     uuid = this.deviceInfo.uuid;
         // } else {
-        uuid = 'browser123';
+        uuid = 'browser-uuid-2';
         // }
         const id = this.hashString(uuid);
         this.userId = id;
