@@ -2,14 +2,15 @@ import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject, from} from 'rxjs';
 import {List} from 'immutable';
 
-import {UserDbService} from '../user-db/user-db.service';
-import {AuthService} from '../../auth/auth.service';
-import {ShuttlesService} from '../shuttles/shuttles.service';
-import {DeviceService} from '../../device/device.service';
+import {UserDbService} from '@services/data/user-db/user-db.service';
+import {AuthService} from '@services/auth/auth.service';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {DeviceService} from '@services/device/device.service';
 
-import {Call, CallOrigin} from '../../../models/call';
-import {HistoryElement} from '../../../models/history-element';
+import {Call, CallOrigin} from '@models/call';
+import {HistoryElement} from '@models/history-element';
 import {Plugins, AppState} from '@capacitor/core';
+import {DocType} from '@models/doctype';
 
 const {App} = Plugins;
 
@@ -48,7 +49,6 @@ export class CallsService {
     public handleCall(shuttleId: string, origin: CallOrigin) {
         let callStartDate: Date;
         let callEndDate: Date;
-        const type = 'call';
         const userId = this.authService.getUserId();
 
         if (this.deviceService.isDevice()) {
@@ -59,8 +59,8 @@ export class CallsService {
             //             callEndDate = new Date();
             //             // callEndDate.setSeconds(callEndDate.getSeconds() - 4);
             //             const call: Call = {
-            //                 _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
-            //                 type: type,
+            //                 _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${shuttleId}`,
+            //                 type: DocType.Call,
             //                 startDate: callStartDate,
             //                 endDate: callEndDate,
             //                 userId: userId,
@@ -81,8 +81,8 @@ export class CallsService {
             callStartDate = new Date();
             callEndDate = new Date();
             this.addCall({
-                _id: `${userId}-${type}-${callStartDate.toISOString()}-${shuttleId}`,
-                type: type,
+                _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${shuttleId}`,
+                type: DocType.Call,
                 startDate: callStartDate,
                 endDate: callEndDate,
                 userId: userId,
@@ -141,12 +141,12 @@ export class CallsService {
         });
     }
 
-    private loadHistory() {
+    private async loadHistory() {
         this.calls.subscribe((calls) => {
             let history: List<HistoryElement> = List([]);
-            calls.map((call: Call) => {
+            calls.map(async (call: Call) => {
                 if (call && call.shuttleId) {
-                    const shuttle = this.shuttlesService.getShuttle(call.shuttleId);
+                    const shuttle = await this.shuttlesService.getShuttle(call.shuttleId);
                     const historyElement: HistoryElement = {
                         shuttle: shuttle,
                         call: call,

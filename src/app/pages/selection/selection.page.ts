@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {GeoService} from '@services/geo/geo.service';
@@ -65,11 +65,13 @@ export class SelectionPage implements OnInit {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
-            const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
-            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-                this.listsService.favorites.getValue(),
-                this.listsService.blacklist.getValue()).toArray();
-        /* Via GPS */
+            this.shuttlesService.allShuttles.subscribe(() => {
+                const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
+                this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+                    this.listsService.favorites.getValue(),
+                    this.listsService.blacklist.getValue()).toArray();
+            });
+            /* Via GPS */
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
             if (coords) {
@@ -77,7 +79,9 @@ export class SelectionPage implements OnInit {
                     latitude: coords.split(',')[0],
                     longitude: coords.split(',')[1],
                 };
-                this.getShuttlesByPosition();
+                this.shuttlesService.allShuttles.subscribe(() => {
+                    this.getShuttlesByPosition();
+                });
             }
         }
         this.lang = await this.localData.getLang();

@@ -13,50 +13,50 @@
 </ion-header>
 
 <ion-content padding>
-    <form (ngSubmit)="onSubmit()">
-        <ion-item lines="none">
-            <ion-label position="stacked" color="primary">Service</ion-label>
-            <ion-range [(ngModel)]="ratingForm.service" name="service"
-                       min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
-            </ion-range>
-            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
-            <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" color="primary">
-                {{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}
-            </ion-label>
-            <ion-range [(ngModel)]="ratingForm.reliabilityAndPunctuality" name="reliabilityAndPunctuality"
-                       min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
-            </ion-range>
-            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
-            <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" color="primary">
-                {{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}
-            </ion-label>
-            <ion-range [(ngModel)]="ratingForm.drivingStyleAndSecurity" name="drivingStyleAndSecurity"
-                       min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
-            </ion-range>
-            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
-            <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" color="primary">
-                {{"rate.PRICE" | translate}}
-            </ion-label>
-            <ion-range [(ngModel)]="ratingForm.price" name="price"
-                       min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
-            </ion-range>
-            <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
-            <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" color="primary">{{"rate.REVIEW" | translate}}</ion-label>
-            <ion-textarea [(ngModel)]="ratingForm.review" name="review"
-                          required="true" maxlength="400" rows="6"></ion-textarea>
-        </ion-item>
-        <ion-button type="submit" expand="block" color="tertiary">{{"rate.RATE" | translate}}</ion-button>
-    </form>
+    <ion-item lines="none">
+        <ion-label position="stacked" color="primary">Service</ion-label>
+        <ion-range [(ngModel)]="ratingForm.service" name="service"
+                   min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
+        </ion-range>
+        <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+        <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
+    </ion-item>
+    <ion-item lines="none">
+        <ion-label position="stacked" color="primary">
+            {{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}
+        </ion-label>
+        <ion-range [(ngModel)]="ratingForm.reliabilityAndPunctuality" name="reliabilityAndPunctuality"
+                   min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
+        </ion-range>
+        <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+        <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
+    </ion-item>
+    <ion-item lines="none">
+        <ion-label position="stacked" color="primary">
+            {{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}
+        </ion-label>
+        <ion-range [(ngModel)]="ratingForm.drivingStyleAndSecurity" name="drivingStyleAndSecurity"
+                   min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
+        </ion-range>
+        <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+        <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
+    </ion-item>
+    <ion-item lines="none">
+        <ion-label position="stacked" color="primary">
+            {{"rate.PRICE" | translate}}
+        </ion-label>
+        <ion-range [(ngModel)]="ratingForm.price" name="price"
+                   min="1" max="5" step="1" snaps="true" color="secondary" pin="true">
+        </ion-range>
+        <ion-icon size="small" slot="start" name="sad" color="danger"></ion-icon>
+        <ion-icon size="small" slot="end" name="happy" color="secondary"></ion-icon>
+    </ion-item>
+    <ion-item lines="none">
+        <ion-label position="stacked" color="primary">{{"rate.REVIEW" | translate}}</ion-label>
+        <ion-textarea [(ngModel)]="ratingForm.review" name="review"
+                      required="true" maxlength="400" rows="6"></ion-textarea>
+    </ion-item>
 </ion-content>
+<ion-footer>
+    <ion-button (click)="rateClicked()" size="large" expand="block" color="tertiary">{{"rate.RATE" | translate}}</ion-button>
+</ion-footer>

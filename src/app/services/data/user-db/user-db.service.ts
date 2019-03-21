@@ -43,9 +43,17 @@ export class UserDbService {
         return this._syncSubject;
     }
 
+    public async getDoc(docId: any) {
+        try {
+            return await this.db.get(docId);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     public async putDoc(doc: any) {
         try {
-            const res = this.db.put(doc);
+            const res = await this.db.put(doc);
             console.log(res);
         } catch (err) {
             console.error(err);
@@ -58,15 +66,14 @@ export class UserDbService {
             if (docFromDb) {
                 doc._rev = docFromDb._rev;
             }
-            const res = this.db.put(doc);
-            console.log(res);
+            await this.putDoc(doc);
         } catch (err) {
             console.error(err);
         }
     }
 
     public async removeDoc(doc: any) {
-        const docFromDb = await this.db.get(doc._id);
-        return this.db.remove(docFromDb._id, docFromDb._rev);
+        doc._deleted = true;
+        await this.updateDoc(doc);
     }
 }

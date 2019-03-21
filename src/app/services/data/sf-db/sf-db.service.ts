@@ -38,38 +38,39 @@ export class SfDbService {
         return this._syncSubject;
     }
 
-    private buildRankingFromLocationInRanges(arr: any[], radius: number): any {
-        const range1: string[] = [];
-        const range2: string[] = [];
-        const range3: string[] = [];
-        arr.forEach((e) => {
-            if (e.distance) {
-                if (e.distance < 12000) {
-                    range1.push(e);
-                } else if (e.distance < 25000) {
-                    range2.push(e);
-                } else {
-                    range3.push(e);
-                }
-            }
-        });
-        return {
-            ranges: [
-                {
-                    distance: 12000,
-                    shuttles: range1.sort(() => Math.random() - 0.5)
-                },
-                {
-                    distance: 25000,
-                    shuttles: range2.sort(() => Math.random() - 0.5)
-                },
-                {
-                    distance: radius,
-                    shuttles: range3.sort(() => Math.random() - 0.5)
-                }
-            ]
-        };
 
+    public async getDoc(docId: any) {
+        try {
+            return await this.db.get(docId);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    public async putDoc(doc: any) {
+        try {
+            const res = await this.db.put(doc);
+            console.log(res);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    public async updateDoc(doc: any) {
+        try {
+            const docFromDb = await this.db.get(doc._id);
+            if (docFromDb) {
+                doc._rev = docFromDb._rev;
+            }
+            await this.putDoc(doc);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    public async removeDoc(doc: any) {
+        doc._deleted = true;
+        await this.updateDoc(doc);
     }
 
 }
