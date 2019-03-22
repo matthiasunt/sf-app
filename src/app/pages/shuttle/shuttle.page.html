@@ -36,13 +36,13 @@
         <ion-col>
             <ion-button (click)="callClicked()" expand="block" color="secondary" size="large">
                 <ion-icon name="call" slot="start"></ion-icon>
-                Call
+                {{"shuttle.CALL" | translate}}
             </ion-button>
         </ion-col>
         <ion-col>
             <ion-button (click)="rateClicked()" expand="block" color="tertiary" size="large">
                 <ion-icon name="star" slot="start"></ion-icon>
-                {{"rate.RATE" | translate}}
+                {{"shuttle.RATE" | translate}}
             </ion-button>
         </ion-col>
     </ion-row>
@@ -78,7 +78,7 @@
     <ng-container *ngIf="userRating">
         <ion-card class="rating-card" (click)="rateClicked()">
             <ion-card-header>
-                <ion-card-subtitle>Meine Bewertung</ion-card-subtitle>
+                <ion-card-subtitle> {{"shuttle.MY_RATINGS" | translate}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <p><span>Service</span>

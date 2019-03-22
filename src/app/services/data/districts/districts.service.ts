@@ -2,7 +2,7 @@ import {Injectable, NgZone} from '@angular/core';
 import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List} from 'immutable';
-import {District} from '../../../models/district';
+import {District} from '@models/district';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +27,6 @@ export class DistrictsService {
                         const districts: District[] = res.rows.map(row => {
                             return row.doc;
                         });
-                        console.log(districts);
                         this._districts.next(List(districts));
                     },
                     err => console.log('Error retrieving Districts')

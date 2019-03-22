@@ -30,7 +30,7 @@ export class CallsService {
                 public zone: NgZone) {
         this.loadInitialData();
         this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-            if (change.doc.type === 'call') {
+            if (change.doc.type === DocType.Call) {
                 this.emitCalls();
             }
         });
@@ -161,18 +161,18 @@ export class CallsService {
 
     private emitCalls() {
         // this.zone.run(() => {
-            from(this.userDbService.db.query('calls/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        const calls = res.rows.map(row => {
-                            if (!row.doc.isHidden) {
-                                return row.doc;
-                            }
-                        });
-                        this._calls.next(List(calls));
-                    },
-                    err => console.log('Error retrieving Calls')
-                );
+        from(this.userDbService.db.query('calls/all', {include_docs: true}))
+            .subscribe(
+                (res: any) => {
+                    const calls = res.rows.map(row => {
+                        if (!row.doc.isHidden) {
+                            return row.doc;
+                        }
+                    });
+                    this._calls.next(List(calls));
+                },
+                err => console.log('Error retrieving Calls')
+            );
         // });
     }
 }
