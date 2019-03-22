@@ -62,7 +62,7 @@ export class ShuttlePage implements OnInit {
         console.log('On init');
         this.lang = await this.localData.getLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        console.log(this.router.url);
+        // console.log(this.router.url);
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
@@ -70,14 +70,14 @@ export class ShuttlePage implements OnInit {
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
 
         /* Update Shuttle Ratings if Shuttles changed */
-        this.shuttlesService.allShuttles.subscribe(() => {
-            // console.log('triggered');
-            this.zone.run(async () => {
-                this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-                console.log(this.userRating);
-            });
-        });
+        // this.shuttlesService.allShuttles.subscribe(() => {
+        //     // console.log('triggered');
+        //     this.zone.run(async () => {
+        //         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+        //         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+        //         console.log(this.userRating);
+        //     });
+        // });
         console.log(this.shuttle);
     }
 

@@ -65,12 +65,12 @@ export class SelectionPage implements OnInit {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
             });
-            this.shuttlesService.allShuttles.subscribe(() => {
-                const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
-                this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-                    this.listsService.favorites.getValue(),
-                    this.listsService.blacklist.getValue()).toArray();
-            });
+            // this.shuttlesService.allShuttles.subscribe(() => {
+            const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
+            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+                this.listsService.favorites.getValue(),
+                this.listsService.blacklist.getValue()).toArray();
+            // });
             /* Via GPS */
         } else {
             const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
@@ -87,21 +87,15 @@ export class SelectionPage implements OnInit {
         this.lang = await this.localData.getLang();
     }
 
-    // TODO: Refactor lang
     private async getShuttlesByPosition() {
-        let lang;
-        if (this.lang === 'it') {
-            lang = 'it';
-        } else {
-            lang = 'de';
+        const lang = this.lang === 'it' ? 'it' : 'de';
+        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 18000);
+        if (shuttlesTemp.count() < 3) {
+            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 25000);
         }
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
-        }
-        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 18000);
-        if (shuttlesTemp.count() < 3) {
-            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 25000);
         }
         if (!shuttlesTemp || shuttlesTemp.count() < 1) {
             this.outOfRange = true;

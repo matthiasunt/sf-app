@@ -8,6 +8,7 @@ import {GeoService} from '@services/geo/geo.service';
 import {Coordinates} from '@models/coordinates';
 import {ListElement} from '@models/list-element';
 import {Shuttle} from '@models/shuttle';
+import {DocType} from '@models/doctype';
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,12 @@ export class ShuttlesService {
                 private districtsService: DistrictsService,
                 public zone: NgZone) {
         this.loadInitialData();
+        this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+            if (change.doc.type === DocType.Shuttle) {
+                console.log('Shuttles changed');
+                this.emitShuttles();
+            }
+        });
     }
 
 
@@ -115,6 +122,31 @@ export class ShuttlesService {
         return shuttles;
     }
 
+    public async getShuttle(shuttleId: string): Promise<Shuttle> {
+        const shuttle = this._allShuttles.value.get(shuttleId);
+        if (shuttle) {
+            return shuttle;
+        } else {
+            return await this.sfDbService.getDoc(shuttleId);
+        }
+    }
+
+    private emitShuttles() {
+        // this.zone.run(() => {
+            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        let shuttles: Map<string, Shuttle> = Map();
+                        res.rows.map(row => {
+                            shuttles = shuttles.set(row.doc._id, row.doc);
+                        });
+                        this._allShuttles.next(shuttles);
+                    },
+                    err => console.log('Error retrieving Shuttles')
+                );
+        // });
+    }
+
     private loadInitialData() {
         this.sfDbService.syncSubject.subscribe(() => {
             // Fetch Shuttles by Districts
@@ -141,14 +173,5 @@ export class ShuttlesService {
                     err => console.log('Error retrieving Shuttles')
                 );
         });
-    }
-
-    public async getShuttle(shuttleId: string): Promise<Shuttle> {
-        const shuttle = this._allShuttles.value.get(shuttleId);
-        if (shuttle) {
-            return shuttle;
-        } else {
-            return this.sfDbService.getDoc(shuttleId);
-        }
     }
 }
