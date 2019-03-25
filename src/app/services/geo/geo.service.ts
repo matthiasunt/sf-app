@@ -12,7 +12,7 @@ import {Coordinates} from '@models/coordinates';
 })
 export class GeoService {
 
-    private position: any;
+    private position: { coordinates: Coordinates, time: Date };
     private geocodedCityName: any;
 
     constructor(
@@ -23,21 +23,32 @@ export class GeoService {
     ) {
     }
 
-    public async getCurrentPosition() {
-        if (this.deviceService.isDevice()) {
-            const res = await this.geolocation.getCurrentPosition({enableHighAccuracy: true});
-            return res.coords;
+    public async getCurrentPosition(): Promise<Coordinates> {
+        /* If position not obtained yet or older than 3 minutes */
+        if (!this.position || (new Date().getTime() - this.position.time.getTime()) / 1000 > (60 * 3)) {
+            if (await this.deviceService.isDevice()) {
+                const res = await this.geolocation.getCurrentPosition({enableHighAccuracy: true});
+                const coordinates = {
+                    latitude: res.coords.latitude,
+                    longitude: res.coords.longitude
+                };
+                this.position = {coordinates, time: new Date()};
+                return coordinates;
+
+            } else {
+                return this.getRandomPosition();
+            }
         } else {
-            return this.getRandomPosition();
+            return this.position.coordinates;
         }
     }
 
     public async getLocalityName(coordinates: Coordinates, lang: string): Promise<string> {
-        if (this.deviceService.isDevice()) {
+        if (await this.deviceService.isDevice()) {
             try {
                 const res: NativeGeocoderReverseResult[] = await this.nativeGeocoder.reverseGeocode(
-                    parseFloat(coordinates.latitude),
-                    parseFloat(coordinates.longitude),
+                    coordinates.latitude,
+                    coordinates.longitude,
                     {useLocale: true, defaultLocale: lang, maxResults: 5}
                 );
                 return res[0].locality;
@@ -73,11 +84,12 @@ export class GeoService {
     private getRandomPosition(): Coordinates {
         const rLat = this.getRandom(4596669237, 4702921307) * Math.pow(10, -8);
         const rLng = this.getRandom(1007811939, 1279174244) * Math.pow(10, -8);
-        this.position = {
+        const coordinates = {
             latitude: rLat,
             longitude: rLng
         };
-        return this.position;
+        this.position = {coordinates, time: new Date()};
+        return coordinates;
 
     }
 

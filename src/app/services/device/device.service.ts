@@ -11,25 +11,36 @@ export class DeviceService {
     private info: DeviceInfo;
 
     constructor() {
-        this.fetchInfo();
+        this.getInfo();
     }
 
-    public getInfo(): DeviceInfo {
-        return this.info;
-    }
-
-    public getPlatform(): string {
+    public async getInfo(): Promise<DeviceInfo> {
         if (this.info) {
-            return this.info.platform;
+            return this.info;
+        } else {
+            return await this.fetchInfo();
         }
     }
 
-    public getAppVersion(): string {
+    public async getPlatform() {
+        if (!this.info) {
+            await this.getInfo();
+        }
+        return this.info.platform;
+    }
+
+    public async getAppVersion() {
+        if (!this.info) {
+            await this.getInfo();
+        }
         return this.info.appVersion;
     }
 
-    public isDevice(): boolean {
-        if (this.getPlatform() === 'android' || this.getPlatform() === 'ios') {
+    public async isDevice() {
+        if (!this.info) {
+            await this.getInfo();
+        }
+        if (await this.getPlatform() === 'android' || await this.getPlatform() === 'ios') {
             return true;
         }
         return false;
@@ -37,6 +48,7 @@ export class DeviceService {
 
     private async fetchInfo() {
         this.info = await Device.getInfo();
+        return this.info;
     }
 
 

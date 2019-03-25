@@ -9,10 +9,12 @@ import {DeviceService} from '@services/device/device.service';
 
 import {Call, CallOrigin} from '@models/call';
 import {HistoryElement} from '@models/history-element';
-import {Plugins, AppState} from '@capacitor/core';
+
 import {DocType} from '@models/doctype';
+import {AppState, Plugins} from '@capacitor/core';
 
 const {App} = Plugins;
+
 
 @Injectable({
     providedIn: 'root'
@@ -21,19 +23,26 @@ export class CallsService {
 
     private _calls: BehaviorSubject<List<Call>> = new BehaviorSubject(List([]));
     private _history: BehaviorSubject<List<HistoryElement>> = new BehaviorSubject(List([]));
+
+    /* To handle Call times */
     private afterCall: boolean;
+    private lastCallShuttleId: string;
+    private lastCallOrigin: CallOrigin;
 
     constructor(private deviceService: DeviceService,
+                private authService: AuthService,
                 private userDbService: UserDbService,
                 private shuttlesService: ShuttlesService,
-                private authService: AuthService,
                 public zone: NgZone) {
         this.loadInitialData();
+
         this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
             if (change.doc.type === DocType.Call) {
                 this.emitCalls();
             }
         });
+
+        this.handleCalls();
     }
 
     get calls() {
@@ -45,50 +54,86 @@ export class CallsService {
         return this._history;
     }
 
-    // TODO: Fix Handler!!
-    public handleCall(shuttleId: string, origin: CallOrigin) {
+    /**
+     *
+     */
+    public hideCalls() {
+        const callsToHide = this._calls.getValue();
+        this._calls.next(List([]));
+        this._history.next(List([]));
+        callsToHide.map((call: Call) => {
+            if (call) {
+                call.isHidden = true;
+            }
+            try {
+                const res = this.userDbService.updateDoc(call);
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+    }
+
+    /**
+     *
+     * @param shuttleId
+     * @param origin
+     */
+    public async setCallHandlerData(shuttleId: string, origin: CallOrigin) {
+        this.lastCallShuttleId = shuttleId;
+        this.lastCallOrigin = origin;
+        /* Only for testing */
+        if (!(await this.deviceService.isDevice())) {
+            const userId = await this.authService.getUserId();
+            this.addCall({
+                _id: `${userId}-${DocType.Call}-${new Date().toISOString()}-${this.lastCallShuttleId}`,
+                type: DocType.Call,
+                startDate: new Date(),
+                endDate: new Date(),
+                userId: userId,
+                shuttleId: this.lastCallShuttleId,
+                origin: this.lastCallOrigin,
+                isHidden: false,
+            });
+        }
+    }
+
+    /**
+     * Puts new Calls automatically
+     */
+    private async handleCalls() {
         let callStartDate: Date;
         let callEndDate: Date;
-        const userId = this.authService.getUserId();
+        const userId = await this.authService.getUserId();
+        if (await this.deviceService.isDevice()) {
+            App.addListener('appStateChange', (state: AppState) => {
+                if (state.isActive) {
+                    if (this.afterCall) {
+                        callEndDate = new Date();
+                        if (userId) {
+                            const call: Call = {
+                                _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${this.lastCallShuttleId}`,
+                                type: DocType.Call,
+                                startDate: callStartDate,
+                                endDate: callEndDate,
+                                userId: userId,
+                                shuttleId: this.lastCallShuttleId,
+                                origin: this.lastCallOrigin,
+                                isHidden: false,
+                            };
+                            this.addCall(call);
+                        } else {
+                            console.log('No User Id!');
+                        }
+                        console.log('Call time: ' + (callEndDate.getTime() - callStartDate.getTime()) / 1000);
 
-        if (this.deviceService.isDevice()) {
-            // App.addListener('appStateChange', (state: AppState) => {
-            //     if (state.isActive) {
-            //         console.log('Resume');
-            //         if (this.afterCall) {
-            //             callEndDate = new Date();
-            //             // callEndDate.setSeconds(callEndDate.getSeconds() - 4);
-            //             const call: Call = {
-            //                 _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${shuttleId}`,
-            //                 type: DocType.Call,
-            //                 startDate: callStartDate,
-            //                 endDate: callEndDate,
-            //                 userId: userId,
-            //                 shuttleId: shuttleId,
-            //                 origin: origin,
-            //                 isHidden: false,
-            //             };
-            //             this.addCall(call);
-            //             this.afterCall = false;
-            //         }
-            //     } else {
-            //         console.log('Pause');
-            //         callStartDate = new Date();
-            //         this.afterCall = true;
-            //     }
-            // });
-        } else {
-            callStartDate = new Date();
-            callEndDate = new Date();
-            this.addCall({
-                _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${shuttleId}`,
-                type: DocType.Call,
-                startDate: callStartDate,
-                endDate: callEndDate,
-                userId: userId,
-                shuttleId: shuttleId,
-                origin: origin,
-                isHidden: false,
+                        this.afterCall = false;
+                    }
+                } else {
+                    callStartDate = new Date();
+                    this.afterCall = true;
+                }
             });
         }
     }
@@ -101,26 +146,6 @@ export class CallsService {
         } catch (err) {
             console.error(err);
         }
-    }
-
-    public hideCalls() {
-        const callsToHide = this._calls.getValue();
-        this._calls.next(List([]));
-        this._history.next(List([]));
-
-        console.log(callsToHide);
-        callsToHide.map((call: Call) => {
-            if (call) {
-                call.isHidden = true;
-            }
-            try {
-                // const res = this.userDbService.updateDoc(call);
-                // console.log(res);
-            } catch (err) {
-                console.error(err);
-            }
-        });
-
     }
 
     private loadInitialData() {
@@ -142,9 +167,9 @@ export class CallsService {
     }
 
     private async loadHistory() {
-        this.calls.subscribe((calls) => {
+        this.calls.subscribe(async (calls) => {
             let history: List<HistoryElement> = List([]);
-            calls.map(async (call: Call) => {
+            await calls.map(async (call: Call) => {
                 if (call && call.shuttleId) {
                     const shuttle = await this.shuttlesService.getShuttle(call.shuttleId);
                     const historyElement: HistoryElement = {

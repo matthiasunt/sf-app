@@ -51,15 +51,16 @@ export class RatePage implements OnInit {
         this.fetchRatingByUser(shuttleId);
     }
 
-    rateClicked() {
+    async rateClicked() {
         const totalAvg = (this.ratingForm.service
             + this.ratingForm.reliabilityAndPunctuality
             + this.ratingForm.drivingStyleAndSecurity
             + this.ratingForm.price) / 4;
 
+        const userId = await this.authService.getUserId();
         const rating: Rating = {
-            _id: `${this.shuttle._id}--${DocType.Rating}--${this.authService.getUserId()}`,
-            userId: this.authService.getUserId(),
+            _id: `${this.shuttle._id}--${DocType.Rating}--${userId}`,
+            userId: userId,
             shuttleId: this.shuttle._id,
             date: new Date().toISOString(),
             totalAvg: totalAvg,

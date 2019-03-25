@@ -93,8 +93,4 @@ export class ListsService {
             console.error(err);
         }
     }
-
-    public hideListElement(listElement: ListElement) {
-
-    }
 }

@@ -21,6 +21,8 @@ import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-too
 })
 export class HistoryPage implements OnInit {
     history: HistoryElement[];
+    historyByDate;
+
     locale: string;
 
     constructor(private navCtrl: NavController,
@@ -38,7 +40,13 @@ export class HistoryPage implements OnInit {
         this.locale = this.localData.getLocaleFromPrefLang();
         this.callsService.history.subscribe((history) => {
             this.history = history.toArray();
+            // this.historyByDate = this.getGroupedHistory(history.toArray());
         });
+    }
+
+    ionViewWillEnter() {
+        // this.history = this.callsService.history.getValue().toArray();
+        // this.historyByDate = this.getGroupedHistory(this.history);
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -54,11 +62,41 @@ export class HistoryPage implements OnInit {
     private callClicked(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.callsService.handleCall(shuttle._id, {
+        this.callsService.setCallHandlerData(shuttle._id, {
             name: CallOriginName.History,
             value: ''
         });
         this.callNumber.callNumber(shuttle.phone, true);
+    }
+
+    private getGroupedHistory(history: any[]): any[][] {
+        const ret: any[][] = [];
+        let j = 0;
+        let k = 0;
+        for (let i = 0; i < history.length; i++) {
+            if (i === 0) {
+                ret[j] = [];
+                ret[j][k] = history[i];
+            } else {
+                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
+                    j++;
+                    ret[j] = [];
+                    k = 0;
+                } else {
+                    k++;
+                }
+                ret[j][k] = history[i];
+            }
+        }
+        return ret;
+    }
+
+    public myHeaderFn(record, recordIndex, records) {
+        if (recordIndex === 0
+            || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
+            return getBeautifulDateString(record.date, 'de');
+        }
+        return null;
     }
 
     getTime(date: string) {
@@ -67,14 +105,6 @@ export class HistoryPage implements OnInit {
 
     getDate(date: string) {
         return getBeautifulDateString(date, this.locale);
-    }
-
-    myHeaderFn(record, recordIndex, records) {
-        if (recordIndex === 0
-            || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
-            return getBeautifulDateString(record.date, 'de');
-        }
-        return null;
     }
 
     async clearHistoryAlert() {

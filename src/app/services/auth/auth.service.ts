@@ -5,6 +5,7 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {LocalDataService} from '../data/local-data/local-data.service';
 import {UserDbService} from '../data/user-db/user-db.service';
 import {ENV} from '@env';
+import {DeviceService} from '@services/device/device.service';
 
 const hash = require('hash.js');
 
@@ -21,6 +22,7 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private uniqueDeviceID: UniqueDeviceID,
+        private deviceService: DeviceService,
         private localData: LocalDataService,
         private userDb: UserDbService,
     ) {
@@ -30,18 +32,12 @@ export class AuthService {
 
     public async doSoftLogin() {
 
-        let uuid: string;
-        // if (!this.deviceInfo.isVirtual) {
-        //     uuid = await this.uniqueDeviceID.get();
-        //     uuid = this.deviceInfo.uuid;
-        // } else {
-        uuid = 'browser-uuid-2';
-        // }
-        const id = this.hashString(uuid);
-        this.userId = id;
+        const uuid = await this.fetchUuid();
+        this.userId = this.hashString(uuid);
+
         const user = {
-            username: id,
-            email: id + '@shuttlefinder.it',
+            username: this.userId,
+            email: this.userId + '@shuttlefinder.it',
             password: 'softlogin',
             confirmPassword: 'softlogin',
             uuid: uuid,
@@ -57,8 +53,24 @@ export class AuthService {
         }
     }
 
-    public getUserId() {
-        return this.userId;
+    public async getUserId() {
+        if (this.userId) {
+            return this.userId;
+        } else {
+            const uuid = await this.fetchUuid();
+            this.userId = this.hashString(uuid);
+            return this.userId;
+        }
+    }
+
+    private async fetchUuid() {
+        let uuid: string;
+        if (await this.deviceService.isDevice()) {
+            uuid = await this.uniqueDeviceID.get();
+        } else {
+            uuid = 'browser-uuid-2';
+        }
+        return uuid;
     }
 
     private hashString(str): string {
@@ -79,6 +91,7 @@ export class AuthService {
                     this.userDb.init(res);
                     resolve(res);
                 }, (err) => {
+                    this.userDb.unableToLogin();
                     console.log(err);
                     resolve(err);
                 });
@@ -99,6 +112,7 @@ export class AuthService {
                     if (err.status === 401) {
                         console.log('401 Unauthorized');
                     }
+                    this.userDb.unableToLogin();
                     resolve(err);
                 });
         });
