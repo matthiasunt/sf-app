@@ -41,6 +41,14 @@ export class ShuttlesService {
         );
     }
 
+    // public async getShuttlesByDistrict(districtId: string) {
+    //     return from(this.sfDbService.db.query('shuttles/by_district', {
+    //         include_docs: true, key: districtId,
+    //     }).rows.map(row => {
+    //         return row.doc;
+    //     }));
+    // }
+
     public getShuttlesFromPosition(coordinates: Coordinates, radius: number): List<Shuttle> {
         let ret: List<Shuttle> = List([]);
         if (coordinates) {
@@ -110,7 +118,7 @@ export class ShuttlesService {
     }
 
 
-    public getShuttlesFromList(list: List<ListElement>) {
+    public getShuttlesFromList(list: List<ListElement>):  List<Shuttle> {
         let shuttles: List<Shuttle> = List([]);
         if (list) {
             list.map((element) => {
@@ -133,17 +141,17 @@ export class ShuttlesService {
 
     private emitShuttles() {
         // this.zone.run(() => {
-            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        let shuttles: Map<string, Shuttle> = Map();
-                        res.rows.map(row => {
-                            shuttles = shuttles.set(row.doc._id, row.doc);
-                        });
-                        this._allShuttles.next(shuttles);
-                    },
-                    err => console.log('Error retrieving Shuttles')
-                );
+        from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+            .subscribe(
+                (res: any) => {
+                    let shuttles: Map<string, Shuttle> = Map();
+                    res.rows.map(row => {
+                        shuttles = shuttles.set(row.doc._id, row.doc);
+                    });
+                    this._allShuttles.next(shuttles);
+                },
+                err => console.log('Error retrieving Shuttles')
+            );
         // });
     }
 

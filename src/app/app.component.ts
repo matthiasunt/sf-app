@@ -10,6 +10,8 @@ import {UserDbService} from '@services/data/user-db/user-db.service';
 import {CallsService} from '@services/data/calls/calls.service';
 import {ListsService} from '@services/data/lists/lists.service';
 import {RatingsService} from '@services/data/ratings/ratings.service';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {DistrictsService} from '@services/data/districts/districts.service';
 
 
 const {SplashScreen} = Plugins;
@@ -25,8 +27,10 @@ export class AppComponent {
         private deviceService: DeviceService,
         private sfDbService: SfDbService,
         private userDbService: UserDbService,
+        private districtsService: DistrictsService,
+        private shuttlesService: ShuttlesService,
+        private listsService: ListsService,
         private callsService: CallsService,
-        public listsService: ListsService,
         private ratingService: RatingsService,
         private translate: TranslateService,
         private authService: AuthService,
@@ -38,10 +42,10 @@ export class AppComponent {
 
     private async initializeApp() {
         this.platform.ready().then(async () => {
-            if (this.deviceService.isDevice()) {
+            if (await this.deviceService.isDevice()) {
                 SplashScreen.hide();
-                StatusBar.setStyle({style: StatusBarStyle.Light});
-                StatusBar.setBackgroundColor({color: 'white'});
+                // StatusBar.setStyle({style: StatusBarStyle.Light});
+                // StatusBar.setBackgroundColor({color: 'white'});
             }
             this.authService.doSoftLogin();
         });

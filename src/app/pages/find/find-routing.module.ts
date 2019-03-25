@@ -18,7 +18,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'gps/:coordinates',
+        path: 'gps',
         children: [
             {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
             {

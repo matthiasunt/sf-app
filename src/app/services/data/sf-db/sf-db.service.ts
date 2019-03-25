@@ -21,17 +21,24 @@ export class SfDbService {
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
             + ENV.DB_PASS + '@' + ENV.DB_HOST + '/dev-shuttle-finder-public';
 
+        console.log('db');
+        console.log(this.db);
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
+            console.log(info);
             console.log('change');
             // this._syncSubject.next(true);
         }).on('paused', (err) => {
+            console.log(err);
             console.log('pause');
+            // const res = this.db.allDocs();
+            // console.log(res);
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
         });
+
     }
 
     get syncSubject() {

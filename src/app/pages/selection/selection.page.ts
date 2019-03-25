@@ -64,34 +64,37 @@ export class SelectionPage implements OnInit {
             this.districtsService.getDistrict(districtId).subscribe((district: District) => {
                 this.district = district;
                 this.districtColors = this.colorGenerator.getDistrictColors(this.district);
+                this.fetchShuttlesByDistrict();
             });
-            // this.shuttlesService.allShuttles.subscribe(() => {
-            const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(districtId);
-            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-                this.listsService.favorites.getValue(),
-                this.listsService.blacklist.getValue()).toArray();
-            // });
             /* Via GPS */
         } else {
-            const coords = this.activatedRoute.snapshot.paramMap.get('coordinates');
-            if (coords) {
-                this.coordinates = {
-                    latitude: coords.split(',')[0],
-                    longitude: coords.split(',')[1],
-                };
-                this.shuttlesService.allShuttles.subscribe(() => {
-                    this.getShuttlesByPosition();
-                });
-            }
+            this.coordinates = await this.geoService.getCurrentPosition();
+            this.fetchShuttlesByPosition();
         }
         this.lang = await this.localData.getLang();
     }
 
-    private async getShuttlesByPosition() {
+    async ionViewWillEnter() {
+        if (this.district) {
+            this.fetchShuttlesByDistrict();
+        } else if (this.coordinates) {
+            this.fetchShuttlesByPosition();
+        }
+
+    }
+
+    private fetchShuttlesByDistrict() {
+        const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(this.district._id);
+        this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+            this.listsService.favorites.getValue(),
+            this.listsService.blacklist.getValue()).toArray();
+    }
+
+    private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';
-        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 18000);
+        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 22000);
         if (shuttlesTemp.count() < 3) {
-            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 25000);
+            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 27000);
         }
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
@@ -100,7 +103,9 @@ export class SelectionPage implements OnInit {
         if (!shuttlesTemp || shuttlesTemp.count() < 1) {
             this.outOfRange = true;
         } else {
-            this.shuttles = shuttlesTemp.toArray();
+            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
+                this.listsService.favorites.getValue(),
+                this.listsService.blacklist.getValue()).toArray();
         }
     }
 
@@ -124,7 +129,7 @@ export class SelectionPage implements OnInit {
                 value: this.coordinates
             };
         }
-        this.callsService.handleCall(shuttle._id, callOrigin);
+        this.callsService.setCallHandlerData(shuttle._id, callOrigin);
         this.callNumber.callNumber(shuttle.phone, true);
     }
 

@@ -62,7 +62,6 @@ export class ShuttlePage implements OnInit {
         console.log('On init');
         this.lang = await this.localData.getLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        // console.log(this.router.url);
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
@@ -70,19 +69,27 @@ export class ShuttlePage implements OnInit {
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
 
         /* Update Shuttle Ratings if Shuttles changed */
-        // this.shuttlesService.allShuttles.subscribe(() => {
-        //     // console.log('triggered');
-        //     this.zone.run(async () => {
-        //         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-        //         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-        //         console.log(this.userRating);
-        //     });
-        // });
-        console.log(this.shuttle);
+        this.shuttlesService.allShuttles.subscribe(() => {
+            this.zone.run(async () => {
+                this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+                console.log(this.userRating);
+            });
+        });
+    }
+
+    ionViewWillEnter() {
+        this.zone.run(async () => {
+            const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
+            this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+            this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+            this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+            console.log(this.userRating);
+        });
     }
 
     public callClicked() {
-        this.callsService.handleCall(this.shuttle._id, {
+        this.callsService.setCallHandlerData(this.shuttle._id, {
             name: CallOriginName.District,
             value: '',
         });
@@ -99,14 +106,14 @@ export class ShuttlePage implements OnInit {
         this.navCtrl.navigateForward(currentUrl + '/ratings/' + this.shuttle._id);
     }
 
-    public addToFavorites() {
-        const type = ElementType.Favorite;
+    public async addToFavorites() {
+        const userId = await this.authService.getUserId();
         const listElement: ListElement = {
-            _id: `${this.authService.getUserId()}-${type}-${this.shuttle._id}`,
-            userId: this.authService.getUserId(),
+            _id: `${userId}-${ElementType.Favorite}-${this.shuttle._id}`,
+            userId: userId,
             shuttleId: this.shuttle._id,
             date: new Date().toISOString(),
-            type: type
+            type: ElementType.Favorite
         };
         this.listsService.addListElement(listElement);
         this.isFavorite = true;
@@ -116,11 +123,11 @@ export class ShuttlePage implements OnInit {
     /* Toasts & Alerts */
     private async presentAddedToFavoritesToast() {
         const toast = await this.toastController.create({
-            message: 'Shuttle added to Favorites!',
+            message: 'Shuttle added to Favorites.',
             showCloseButton: true,
             closeButtonText: 'Ok',
             position: 'top',
-            duration: 2000,
+            duration: 1700,
             color: 'secondary',
         });
         toast.present();
@@ -135,11 +142,11 @@ export class ShuttlePage implements OnInit {
 
     private async presentRemovedFromFavoritesToast() {
         const toast = await this.toastController.create({
-            message: 'Shuttle removed from Favorites!',
+            message: 'Shuttle removed from Favorites.',
             showCloseButton: true,
             closeButtonText: 'Ok',
             position: 'top',
-            duration: 2000,
+            duration: 1700,
             color: 'danger',
         });
         toast.present();

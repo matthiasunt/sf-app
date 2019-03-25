@@ -53,11 +53,11 @@ export class FindPage implements OnInit {
     async ngOnInit(): Promise<void> {
         console.log(ENV.message);
         this.listsService.favorites.subscribe((favorites) => {
-            this.zone.run(() => {
+            // this.zone.run(async () => {
                 const favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites);
                 this.favorites = favoriteShuttles.toArray();
                 console.log(this.favorites);
-            });
+            // });
         });
         this.localData.getLang().then((lang) => {
             this.lang = lang;
@@ -71,7 +71,7 @@ export class FindPage implements OnInit {
 
     public async gpsClicked() {
         // Device testing
-        if (this.deviceService.isDevice()) {
+        if (await this.deviceService.isDevice()) {
             const locationAuthorized: boolean = await this.diagnostic.isLocationAuthorized();
             if (!locationAuthorized) {
                 await this.diagnostic.requestLocationAuthorization();
@@ -80,14 +80,11 @@ export class FindPage implements OnInit {
             if (!locationEnabled) {
                 this.presentEnableGpsAlert();
             } else {
-                // TODO: Find better solution?
-                const position = await this.geoService.getCurrentPosition();
-                this.navCtrl.navigateForward(`/tabs/find/gps/${position.latitude},${position.longitude}`);
+                this.navCtrl.navigateForward(`/tabs/find/gps`);
             }
             // Browser testing
         } else {
-            const position = await this.geoService.getCurrentPosition();
-            this.navCtrl.navigateForward(`/tabs/find/gps/${position.latitude},${position.longitude}`);
+            this.navCtrl.navigateForward(`/tabs/find/gps`);
         }
 
     }

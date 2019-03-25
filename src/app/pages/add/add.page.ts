@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {SfDbService} from '../../services/data/sf-db/sf-db.service';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '../../services/color-generator/color-generator.service';
-import {Shuttle} from '../../models/shuttle';
+import {SfDbService} from '@services/data/sf-db/sf-db.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
+import {Shuttle} from '@models/shuttle';
 import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {Router} from '@angular/router';
-import {ShuttlesService} from '../../services/data/shuttles/shuttles.service';
-import {ListsService} from '../../services/data/lists/lists.service';
-import {ElementType, ListElement} from '../../models/list-element';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {ListsService} from '@services/data/lists/lists.service';
+import {ElementType, ListElement} from '@models/list-element';
 import {List} from 'immutable';
-import {AuthService} from '../../services/auth/auth.service';
+import {AuthService} from '@services/auth/auth.service';
 
 @Component({
     selector: 'app-add',
@@ -78,10 +78,11 @@ export class AddPage implements OnInit {
         const listToCheck: List<ListElement> = this.addToFavorites ?
             this.blacklist :
             this.favorites;
+        const userId = await this.authService.getUserId();
         const type = this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted;
         const listElement: ListElement = {
-            _id: `${this.authService.getUserId()}--${type}--${shuttle._id}`,
-            userId: this.authService.getUserId(),
+            _id: `${userId}--${type}--${shuttle._id}`,
+            userId: userId,
             shuttleId: shuttle._id,
             date: new Date().toISOString(),
             type: type
@@ -97,11 +98,7 @@ export class AddPage implements OnInit {
     public isInList(shuttle: Shuttle): boolean {
         const list = this.addToFavorites ? this.favorites : this.blacklist;
         if (shuttle) {
-            if (list.findIndex(e => e.shuttleId === shuttle._id) < 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return list.findIndex(e => e.shuttleId === shuttle._id) >= 0;
         }
     }
 

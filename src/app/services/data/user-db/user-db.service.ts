@@ -22,7 +22,7 @@ export class UserDbService {
         this._syncSubject = new Subject<boolean>();
     }
 
-    init(details) {
+    public init(details) {
         this.userId = details.user_id;
         this.details = details;
         this.remote = ENV.production ? details.userDBs.sf : details.userDBs.dev_sf;
@@ -37,6 +37,11 @@ export class UserDbService {
         }).on('error', (err) => {
             console.error(err);
         });
+    }
+
+    public unableToLogin() {
+        console.log('Unable to login!');
+        this._syncSubject.next(true);
     }
 
     get syncSubject() {
