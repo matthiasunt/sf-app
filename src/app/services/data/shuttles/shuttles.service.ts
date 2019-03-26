@@ -22,12 +22,15 @@ export class ShuttlesService {
                 private districtsService: DistrictsService,
                 public zone: NgZone) {
         this.loadInitialData();
-        this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-            if (change.doc.type === DocType.Shuttle) {
-                console.log('Shuttles changed');
-                this.emitShuttles();
-            }
+        this.sfDbService.syncSubject.subscribe(() => {
+            this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+                if (change.doc.type === DocType.Shuttle) {
+                    console.log('Shuttles changed');
+                    this.emitShuttles();
+                }
+            });
         });
+
     }
 
 

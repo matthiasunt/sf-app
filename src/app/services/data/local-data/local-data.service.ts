@@ -7,6 +7,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {HistoryElement} from '@models/history-element';
 import {BehaviorSubject} from 'rxjs';
 import {List} from 'immutable';
+import {Shuttle} from '@models/shuttle';
 
 @Injectable({
     providedIn: 'root'
@@ -98,15 +99,12 @@ export class LocalDataService {
         return this.lang;
     }
 
-    public shuttleCalledLately(shuttle: any): boolean {
+    public shuttleCalledLately(shuttle: Shuttle): boolean {
         this.history.value.map((e: HistoryElement) => {
-            if (e.shuttle) {
-                if (e.shuttle.phone === shuttle.phone &&
-                    ((new Date().getTime() - new Date(e.date).getTime()) / 36e5 < 0.5)) {
-                    return true;
-                }
-            } else {
-                console.log('Shuttle undefined');
+            if (e.shuttle.phone === shuttle.phone &&
+                ((new Date().getTime() - new Date(e.date).getTime()) / 36e5 < 0.5)) {
+                // console.log('Truu!');
+                return true;
             }
         });
         return false;

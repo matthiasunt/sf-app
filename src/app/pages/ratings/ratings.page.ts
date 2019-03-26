@@ -32,6 +32,7 @@ export class RatingsPage implements OnInit {
         this.locale = this.localData.getLocaleFromPrefLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
+
         const ratings = this.ratingsService.getRatingsFromShuttle(shuttleId);
         this.ratings = ratings ? ratings.toArray() : [];
         this.ratings.sort((a, b) => {

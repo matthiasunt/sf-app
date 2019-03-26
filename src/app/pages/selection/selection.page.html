@@ -19,7 +19,9 @@
 
 <ion-content>
     <ion-virtual-scroll [items]="shuttles" approxItemHeight="60px">
-        <ion-item lines="full" *virtualItem="let shuttle" approxItemHeight="59px" (click)="shuttleClicked(shuttle)"
+        <ion-item class="alreadyCalledElement"
+                  color="{{localDataService.shuttleCalledLately(shuttle)?'primary':'light'}}" lines="full"
+                  *virtualItem="let shuttle" approxItemHeight="59px" (click)="shuttleClicked(shuttle)"
                   [class.alreadyCalledElement]="localDataService.shuttleCalledLately(shuttle)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
