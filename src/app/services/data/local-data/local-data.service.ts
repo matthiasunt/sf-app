@@ -99,15 +99,11 @@ export class LocalDataService {
         return this.lang;
     }
 
-    public shuttleCalledLately(shuttle: Shuttle): boolean {
-        this.history.value.map((e: HistoryElement) => {
-            if (e.shuttle.phone === shuttle.phone &&
-                ((new Date().getTime() - new Date(e.date).getTime()) / 36e5 < 0.5)) {
-                // console.log('Truu!');
-                return true;
-            }
+    public shuttleCalledLately(shuttleId: string): boolean {
+        const calledLast = this.history.value.filter((h) => {
+            return ((new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5);
         });
-        return false;
+        return calledLast.findIndex((c) => c.shuttle._id === shuttleId) > -1;
     }
 
 

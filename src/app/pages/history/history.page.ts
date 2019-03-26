@@ -55,15 +55,13 @@ export class HistoryPage implements OnInit {
         event.stopPropagation();
         event.preventDefault();
         this.callsService.setCallHandlerData(shuttle._id, {
-            name: CallOriginName.History,
-            value: ''
+            name: CallOriginName.History, value: ''
         });
         this.callNumber.callNumber(shuttle.phone, true);
         this.localDataService.addToHistory({shuttle, date: new Date()});
     }
 
     public myHeaderFn(record, recordIndex, records) {
-        console.log(record);
         if (recordIndex === 0
             || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
             return getBeautifulDateString(record.date, 'de');

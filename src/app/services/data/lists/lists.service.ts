@@ -81,8 +81,7 @@ export class ListsService {
         const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
         const listElement = list.find((element) => element.shuttleId === shuttleId);
         try {
-            const res = await this.userDbService.removeDoc(listElement);
-            console.log(res);
+            await this.userDbService.removeDoc(listElement);
             const index = list.findIndex((element) => element.shuttleId === shuttleId);
             if (type === ElementType.Favorite) {
                 this._favorites.next(this._favorites.getValue().delete(index));
