@@ -17,6 +17,7 @@ import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {Coordinates} from '@models/coordinates';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-selection',
@@ -48,7 +49,7 @@ export class SelectionPage implements OnInit {
                 private authService: AuthService,
                 private callsService: CallsService,
                 private listsService: ListsService,
-                public localData: LocalDataService,
+                public localDataService: LocalDataService,
                 private geoService: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
@@ -57,55 +58,50 @@ export class SelectionPage implements OnInit {
     }
 
     async ngOnInit() {
-        this.lang = await this.localData.getLang();
+        this.lang = await this.localDataService.getLang();
         const districtId = this.activatedRoute.snapshot.paramMap.get('id');
-        /* Via District */
         if (districtId) {
-            this.districtsService.getDistrict(districtId).subscribe((district: District) => {
-                this.district = district;
-                this.districtColors = this.colorGenerator.getDistrictColors(this.district);
-                this.fetchShuttlesByDistrict();
-            });
-            /* Via GPS */
+            this.fetchShuttlesByDistrict(districtId);
         } else {
             this.coordinates = await this.geoService.getCurrentPosition();
             this.fetchShuttlesByPosition();
         }
-        this.lang = await this.localData.getLang();
     }
 
-    async ionViewWillEnter() {
-        if (this.district) {
-            this.fetchShuttlesByDistrict();
-        } else if (this.coordinates) {
-            this.fetchShuttlesByPosition();
-        }
-
-    }
-
-    private fetchShuttlesByDistrict() {
-        const shuttlesTemp = this.shuttlesService.getShuttlesByDistrict(this.district._id);
-        this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-            this.listsService.favorites.getValue(),
-            this.listsService.blacklist.getValue()).toArray();
+    private fetchShuttlesByDistrict(districtId: string) {
+        this.districtsService.getDistrict(districtId).subscribe((district: District) => {
+            this.district = district;
+            this.districtColors = this.colorGenerator.getDistrictColors(this.district);
+            this.shuttlesService.allShuttles.subscribe((allShuttles) => {
+                let shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
+                    return shuttle.districtIds.indexOf(districtId) > -1;
+                }).toList();
+                shuttles = this.shuttlesService.rankShuttlesByScore(shuttles);
+                this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
+                    this.listsService.favorites.getValue(),
+                    this.listsService.blacklist.getValue()).toArray();
+            });
+        });
     }
 
     private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';
-        let shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 22000);
-        if (shuttlesTemp.count() < 3) {
-            shuttlesTemp = this.shuttlesService.getShuttlesFromPosition(this.coordinates, 27000);
-        }
+        this.shuttlesService.allShuttles.subscribe((allShuttles) => {
+            let shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 22000);
+            if (shuttles.count() < 3) {
+                shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 27000);
+            }
+            if (!shuttles || shuttles.count() < 1) {
+                this.outOfRange = true;
+            } else {
+                this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
+                    this.listsService.favorites.getValue(),
+                    this.listsService.blacklist.getValue()).toArray();
+            }
+        });
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
-        }
-        if (!shuttlesTemp || shuttlesTemp.count() < 1) {
-            this.outOfRange = true;
-        } else {
-            this.shuttles = this.shuttlesService.mergeShuttles(shuttlesTemp,
-                this.listsService.favorites.getValue(),
-                this.listsService.blacklist.getValue()).toArray();
         }
     }
 
@@ -131,6 +127,7 @@ export class SelectionPage implements OnInit {
         }
         this.callsService.setCallHandlerData(shuttle._id, callOrigin);
         this.callNumber.callNumber(shuttle.phone, true);
+        this.localDataService.addToHistory({shuttle, date: new Date()});
     }
 
     getToolbarStyle() {

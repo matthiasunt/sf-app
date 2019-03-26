@@ -35,24 +35,10 @@ export class ShuttlesService {
         return this._allShuttles;
     }
 
-    public getShuttlesByDistrict(districtId: string): List<Shuttle> {
-        return this.rankShuttlesByScore(
-            this.shuttlesByDistrict.get(districtId)
-        );
-    }
-
-    // public async getShuttlesByDistrict(districtId: string) {
-    //     return from(this.sfDbService.db.query('shuttles/by_district', {
-    //         include_docs: true, key: districtId,
-    //     }).rows.map(row => {
-    //         return row.doc;
-    //     }));
-    // }
-
-    public getShuttlesFromPosition(coordinates: Coordinates, radius: number): List<Shuttle> {
+    public filterShuttlesByPosition(shuttles: List<Shuttle>, coordinates: Coordinates, radius: number): List<Shuttle> {
         let ret: List<Shuttle> = List([]);
         if (coordinates) {
-            this._allShuttles.getValue().map((shuttle: Shuttle) => {
+            shuttles.map((shuttle: Shuttle) => {
                 if (shuttle && shuttle.coordinates) {
                     const distance = this.geoService.getDistance(coordinates, shuttle.coordinates);
                     if (distance && distance < radius) {
@@ -85,7 +71,7 @@ export class ShuttlesService {
         return ret;
     }
 
-    private rankShuttlesByScore(list: List<Shuttle>): List<Shuttle> {
+    public rankShuttlesByScore(list: List<Shuttle>): List<Shuttle> {
         let ret: List<Shuttle> = List([]);
         if (list) {
             ret = list.sort(() => Math.random() - 0.5);
@@ -118,7 +104,7 @@ export class ShuttlesService {
     }
 
 
-    public getShuttlesFromList(list: List<ListElement>):  List<Shuttle> {
+    public getShuttlesFromList(list: List<ListElement>): List<Shuttle> {
         let shuttles: List<Shuttle> = List([]);
         if (list) {
             list.map((element) => {
@@ -131,44 +117,34 @@ export class ShuttlesService {
     }
 
     public async getShuttle(shuttleId: string): Promise<Shuttle> {
-        const shuttle = this._allShuttles.value.get(shuttleId);
-        if (shuttle) {
-            return shuttle;
-        } else {
-            return await this.sfDbService.getDoc(shuttleId);
-        }
+        return this._allShuttles.value.get(shuttleId);
+        // if (shuttle) {
+        //     return shuttle;
+        // } else {
+        //     this.sfDbService.getDoc(shuttleId).subscribe((res) => {
+        //         return res;
+        //     });
+        // }
     }
 
     private emitShuttles() {
-        // this.zone.run(() => {
-        from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
-                    let shuttles: Map<string, Shuttle> = Map();
-                    res.rows.map(row => {
-                        shuttles = shuttles.set(row.doc._id, row.doc);
-                    });
-                    this._allShuttles.next(shuttles);
-                },
-                err => console.log('Error retrieving Shuttles')
-            );
-        // });
+        this.zone.run(() => {
+            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        let shuttles: Map<string, Shuttle> = Map();
+                        res.rows.map(row => {
+                            shuttles = shuttles.set(row.doc._id, row.doc);
+                        });
+                        this._allShuttles.next(shuttles);
+                    },
+                    err => console.log('Error retrieving Shuttles')
+                );
+        });
     }
 
     private loadInitialData() {
         this.sfDbService.syncSubject.subscribe(() => {
-            // Fetch Shuttles by Districts
-            this.districtsService.districts.subscribe((districts) => {
-                districts.map(async (district) => {
-                    const res = await this.sfDbService.db.query('shuttles/by_district', {
-                        include_docs: true, key: district._id,
-                    });
-                    const shuttles: List<Shuttle> = res.rows.map(row => {
-                        return row.doc;
-                    });
-                    this.shuttlesByDistrict = this.shuttlesByDistrict.set(district._id, shuttles);
-                });
-            });
             from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
                 .subscribe(
                     (res: any) => {

@@ -54,7 +54,7 @@ export class RatingsService {
         try {
             const res = await this.userDbService.removeDoc(rating);
             console.log(res);
-            this.ratingsFromUser.remove(rating.shuttleId);
+            this.ratingsFromUser = this.ratingsFromUser.remove(rating.shuttleId);
         } catch (err) {
             console.error(err);
         }

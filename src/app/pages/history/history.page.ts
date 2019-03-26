@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {AlertController, NavController} from '@ionic/angular';
@@ -12,6 +12,8 @@ import {HistoryElement} from '@models/history-element';
 import {CallOriginName} from '@models/call';
 import {Shuttle} from '@models/shuttle';
 import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
+import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-history',
@@ -21,32 +23,32 @@ import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-too
 })
 export class HistoryPage implements OnInit {
     history: HistoryElement[];
-    historyByDate;
 
     locale: string;
 
     constructor(private navCtrl: NavController,
+                private zone: NgZone,
                 private router: Router,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private callNumber: CallNumber,
-                private localData: LocalDataService,
+                private localDataService: LocalDataService,
                 private callsService: CallsService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
+        this.history = [];
     }
 
-    ngOnInit() {
-        this.locale = this.localData.getLocaleFromPrefLang();
-        this.callsService.history.subscribe((history) => {
+    async ngOnInit() {
+        this.locale = await this.localDataService.getLocaleFromPrefLang();
+        this.localDataService.history.subscribe((history: List<HistoryElement>) => {
             this.history = history.toArray();
-            // this.historyByDate = this.getGroupedHistory(history.toArray());
         });
-    }
+        // this.callsService.calls.subscribe((calls) => {
+        //     console.log('Calls updated');
+        //     this.history = this.callsService.getHistoryFromCalls(calls).toArray();
+        // });
 
-    ionViewWillEnter() {
-        // this.history = this.callsService.history.getValue().toArray();
-        // this.historyByDate = this.getGroupedHistory(this.history);
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -67,28 +69,7 @@ export class HistoryPage implements OnInit {
             value: ''
         });
         this.callNumber.callNumber(shuttle.phone, true);
-    }
-
-    private getGroupedHistory(history: any[]): any[][] {
-        const ret: any[][] = [];
-        let j = 0;
-        let k = 0;
-        for (let i = 0; i < history.length; i++) {
-            if (i === 0) {
-                ret[j] = [];
-                ret[j][k] = history[i];
-            } else {
-                if (this.getDate(history[i].date) !== this.getDate(history[i - 1].date)) {
-                    j++;
-                    ret[j] = [];
-                    k = 0;
-                } else {
-                    k++;
-                }
-                ret[j][k] = history[i];
-            }
-        }
-        return ret;
+        this.localDataService.addToHistory({shuttle, date: new Date()});
     }
 
     public myHeaderFn(record, recordIndex, records) {
@@ -116,7 +97,9 @@ export class HistoryPage implements OnInit {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
+                        this.history = [];
                         this.callsService.hideCalls();
+                        this.localDataService.clearHistory();
                     }
                 }
             ]

@@ -58,13 +58,13 @@ export class RatingsPage implements OnInit {
                     break;
                 case 'rating_dsc':
                     this.ratings.sort((a, b) => {
-                            return (a.totalAvg < b.totalAvg) ? -1 : ((a.totalAvg > b.totalAvg) ? 1 : 0);
+                            return (a.totalAvg < b.totalAvg) ? 1 : ((a.totalAvg > b.totalAvg) ? -1 : 0);
                         }
                     );
                     break;
                 case 'rating_asc':
                     this.ratings.sort((a, b) => {
-                            return (a.totalAvg < b.totalAvg) ? 1 : ((a.totalAvg > b.totalAvg) ? -1 : 0);
+                            return (a.totalAvg < b.totalAvg) ? -1 : ((a.totalAvg > b.totalAvg) ? 1 : 0);
                         }
                     );
                     break;

@@ -1,9 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {District} from '../../../models/district';
 import {Platform} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {TranslateService} from '@ngx-translate/core';
+
+import {HistoryElement} from '@models/history-element';
+import {BehaviorSubject} from 'rxjs';
+import {List} from 'immutable';
 
 @Injectable({
     providedIn: 'root'
@@ -12,8 +15,7 @@ export class LocalDataService {
 
     private softLoginCredentials: any;
     private lang: string;
-    private recentDistricts: District[];
-    private history: any[];
+    private _history: BehaviorSubject<List<HistoryElement>> = new BehaviorSubject(List([]));
 
     private numberOfCalls: number;
     private directMode: boolean;
@@ -28,21 +30,35 @@ export class LocalDataService {
         this.fetchData();
     }
 
+    get history() {
+        return this._history;
+    }
+
     private async fetchData() {
-
-
         await this.storage.ready();
         let val = await this.storage.get('directMode');
         this.directMode = val ? val : false;
         val = await this.getLang();
         this.lang = val ? val : this.translate.getBrowserLang();
-        val = await this.storage.get('recentDistricts');
-        this.recentDistricts = val ? val : [];
         val = await this.getItem('history');
-        this.history = val ? val : [];
+        console.log(val);
+        if (val) {
+            this.history.next(List(val));
+        }
 
         val = await this.storage.get('numberOfCalls');
         this.numberOfCalls = val ? val : 0;
+    }
+
+    public async addToHistory(historyElement: HistoryElement) {
+        this.history.next(this.history.value.insert(0, historyElement));
+        console.log(this.history.value);
+        return await this.saveItem('history', this.history.value.toArray());
+    }
+
+    public async clearHistory() {
+        this.history.next(List([]));
+        return await this.saveItem('history', []);
     }
 
     public getSoftLoginCredentials(): Promise<any> {
@@ -60,26 +76,6 @@ export class LocalDataService {
     public async saveSoftLoginCredentials(softLoginCredentials: any) {
         this.softLoginCredentials = softLoginCredentials;
         await this.saveItem('softLoginCredentials', softLoginCredentials);
-    }
-
-    public async getRecentDistricts(): Promise<District[]> {
-        const ret = this.recentDistricts ? this.recentDistricts : await this.getItem('recentDistricts');
-        return ret ? ret : [];
-    }
-
-    public async setRecentDistricts(district) {
-        setTimeout(async () => {
-            if (this.recentDistricts.length === 0) {
-                this.recentDistricts[0] = district;
-            } else {
-                // prevent 2 same districts
-                if (this.recentDistricts[0]._id !== district._id) {
-                    this.recentDistricts[1] = this.recentDistricts[0];
-                    this.recentDistricts[0] = district;
-                }
-            }
-            await this.saveItem('recentDistricts', this.recentDistricts);
-        }, 500);
     }
 
     public async getLang(): Promise<string> {
@@ -103,18 +99,16 @@ export class LocalDataService {
     }
 
     public shuttleCalledLately(shuttle: any): boolean {
-        if (this.history && this.history.length > 0) {
-            for (const e of this.history) {
-                if (e.shuttle) {
-                    if (e.shuttle.phone === shuttle.phone &&
-                        ((new Date().getTime() - new Date(e.date).getTime()) / 36e5 < 0.5)) {
-                        return true;
-                    }
-                } else {
-                    console.log('Shuttle undefined');
+        this.history.value.map((e: HistoryElement) => {
+            if (e.shuttle) {
+                if (e.shuttle.phone === shuttle.phone &&
+                    ((new Date().getTime() - new Date(e.date).getTime()) / 36e5 < 0.5)) {
+                    return true;
                 }
+            } else {
+                console.log('Shuttle undefined');
             }
-        }
+        });
         return false;
     }
 
@@ -125,7 +119,7 @@ export class LocalDataService {
 
     public async setDirectMode(directMode: boolean) {
         this.directMode = directMode;
-        await this.saveItem('directMode', this.directMode);
+        return await this.saveItem('directMode', this.directMode);
     }
 
     public getNumberOfCalls(): number {
@@ -134,7 +128,7 @@ export class LocalDataService {
 
     public async incrementNumberOfCalls() {
         this.numberOfCalls++;
-        await this.saveItem('numberOfCalls', this.numberOfCalls);
+        return await this.saveItem('numberOfCalls', this.numberOfCalls);
     }
 
     private async getItem(key: string): Promise<any> {
