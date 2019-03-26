@@ -17,6 +17,7 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {getContrastColor} from '../../tools/sf-tools';
+import {ListElement} from '@models/list-element';
 
 @Component({
     selector: 'app-find',
@@ -45,28 +46,29 @@ export class FindPage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
                 private localData: LocalDataService,
-                private geoService: GeoService,
                 public colorGenerator: ColorGeneratorService,
     ) {
     }
 
-    async ngOnInit(): Promise<void> {
+    async ngOnInit() {
         console.log(ENV.message);
+        this.fetchFavorites();
+        this.lang = await this.localData.getLang();
+    }
+
+    private fetchFavorites() {
         this.listsService.favorites.subscribe((favorites) => {
-            // this.zone.run(async () => {
-                const favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites);
-                this.favorites = favoriteShuttles.toArray();
-                console.log(this.favorites);
-            // });
-        });
-        this.localData.getLang().then((lang) => {
-            this.lang = lang;
+            this.shuttlesService.allShuttles.subscribe((allShuttles) => {
+                this.favorites = [];
+                favorites.map((favorite: ListElement) => {
+                    this.favorites.push(allShuttles.get(favorite.shuttleId));
+                });
+            });
         });
     }
 
     private async districtClicked(district) {
         this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
-        this.localData.setRecentDistricts(district);
     }
 
     public async gpsClicked() {

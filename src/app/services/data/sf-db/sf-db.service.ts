@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
-import {Subject} from 'rxjs';
-
+import {from, Observable, Subject} from 'rxjs';
+// PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
 @Injectable({
     providedIn: 'root'
 })
@@ -11,11 +11,13 @@ export class SfDbService {
     public db: any;
     private remote: string;
 
-    private _syncSubject: Subject<boolean>;
+    private readonly _syncSubject: Subject<boolean>;
 
     constructor() {
 
+        // this.db = new PouchDB('dev-shuttle-finder-public', {adapter: 'cordova-sqlite'});
         this.db = new PouchDB('dev-shuttle-finder-public');
+
         this._syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
@@ -46,38 +48,27 @@ export class SfDbService {
     }
 
 
-    public async getDoc(docId: any) {
-        try {
-            return await this.db.get(docId);
-        } catch (err) {
-            console.error(err);
-        }
+    public getDoc(docId: any): Observable<any> {
+        return from(this.db.get(docId));
+
     }
 
-    public async putDoc(doc: any) {
-        try {
-            const res = await this.db.put(doc);
-            console.log(res);
-        } catch (err) {
-            console.error(err);
-        }
+    public putDoc(doc: any): Observable<any> {
+        return from(this.db.put(doc));
     }
 
-    public async updateDoc(doc: any) {
-        try {
-            const docFromDb = await this.db.get(doc._id);
+    public updateDoc(doc: any) {
+        this.db.get(doc._id).then((docFromDb) => {
             if (docFromDb) {
                 doc._rev = docFromDb._rev;
             }
-            await this.putDoc(doc);
-        } catch (err) {
-            console.error(err);
-        }
+            return from(this.putDoc(doc));
+        });
     }
 
-    public async removeDoc(doc: any) {
+    public removeDoc(doc: any) {
         doc._deleted = true;
-        await this.updateDoc(doc);
+        return this.updateDoc(doc);
     }
 
 }

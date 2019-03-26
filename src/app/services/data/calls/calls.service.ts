@@ -12,6 +12,7 @@ import {HistoryElement} from '@models/history-element';
 
 import {DocType} from '@models/doctype';
 import {AppState, Plugins} from '@capacitor/core';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
 
 const {App} = Plugins;
 
@@ -30,17 +31,18 @@ export class CallsService {
     private lastCallOrigin: CallOrigin;
 
     constructor(private deviceService: DeviceService,
+                private localDataService: LocalDataService,
                 private authService: AuthService,
                 private userDbService: UserDbService,
                 private shuttlesService: ShuttlesService,
                 public zone: NgZone) {
         this.loadInitialData();
 
-        this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-            if (change.doc.type === DocType.Call) {
-                this.emitCalls();
-            }
-        });
+        // this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+        //     if (change.doc.type === DocType.Call) {
+        //         this.emitCalls();
+        //     }
+        // });
 
         this.handleCalls();
     }
@@ -53,6 +55,24 @@ export class CallsService {
     get history() {
         return this._history;
     }
+
+    // public getHistoryFromCalls(calls: List<Call>) {
+    //     let ret: List<HistoryElement> = List();
+    //     calls.map((call: Call) => {
+    //         if (call && call.shuttleId) {
+    //             const shuttle = this.shuttlesService.allShuttles.getValue().get(call.shuttleId);
+    //             if (shuttle) {
+    //                 const historyElement: HistoryElement = {
+    //                     shuttle: shuttle,
+    //                     // call: call,
+    //                     date: call.startDate,
+    //                 };
+    //                 ret = ret.push(historyElement);
+    //             }
+    //         }
+    //     });
+    //     return ret.reverse();
+    // }
 
     /**
      *
@@ -159,45 +179,26 @@ export class CallsService {
                             }
                         });
                         this._calls.next(List(calls));
-                        this.loadHistory();
                     },
                     (err) => console.log('Error retrieving Calls')
                 );
         });
     }
 
-    private async loadHistory() {
-        this.calls.subscribe(async (calls) => {
-            let history: List<HistoryElement> = List([]);
-            await calls.map(async (call: Call) => {
-                if (call && call.shuttleId) {
-                    const shuttle = await this.shuttlesService.getShuttle(call.shuttleId);
-                    const historyElement: HistoryElement = {
-                        shuttle: shuttle,
-                        call: call,
-                        date: call.startDate,
-                    };
-                    history = history.push(historyElement);
-                }
-            });
-            this._history.next(history.reverse());
-        });
-    }
-
     private emitCalls() {
-        // this.zone.run(() => {
-        from(this.userDbService.db.query('calls/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
-                    const calls = res.rows.map(row => {
-                        if (!row.doc.isHidden) {
-                            return row.doc;
-                        }
-                    });
-                    this._calls.next(List(calls));
-                },
-                err => console.log('Error retrieving Calls')
-            );
-        // });
+        this.zone.run(() => {
+            from(this.userDbService.db.query('calls/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        const calls = res.rows.map(row => {
+                            if (!row.doc.isHidden) {
+                                return row.doc;
+                            }
+                        });
+                        this._calls.next(List(calls));
+                    },
+                    err => console.log('Error retrieving Calls')
+                );
+        });
     }
 }

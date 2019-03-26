@@ -19,6 +19,7 @@ import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {List} from 'immutable';
+import {Local} from 'protractor/built/driverProviders';
 
 @Component({
     selector: 'app-shuttle',
@@ -41,6 +42,7 @@ export class ShuttlePage implements OnInit {
                 public translate: TranslateService,
                 private toastController: ToastController,
                 private popoverController: PopoverController,
+                private localDataService: LocalDataService,
                 private geoService: GeoService,
                 private callNumber: CallNumber,
                 private activatedRoute: ActivatedRoute,
@@ -69,22 +71,11 @@ export class ShuttlePage implements OnInit {
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
 
         /* Update Shuttle Ratings if Shuttles changed */
-        this.shuttlesService.allShuttles.subscribe(() => {
-            this.zone.run(async () => {
-                this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-                console.log(this.userRating);
-            });
-        });
-    }
-
-    ionViewWillEnter() {
-        this.zone.run(async () => {
-            const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-            this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-            this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-            this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-            console.log(this.userRating);
+        this.shuttlesService.allShuttles.subscribe((allShuttles) => {
+            // this.zone.run(() => {
+            this.shuttle = allShuttles.get(shuttleId);
+            this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+            // });
         });
     }
 
@@ -94,6 +85,7 @@ export class ShuttlePage implements OnInit {
             value: '',
         });
         this.callNumber.callNumber(this.shuttle.phone, true);
+        this.localDataService.addToHistory({shuttle: this.shuttle, date: new Date()});
     }
 
     public rateClicked() {

@@ -24,8 +24,8 @@ export class GeoService {
     }
 
     public async getCurrentPosition(): Promise<Coordinates> {
-        /* If position not obtained yet or older than 3 minutes */
-        if (!this.position || (new Date().getTime() - this.position.time.getTime()) / 1000 > (60 * 3)) {
+        /* If position not obtained yet or older than 1 minute */
+        if (!this.position || (new Date().getTime() - this.position.time.getTime()) / 1000 > (60 * 2)) {
             if (await this.deviceService.isDevice()) {
                 const res = await this.geolocation.getCurrentPosition({enableHighAccuracy: true});
                 const coordinates = {
