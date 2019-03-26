@@ -5,9 +5,6 @@ import PouchDB from 'pouchdb';
 import {Subject} from 'rxjs';
 import {ENV} from '@env';
 
-
-PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
-
 @Injectable({
     providedIn: 'root'
 })
@@ -20,7 +17,6 @@ export class UserDbService {
     private _syncSubject: Subject<boolean>;
 
     constructor(public http: HttpClient) {
-        // this.db = new PouchDB('sf-private', {auto_compaction: true, adapter: 'cordova-sqlite'});
         this.db = new PouchDB('sf-private', {auto_compaction: true});
         this._syncSubject = new Subject<boolean>();
     }

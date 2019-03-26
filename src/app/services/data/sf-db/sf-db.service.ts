@@ -2,7 +2,10 @@ import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
 import {from, Observable, Subject} from 'rxjs';
-// PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
+
+import pouchdbDebug from 'pouchdb-debug';
+
+
 @Injectable({
     providedIn: 'root'
 })
@@ -14,33 +17,37 @@ export class SfDbService {
     private readonly _syncSubject: Subject<boolean>;
 
     constructor() {
-
-        // this.db = new PouchDB('dev-shuttle-finder-public', {adapter: 'cordova-sqlite'});
-        this.db = new PouchDB('dev-shuttle-finder-public');
+        PouchDB.plugin(pouchdbDebug);
+        // PouchDB.debug.enable('*');
+        this.db = new PouchDB('dsf-public');
 
         this._syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
             + ENV.DB_PASS + '@' + ENV.DB_HOST + '/dev-shuttle-finder-public';
-
-        console.log('db');
-        console.log(this.db);
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
-            console.log(info);
             console.log('change');
+            console.log(info);
             // this._syncSubject.next(true);
         }).on('paused', (err) => {
-            console.log(err);
             console.log('pause');
+            console.log(err);
             // const res = this.db.allDocs();
             // console.log(res);
             this._syncSubject.next(true);
+        }).on('denied', (err) => {
+            console.log('Denied');
+            console.log(err);
         }).on('error', (err) => {
+            console.log('ERROR');
             console.error(err);
         });
 
+        this.db.info().then(function (info) {
+            console.log(info);
+        });
     }
 
     get syncSubject() {

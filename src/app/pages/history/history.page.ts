@@ -8,12 +8,9 @@ import {CallsService} from '@services/data/calls/calls.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 
-import {HistoryElement} from '@models/history-element';
 import {CallOriginName} from '@models/call';
 import {Shuttle} from '@models/shuttle';
 import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {List} from 'immutable';
 
 @Component({
     selector: 'app-history',
@@ -22,9 +19,8 @@ import {List} from 'immutable';
     providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
-    history: HistoryElement[];
-
     locale: string;
+    history;
 
     constructor(private navCtrl: NavController,
                 private zone: NgZone,
@@ -36,19 +32,13 @@ export class HistoryPage implements OnInit {
                 private callsService: CallsService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
-        this.history = [];
     }
 
     async ngOnInit() {
         this.locale = await this.localDataService.getLocaleFromPrefLang();
-        this.localDataService.history.subscribe((history: List<HistoryElement>) => {
+        this.localDataService.history.subscribe((history) => {
             this.history = history.toArray();
         });
-        // this.callsService.calls.subscribe((calls) => {
-        //     console.log('Calls updated');
-        //     this.history = this.callsService.getHistoryFromCalls(calls).toArray();
-        // });
-
     }
 
     private shuttleClicked(shuttle: Shuttle) {
@@ -73,6 +63,7 @@ export class HistoryPage implements OnInit {
     }
 
     public myHeaderFn(record, recordIndex, records) {
+        console.log(record);
         if (recordIndex === 0
             || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
             return getBeautifulDateString(record.date, 'de');
@@ -97,7 +88,6 @@ export class HistoryPage implements OnInit {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
-                        this.history = [];
                         this.callsService.hideCalls();
                         this.localDataService.clearHistory();
                     }
