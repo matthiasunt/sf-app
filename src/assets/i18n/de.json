@@ -41,11 +41,11 @@
   "shuttle": {
     "CALL": "Anrufen",
     "RATE": "Bewerten",
-    "MY_RATINGS": "Meine Bewertungen",
+    "MY_RATINGS": "Meine Bewertung",
     "RATINGS": "Bewertungen",
     "OVERALL": "Insgesamt",
-    "SHUTTLE_ADDED_TO_FAVORITES": "Shuttle würde zu deinen Favoriten hinzugefügt",
-    "SHUTTLE_REMOVED_FROM_FAVORITES": "Shuttle würde von deinen Favoriten entfernt"
+    "SHUTTLE_ADDED_TO_FAVORITES": "Shuttle wurde zu deinen Favoriten hinzugefügt",
+    "SHUTTLE_REMOVED_FROM_FAVORITES": "Shuttle wurde von deinen Favoriten entfernt"
   },
   "rate": {
     "RATE": "Bewerte",

@@ -51,12 +51,10 @@ export class HistoryPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((history) => {
                 this.history = history.toArray();
-                console.log(this.history);
             });
     }
 
     ionViewWillLeave() {
-        console.log('unsubscribe!');
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

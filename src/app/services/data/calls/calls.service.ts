@@ -81,15 +81,10 @@ export class CallsService {
         const callsToHide = this._calls.getValue();
         this._calls.next(List([]));
         this._history.next(List([]));
-        callsToHide.map((call: Call) => {
-            if (call) {
+        callsToHide.map(async (call: Call) => {
+            if (call && call._id) {
                 call.isHidden = true;
-            }
-            try {
-                const res = this.userDbService.updateDoc(call);
-                console.log(res);
-            } catch (err) {
-                console.error(err);
+                await this.userDbService.updateDoc(call);
             }
         });
 
@@ -127,7 +122,7 @@ export class CallsService {
         let callEndDate: Date;
         const userId = await this.authService.getUserId();
         if (await this.deviceService.isDevice()) {
-            App.addListener('appStateChange', (state: AppState) => {
+            App.addListener('appStateChange', async (state: AppState) => {
                 if (state.isActive) {
                     if (this.afterCall) {
                         callEndDate = new Date();
@@ -142,7 +137,7 @@ export class CallsService {
                                 origin: this.lastCallOrigin,
                                 isHidden: false,
                             };
-                            this.addCall(call);
+                            await this.addCall(call);
                         } else {
                             console.log('No User Id!');
                         }
@@ -159,13 +154,8 @@ export class CallsService {
     }
 
     private async addCall(call: Call) {
-        try {
-            this._calls.next(this._calls.getValue().push(call));
-            const res = await this.userDbService.db.put(call);
-            console.log(res);
-        } catch (err) {
-            console.error(err);
-        }
+        this._calls.next(this._calls.getValue().push(call));
+        await this.userDbService.db.put(call);
     }
 
     private loadInitialData() {

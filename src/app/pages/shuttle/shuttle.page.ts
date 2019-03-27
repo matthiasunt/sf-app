@@ -11,15 +11,13 @@ import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 
 import {Shuttle} from '@models/shuttle';
-import {CallOriginName} from '@models/call';
+import {CallOrigin, CallOriginName} from '@models/call';
 import {ElementType, ListElement} from '@models/list-element';
 import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
-import {List} from 'immutable';
-import {Local} from 'protractor/built/driverProviders';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -69,6 +67,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             .subscribe((lang: string) => this.lang = lang);
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
+
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
@@ -81,7 +80,9 @@ export class ShuttlePage implements OnInit, OnDestroy {
             .subscribe((allShuttles) => {
                 this.zone.run(() => {
                     this.shuttle = allShuttles.get(shuttleId);
-                    this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+                    if (this.shuttle) {
+                        this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+                    }
                 });
             });
     }
@@ -91,11 +92,27 @@ export class ShuttlePage implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    public callClicked() {
-        this.callsService.setCallHandlerData(this.shuttle._id, {
-            name: CallOriginName.District,
-            value: '',
-        });
+    public async callClicked() {
+        const url = this.router.url.split('/');
+
+        let callOrigin: CallOrigin;
+        if (url.includes('history')) {
+            callOrigin = {
+                name: CallOriginName.History,
+                value: ''
+            };
+        } else if (url.includes('district')) {
+            callOrigin = {
+                name: CallOriginName.District,
+                value: url[url.indexOf('district') + 1]
+            };
+        } else {
+            callOrigin = {
+                name: CallOriginName.Gps,
+                value: await this.geoService.getCurrentPosition()
+            };
+        }
+        this.callsService.setCallHandlerData(this.shuttle._id, callOrigin);
         this.callNumber.callNumber(this.shuttle.phone, true);
         this.localDataService.addToHistory({shuttle: this.shuttle, date: new Date()});
     }

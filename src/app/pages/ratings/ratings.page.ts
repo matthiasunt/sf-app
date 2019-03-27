@@ -22,7 +22,7 @@ export class RatingsPage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
 
     shuttle: Shuttle;
-    ratings: Rating[] = [];
+    ratings: Rating[];
     locale: string;
 
     constructor(private activatedRoute: ActivatedRoute,
@@ -42,7 +42,6 @@ export class RatingsPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((ratingsByShuttles: Map<string, List<Rating>>) => {
                 const ratings: List<Rating> = ratingsByShuttles.get(shuttleId);
-                console.log(ratings);
                 this.ratings = ratings ? ratings.toArray() : [];
                 this.ratings.sort((a, b) => {
                         return (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0);
