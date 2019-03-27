@@ -27,7 +27,6 @@ export class DistrictsService {
                         const districts: District[] = res.rows.map(row => {
                             return row.doc;
                         });
-                        console.log(districts);
                         this._districts.next(List(districts));
                     },
                     err => {

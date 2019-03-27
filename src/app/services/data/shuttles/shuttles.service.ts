@@ -85,28 +85,6 @@ export class ShuttlesService {
         return ret;
     }
 
-    private buildRankingFromLocation(list: List<Shuttle>) {
-        // const a1: string[] = [];
-        // const a2: string[] = [];
-        // const a3: string[] = [];
-        // list.forEach((e) => {
-        //     if (e.distance) {
-        //         if (e.distance < 12000) {
-        //             a1.push(e);
-        //         } else if (e.distance < 25000) {
-        //             a2.push(e);
-        //         } else {
-        //             a3.push(e);
-        //         }
-        //     }
-        // });
-        // a1.sort(() => Math.random() - 0.5);
-        // a2.sort(() => Math.random() - 0.5);
-        // a3.sort(() => Math.random() - 0.5);
-        // return a1.concat(a2.concat(a3));
-    }
-
-
     public getShuttlesFromList(list: List<ListElement>): List<Shuttle> {
         let shuttles: List<Shuttle> = List([]);
         if (list) {
@@ -121,13 +99,6 @@ export class ShuttlesService {
 
     public async getShuttle(shuttleId: string): Promise<Shuttle> {
         return this._allShuttles.value.get(shuttleId);
-        // if (shuttle) {
-        //     return shuttle;
-        // } else {
-        //     this.sfDbService.getDoc(shuttleId).subscribe((res) => {
-        //         return res;
-        //     });
-        // }
     }
 
     private emitShuttles() {

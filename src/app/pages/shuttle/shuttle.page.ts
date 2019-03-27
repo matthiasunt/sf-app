@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {NavController, PopoverController, ToastController} from '@ionic/angular';
@@ -29,7 +29,7 @@ import {takeUntil} from 'rxjs/operators';
     styleUrls: ['./shuttle.page.scss'],
     providers: [CallNumber],
 })
-export class ShuttlePage implements OnInit {
+export class ShuttlePage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
@@ -46,13 +46,12 @@ export class ShuttlePage implements OnInit {
                 public translate: TranslateService,
                 private toastController: ToastController,
                 private popoverController: PopoverController,
-                private localDataService: LocalDataService,
                 private geoService: GeoService,
                 private callNumber: CallNumber,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private authService: AuthService,
-                private localData: LocalDataService,
+                private localDataService: LocalDataService,
                 private listsService: ListsService,
                 private shuttlesService: ShuttlesService,
                 public callsService: CallsService,
@@ -65,8 +64,10 @@ export class ShuttlePage implements OnInit {
     }
 
     async ngOnInit() {
-        console.log('On init');
-        this.lang = await this.localData.getLang();
+        this.localDataService.lang
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((lang: string) => this.lang = lang);
+
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
@@ -172,12 +173,10 @@ export class ShuttlePage implements OnInit {
         let ret: string;
         if (this.shuttle && this.shuttle.address && this.shuttle.address.locality) {
             const locality = this.shuttle.address.locality;
-            switch (this.lang) {
-                case 'it':
-                    ret = locality.it;
-                    break;
-                default:
-                    ret = locality.de;
+            if (this.lang === 'it') {
+                ret = locality.it;
+            } else {
+                ret = locality.de;
             }
             return this.geoService.getBeatifulCityName(ret);
         }

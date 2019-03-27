@@ -45,15 +45,17 @@ export class FindPage implements OnInit {
                 public districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
-                private localData: LocalDataService,
+                private localDataService: LocalDataService,
                 public colorGenerator: ColorGeneratorService,
     ) {
     }
 
     async ngOnInit() {
+        this.localDataService.lang.subscribe((lang: string) => this.lang = lang);
+
         console.log(ENV.message);
         this.fetchFavorites();
-        this.lang = await this.localData.getLang();
+
     }
 
     private fetchFavorites() {
@@ -149,7 +151,7 @@ export class FindPage implements OnInit {
         }
     }
 
-    public getDistrictName(district: any): string {
+    public getDistrictName(district: District) {
         if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
             switch (this.lang) {
                 case 'de_st':

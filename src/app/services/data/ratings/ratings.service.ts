@@ -5,13 +5,14 @@ import {Rating} from '@models/rating';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {UserDbService} from '@services/data/user-db/user-db.service';
 import {Shuttle} from '@models/shuttle';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RatingsService {
 
-    private ratingsByShuttles: Map<string, List<Rating>> = Map({});
+    private _ratingsByShuttles: BehaviorSubject<Map<string, List<Rating>>> = new BehaviorSubject(Map({}));
     private ratingsFromUser: Map<string, Rating> = Map({});
 
     constructor(private sfDbService: SfDbService,
@@ -21,9 +22,8 @@ export class RatingsService {
         this.loadInitialData();
     }
 
-    public getRatingsFromShuttle(shuttleId: string): List<Rating> {
-        const ret = this.ratingsByShuttles.get(shuttleId);
-        return ret ? ret : List([]);
+    get ratingsByShuttles() {
+        return this._ratingsByShuttles;
     }
 
     public getRatingByUserForShuttle(shuttleId: string): Rating {
@@ -62,6 +62,7 @@ export class RatingsService {
 
     private async loadInitialData() {
         this.shuttlesService.allShuttles.subscribe((shuttles) => {
+            let ratingsByShuttles: Map<string, List<Rating>> = Map({});
             shuttles.map(async (shuttle: Shuttle) => {
                 try {
                     const res = await this.sfDbService.db.query('ratings/by_shuttle', {
@@ -70,11 +71,13 @@ export class RatingsService {
                     const ratings: Rating[] = res.rows.map(row => {
                         return row.doc;
                     });
-                    this.ratingsByShuttles = this.ratingsByShuttles.set(shuttle._id, List(ratings));
+                    ratingsByShuttles = ratingsByShuttles.set(shuttle._id, List(ratings));
+                    this._ratingsByShuttles.next(ratingsByShuttles);
                 } catch (err) {
                     console.error(err);
                 }
             });
+
         });
         try {
             const res = await this.userDbService.db.query('ratings/all', {

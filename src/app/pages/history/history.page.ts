@@ -20,7 +20,7 @@ import {takeUntil} from 'rxjs/operators';
     styleUrls: ['history.page.scss'],
     providers: [CallNumber],
 })
-export class HistoryPage implements OnInit {
+export class HistoryPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
     locale: string;
@@ -51,6 +51,7 @@ export class HistoryPage implements OnInit {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((history) => {
                 this.history = history.toArray();
+                console.log(this.history);
             });
     }
 

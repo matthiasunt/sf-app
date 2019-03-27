@@ -82,18 +82,18 @@
             </ion-card-header>
             <ion-card-content>
                 <p><span>Service</span>
-                    <ion-badge color="tertiary">{{userRating?.service}} von 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.service}} {{"rate.OF" | translate}} 5</ion-badge>
                 </p>
                 <p><span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{userRating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5</ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{userRating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5</ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.PRICE" | translate}}</span>
-                    <ion-badge color="tertiary">{{userRating?.price}} von 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.price}} {{"rate.OF" | translate}} 5</ion-badge>
                 </p>
                 <ng-container *ngIf="userRating?.review">
                     <hr>
@@ -112,24 +112,34 @@
             <ion-card-content>
                 <p>
                     <span><b>Insgesamt</b></span>
-                    <ion-badge color="tertiary"><b>{{shuttle?.avgRating?.totalAvg}} von 5</b></ion-badge>
+                    <ion-badge color="tertiary">
+                        <b>{{shuttle?.avgRating?.totalAvg}} {{"rate.OF" | translate}} 5</b>
+                    </ion-badge>
                 </p>
                 <hr>
                 <p>
                     <span>Service</span>
-                    <ion-badge color="tertiary">{{shuttle?.avgRating?.service}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{shuttle?.avgRating?.service}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{shuttle?.avgRating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{shuttle?.avgRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{shuttle?.avgRating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{shuttle?.avgRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.PRICE" | translate}}</span>
-                    <ion-badge color="tertiary">{{shuttle?.avgRating?.price}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{shuttle?.avgRating?.price}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <!--<hr>-->
                 <!--<p *ngFor="let review of shuttle?.avgRating?.reviews">-->

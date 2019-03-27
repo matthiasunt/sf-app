@@ -14,7 +14,6 @@
   "NO_CONNECTION": "Nessuna connessione.",
   "NOT_AVAILABLE": "Shuttle Finder è attualmente non disponibile, riprova più tardi.",
   "page_titles": {
-    "SELECTION": "Seleziona uno shuttle",
     "HISTORY": "Cronologia",
     "SETTINGS": "Impostazioni",
     "FAVORITES": "Preferiti",
@@ -31,8 +30,8 @@
       "CHECK_CONNECTION": "Controlla la tua connessione :)",
       "ENABLE_GPS": "Attiva la geolocalizzazione nelle impostazioni 😊"
     },
-    "WHO_DRIVES": "Wer trinkt",
-    "DOESNT_DRINK": "fährt nicht!"
+    "WHO_DRIVES": "Chi beve",
+    "DOESNT_DRINK": "non guida!"
   },
   "selection": {
     "REALLY_CALL_1": "Vuoi veramente chiamare",
@@ -53,7 +52,8 @@
     "RELIABILITY_AND_PUNCTUALITY": "Affidabilità e puntualità",
     "DRIVING_STYLE_AND_SECURITY": "Stile di guida e sicurezza",
     "PRICE": "Prezzo",
-    "REVIEW": "Recensione"
+    "REVIEW": "Recensione",
+    "OF": "di"
   },
   "ratings": {
     "RATINGS": "Valutazioni",

@@ -27,7 +27,7 @@ import {takeUntil} from 'rxjs/operators';
     styleUrls: ['./selection.page.scss'],
     providers: [CallNumber],
 })
-export class SelectionPage implements OnInit {
+export class SelectionPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
@@ -63,7 +63,10 @@ export class SelectionPage implements OnInit {
     }
 
     async ngOnInit() {
-        this.lang = await this.localDataService.getLang();
+        this.localDataService.lang
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((lang: string) => this.lang = lang);
+
         const districtId = this.activatedRoute.snapshot.paramMap.get('id');
         if (districtId) {
             this.fetchShuttlesByDistrict(districtId);
@@ -74,7 +77,6 @@ export class SelectionPage implements OnInit {
     }
 
     ngOnDestroy() {
-        console.log('ngOnDestroy');
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -88,13 +90,10 @@ export class SelectionPage implements OnInit {
                 this.shuttlesService.allShuttles
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe((allShuttles) => {
-                        let shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
+                        const shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
                             return shuttle.districtIds.indexOf(districtId) > -1;
                         }).toList();
-                        shuttles = this.shuttlesService.rankShuttlesByScore(shuttles);
-                        this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
-                            this.listsService.favorites.getValue(),
-                            this.listsService.blacklist.getValue()).toArray();
+                        this.mergeShuttles(shuttles);
                     });
             });
     }
@@ -111,15 +110,20 @@ export class SelectionPage implements OnInit {
                 if (!shuttles || shuttles.count() < 1) {
                     this.outOfRange = true;
                 } else {
-                    this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
-                        this.listsService.favorites.getValue(),
-                        this.listsService.blacklist.getValue()).toArray();
+                    this.mergeShuttles(shuttles);
                 }
             });
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
         }
+    }
+
+    private mergeShuttles(shuttles: List<Shuttle>) {
+        this.shuttles = this.shuttlesService.mergeShuttles(
+            this.shuttlesService.rankShuttlesByScore(shuttles),
+            this.listsService.favorites.getValue(),
+            this.listsService.blacklist.getValue()).toArray();
     }
 
     public shuttleClicked(shuttle: Shuttle) {

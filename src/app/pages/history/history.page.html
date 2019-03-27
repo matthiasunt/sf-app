@@ -60,11 +60,11 @@
         </ion-item>
     </ion-virtual-scroll>
 
-    <!--<p *ngIf="localDataService.history.getValue().count() < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>-->
+    <p *ngIf="localDataService.history.getValue().count() < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
 
-    <!--<ion-fab *ngIf="localDataService.history.getValue().count() > 0" vertical="center" horizontal="end" slot="fixed">-->
-        <!--<ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">-->
-            <!--<ion-icon name="trash"></ion-icon>-->
-        <!--</ion-fab-button>-->
-    <!--</ion-fab>-->
+    <ion-fab *ngIf="localDataService.history.getValue().count() > 0" vertical="center" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">
+            <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>

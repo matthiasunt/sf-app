@@ -27,19 +27,27 @@
             <ion-card-content>
                 <p>
                     <span>Service</span>
-                    <ion-badge color="tertiary">{{rating?.service}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{rating?.service}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{rating?.reliabilityAndPunctuality}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{rating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{rating?.drivingStyleAndSecurity}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{rating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.PRICE" | translate}}</span>
-                    <ion-badge color="tertiary">{{rating?.price}} von 5</ion-badge>
+                    <ion-badge color="tertiary">
+                        {{rating?.price}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <hr>
                 <p *ngIf="rating?.review?.length > 0">
