@@ -39,6 +39,15 @@
     "REALLY_CALL_2": "?",
     "ALL_SHUTTLES": "All shuttles"
   },
+  "shuttle": {
+    "CALL": "Call",
+    "RATE": "Rate",
+    "MY_RATINGS": "My Ratings",
+    "RATINGS": "Ratings",
+    "OVERALL": "Overall",
+    "SHUTTLE_ADDED_TO_FAVORITES": "Shutle added to Favorites",
+    "SHUTTLE_REMOVED_FROM_FAVORITES": "Shuttle removed from Favorites"
+  },
   "rate": {
     "RATE": "Rate",
     "RELIABILITY_AND_PUNCTUALITY": "Reliability & Punctuality",

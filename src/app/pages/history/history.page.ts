@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit, OnDestroy} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {AlertController, NavController} from '@ionic/angular';
@@ -11,6 +11,8 @@ import {ColorGeneratorService} from '@services/color-generator/color-generator.s
 import {CallOriginName} from '@models/call';
 import {Shuttle} from '@models/shuttle';
 import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-tools';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-history',
@@ -19,6 +21,8 @@ import {getBeautifulDateString, getBeautifulTimeString} from '../../tools/sf-too
     providers: [CallNumber],
 })
 export class HistoryPage implements OnInit {
+
+    private unsubscribe$ = new Subject<void>();
     locale: string;
     history;
 
@@ -28,7 +32,7 @@ export class HistoryPage implements OnInit {
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
                 private callNumber: CallNumber,
-                private localDataService: LocalDataService,
+                public localDataService: LocalDataService,
                 private callsService: CallsService,
                 public colorGeneratorService: ColorGeneratorService,
     ) {
@@ -36,9 +40,24 @@ export class HistoryPage implements OnInit {
 
     async ngOnInit() {
         this.locale = await this.localDataService.getLocaleFromPrefLang();
-        this.localDataService.history.subscribe((history) => {
-            this.history = history.toArray();
-        });
+    }
+
+    ngOnDestroy() {
+        console.log('Destroyed');
+    }
+
+    ionViewWillEnter() {
+        this.localDataService.history
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((history) => {
+                this.history = history.toArray();
+            });
+    }
+
+    ionViewWillLeave() {
+        console.log('unsubscribe!');
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     private shuttleClicked(shuttle: Shuttle) {

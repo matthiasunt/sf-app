@@ -20,6 +20,8 @@ import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {List} from 'immutable';
 import {Local} from 'protractor/built/driverProviders';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-shuttle',
@@ -28,6 +30,8 @@ import {Local} from 'protractor/built/driverProviders';
     providers: [CallNumber],
 })
 export class ShuttlePage implements OnInit {
+
+    private unsubscribe$ = new Subject<void>();
 
     shuttle: Shuttle;
     shuttleColor: string;
@@ -71,12 +75,19 @@ export class ShuttlePage implements OnInit {
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
 
         /* Update Shuttle Ratings if Shuttles changed */
-        this.shuttlesService.allShuttles.subscribe((allShuttles) => {
-            // this.zone.run(() => {
-            this.shuttle = allShuttles.get(shuttleId);
-            this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
-            // });
-        });
+        this.shuttlesService.allShuttles
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((allShuttles) => {
+                this.zone.run(() => {
+                    this.shuttle = allShuttles.get(shuttleId);
+                    this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+                });
+            });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public callClicked() {
@@ -115,7 +126,7 @@ export class ShuttlePage implements OnInit {
     /* Toasts & Alerts */
     private async presentAddedToFavoritesToast() {
         const toast = await this.toastController.create({
-            message: 'Shuttle added to Favorites.',
+            message: this.translate.instant('shuttle.SHUTTLE_ADDED_TO_FAVORITES'),
             showCloseButton: true,
             closeButtonText: 'Ok',
             position: 'top',
@@ -134,7 +145,7 @@ export class ShuttlePage implements OnInit {
 
     private async presentRemovedFromFavoritesToast() {
         const toast = await this.toastController.create({
-            message: 'Shuttle removed from Favorites.',
+            message: this.translate.instant('shuttle.SHUTTLE_REMOVED_FROM_FAVORITES'),
             showCloseButton: true,
             closeButtonText: 'Ok',
             position: 'top',
