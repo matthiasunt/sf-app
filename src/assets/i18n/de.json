@@ -14,7 +14,6 @@
   "NO_CONNECTION": "Keine Verbindung.",
   "NOT_AVAILABLE": "Shuttle Finder ist zurzeit nicht verfügbar, versuche es später erneut.",
   "page_titles": {
-    "SELECTION": "Wähle einen Shuttle",
     "HISTORY": "Verlauf",
     "SETTINGS": "Einstellungen",
     "FAVORITES": "Favoriten",
@@ -53,7 +52,8 @@
     "RELIABILITY_AND_PUNCTUALITY": "Verlässlichkeit & Pünktlichkeit",
     "DRIVING_STYLE_AND_SECURITY": "Fahrstil & Sicherheit",
     "PRICE": "Preis",
-    "REVIEW": "Rezension"
+    "REVIEW": "Rezension",
+    "OF": "von"
   },
   "ratings": {
     "RATINGS": "Bewertungen",

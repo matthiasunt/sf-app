@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {Shuttle} from '@models/shuttle';
@@ -11,16 +11,13 @@ import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
     templateUrl: './blacklist.page.html',
     styleUrls: ['./blacklist.page.scss'],
 })
-export class BlacklistPage implements OnInit {
+export class BlacklistPage {
 
     constructor(private navCtrl: NavController,
                 public listsService: ListsService,
                 public shuttlesService: ShuttlesService,
                 public colorGeneratorService: ColorGeneratorService
     ) {
-    }
-
-    async ngOnInit() {
     }
 
     public blockClicked() {

@@ -14,7 +14,6 @@
   "NO_CONNECTION": "Koane Verbindung :/",
   "NOT_AVAILABLE": "Shuttle Finder isch grod net verfügbor, ci scusiamo per il disagio.",
   "page_titles": {
-    "SELECTION": "Suach dor an Shuttle aus",
     "HISTORY": "Unruafliste",
     "SETTINGS": "Einstellungen",
     "FAVORITES": "Favoriten",
@@ -32,7 +31,7 @@
       "ENABLE_GPS": "Bitte aktivier die Ortungsdianste 🙈"
     },
     "WHO_DRIVES": "Wer trinkt",
-    "DOESNT_DRINK": "fährt nicht!"
+    "DOESNT_DRINK": "fohrt net!"
   },
   "selection": {
     "REALLY_CALL_1": "Willsch wirklich",
@@ -53,10 +52,11 @@
     "RELIABILITY_AND_PUNCTUALITY": "Verlässlichkeit & Pünktlichkeit",
     "DRIVING_STYLE_AND_SECURITY": "Fohrstil & Sicherheit",
     "PRICE": "Preis",
-    "REVIEW": "Rezension"
+    "REVIEW": "Rezension",
+    "OF": "von"
   },
   "ratings": {
-    "RATINGS": "bewertungen",
+    "RATINGS": "Bewertungen",
     "NO_RATINGS": "Koane Bewertungen :("
   },
   "call": {

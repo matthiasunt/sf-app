@@ -53,21 +53,12 @@ export class AppComponent {
 
     private async setLang() {
         this.translate.setDefaultLang('en');
-        const lang = await this.localDataService.getLang();
-        if (lang) {
-            this.translate.use(lang);
-        } else {
-            switch (this.translate.getBrowserLang()) {
-                case 'de':
-                    this.translate.use('de');
-                    break;
-                case 'it':
-                    this.translate.use('it');
-                    break;
-                default:
-                    this.translate.use('en');
-                    break;
+        this.localDataService.lang.subscribe((lang) => {
+            if (lang === 'de' || lang === 'it') {
+                this.translate.use(lang);
+            } else {
+                this.translate.use('en');
             }
-        }
+        });
     }
 }

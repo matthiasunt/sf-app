@@ -5,7 +5,6 @@ import {NavController} from '@ionic/angular';
 import {ListsService} from '@services/data/lists/lists.service';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {ElementType} from '@models/list-element';
-import {List} from 'immutable';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -14,8 +13,8 @@ import {Subject} from 'rxjs';
     templateUrl: 'favorites.page.html',
     styleUrls: ['favorites.page.scss']
 })
-export class FavoritesPage implements OnInit {
-    private unsubscribe$ = new Subject<void>();
+export class FavoritesPage {
+
     public favoriteShuttles: Shuttle[];
 
     constructor(private navCtrl: NavController,
@@ -24,19 +23,6 @@ export class FavoritesPage implements OnInit {
                 public colorGeneratorService: ColorGeneratorService
     ) {
         this.favoriteShuttles = [];
-    }
-
-    ngOnInit() {
-        this.listsService.favorites
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((favorites) => {
-            this.favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites).toArray();
-        });
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public shuttleClicked(shuttle: Shuttle) {

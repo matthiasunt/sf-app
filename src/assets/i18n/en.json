@@ -12,10 +12,9 @@
   "NO_SHUTTLE_FOUND": "No shuttles found :(",
   "VERIFY_CONNECTION": "Please check your internet connection.",
   "NO_CONNECTION": "No connection.",
-  "NOT_AVAILABLE": "Shuttle Finder is currently not available, retry later.",
+  "NOT_AVAILABLE": "Shuttle Finder is currently not available, please try again later later.",
   "page_titles": {
-    "SELECTION": "Choose a shuttle",
-    "HISTORY": "Call history",
+    "HISTORY": "Call History",
     "SETTINGS": "Settings",
     "FAVORITES": "Favorites",
     "ABOUT": "About this app",
@@ -31,8 +30,8 @@
       "CHECK_CONNECTION": "Please check your connection :)",
       "ENABLE_GPS": "Please enable the location services in your system settings 😊"
     },
-    "WHO_DRIVES": "Wer trinkt",
-    "DOESNT_DRINK": "fährt nicht!"
+    "WHO_DRIVES": "Who drinks",
+    "DOESNT_DRINK": "doesn't drive!"
   },
   "selection": {
     "REALLY_CALL_1": "Do you really want to call",
@@ -42,7 +41,7 @@
   "shuttle": {
     "CALL": "Call",
     "RATE": "Rate",
-    "MY_RATINGS": "My Ratings",
+    "MY_RATINGS": "My Rating",
     "RATINGS": "Ratings",
     "OVERALL": "Overall",
     "SHUTTLE_ADDED_TO_FAVORITES": "Shutle added to Favorites",
@@ -53,27 +52,28 @@
     "RELIABILITY_AND_PUNCTUALITY": "Reliability & Punctuality",
     "DRIVING_STYLE_AND_SECURITY": "Driving Style & Security",
     "PRICE": "Price",
-    "REVIEW": "Review"
+    "REVIEW": "Review",
+    "OF": "of"
   },
   "ratings": {
     "RATINGS": "Ratings",
-    "NO_RATINGS": "No ratings :("
+    "NO_RATINGS": "No Ratings :("
   },
   "call": {
     "msg": {
       "DIALER_ERROR": "I wasn't able to open your dialer, please try again.",
       "CALLING_1": "Calling ",
       "CALLING_2": "",
-      "TRY_ANOTHER_SHUTTLE_1": "Try another shuttle?",
+      "TRY_ANOTHER_SHUTTLE_1": "Try another Shuttle?",
       "TRY_ANOTHER_SHUTTLE_2": "?",
       "SORRY": "Sorry",
       "LAST_SHUTTLE_NUMBER": "That was my last number :("
     }
   },
   "history": {
-    "EMPTY": "Your history is empty.",
+    "EMPTY": "Your History is empty.",
     "msg": {
-      "DELETE_ALL": "Do you really want to delete your full history?"
+      "DELETE_ALL": "Do you really want to delete your History?"
     }
   },
   "settings": {
@@ -81,42 +81,42 @@
     "DIRECT_MODE": "Direct Mode",
     "DIRECT_MODE_ON_DESCRIPTION": "Deactivate the \"Direct Mode\" to select a shuttle by yourself.",
     "DIRECT_MODE_OFF_DESCRIPTION": "Activate the \"Direct Mode\", if the app should select a shuttle for you.",
-    "FAVORITES_DESCRIPTION_1": "Favorized shuttles will be called first.",
-    "FAVORITES_DESCRIPTION_2": "Favorized shuttles will be displayed on top.",
-    "BLACKLIST_DESCRIPTION_1": "Shuttles in your blacklist won't be called anymore.",
-    "BLACKLIST_DESCRIPTION_2": "Shuttles in your blacklist won't be displayed anymore.",
+    "FAVORITES_DESCRIPTION_1": "Favorized Shuttles will be called first.",
+    "FAVORITES_DESCRIPTION_2": "Favorized Shuttles will be displayed on top.",
+    "BLACKLIST_DESCRIPTION_1": "Shuttles in your Blacklist won't be called anymore.",
+    "BLACKLIST_DESCRIPTION_2": "Shuttles in your Blacklist won't be displayed anymore.",
     "SHARE_DATA": "Send anonymous usage statistics",
     "SHARE_DATA_DESCRIPTION": ""
   },
   "favorites": {
-    "EMPTY": "You don't have favorites."
+    "EMPTY": "You don't have Favorites."
   },
   "blacklist": {
     "EMPTY": "Your blacklist is empty."
   },
   "add": {
-    "ADD_FAVORITE": "Add favorites",
-    "LOCK_SHUTTLE": "Block shuttle",
+    "ADD_FAVORITE": "Add Favorites",
+    "LOCK_SHUTTLE": "Block Shuttle",
     "NO_RESULT": "No result.",
     "NAME_OR_PHONE": "Name or phone number",
     "msg": {
-      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "This shuttle is in your blacklist",
-      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Remove it from your blacklist, to add it to your favorites.",
-      "ALREADY_ADDED_IN_FAVORITES_TITLE": "This shuttle is a favorite",
-      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Remove it from your favorites, to add it to your blacklist."
+      "ALREADY_ADDED_IN_BLACKLIST_TITLE": "This Shuttle is in your Blacklist",
+      "ALREADY_ADDED_IN_BLACKLIST_SUBTITLE": "Remove it from your Blacklist, to add it to your Favorites.",
+      "ALREADY_ADDED_IN_FAVORITES_TITLE": "This shuttle is a Favorite",
+      "ALREADY_ADDED_IN_FAVORITES_SUBTITLE": "Remove it from your Favorites, to add it to your Blacklist."
     }
   },
   "about": {
     "VERSION": "Version",
-    "TEXT": "South Tyrols shuttle & taxi App.",
+    "TEXT": "South Tyrols Shuttle & Taxi App.",
     "QUESTIONS": "Contact us for questions, feedback and suggestions",
     "SUPPORTED_BY": "Supported by",
     "MISSING": "Shuttle missing?",
-    "MISSING_MAIL_SUBJECT": "Missing shuttle",
-    "IMPRINT": "Impring",
+    "MISSING_MAIL_SUBJECT": "Missing Shuttle",
+    "IMPRINT": "Imprint",
     "PRIVACY": "Privacy",
     "share": {
-      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Over 200 shuttles & taxis in one app.",
+      "SHUTTLE_FINDER_IS_NOW_AVAILABLE": "Over 200 Shuttles & Taxis in one app.",
       "SHUTTLE_FINDER_SOUTH_TYROL": "Shuttle Finder - South Tyrol"
     }
   },

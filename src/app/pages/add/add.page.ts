@@ -111,7 +111,7 @@ export class AddPage implements OnInit {
     public isInList(shuttle: Shuttle): boolean {
         const list = this.addToFavorites ? this.favorites : this.blacklist;
         if (shuttle) {
-            return list.findIndex(e => e.shuttleId === shuttle._id) >= 0;
+            return list.findIndex(e => e && e.shuttleId && e.shuttleId === shuttle._id) > -1;
         }
     }
 
