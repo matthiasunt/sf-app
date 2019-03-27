@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {Shuttle} from '@models/shuttle';
 import {NavController} from '@ionic/angular';
@@ -6,6 +6,8 @@ import {ListsService} from '@services/data/lists/lists.service';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {ElementType} from '@models/list-element';
 import {List} from 'immutable';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'app-favorites',
@@ -13,7 +15,7 @@ import {List} from 'immutable';
     styleUrls: ['favorites.page.scss']
 })
 export class FavoritesPage implements OnInit {
-
+    private unsubscribe$ = new Subject<void>();
     public favoriteShuttles: Shuttle[];
 
     constructor(private navCtrl: NavController,
@@ -25,9 +27,16 @@ export class FavoritesPage implements OnInit {
     }
 
     ngOnInit() {
-        this.listsService.favorites.subscribe((favorites) => {
+        this.listsService.favorites
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((favorites) => {
             this.favoriteShuttles = this.shuttlesService.getShuttlesFromList(favorites).toArray();
         });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public shuttleClicked(shuttle: Shuttle) {

@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit, OnDestroy} from '@angular/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {GeoService} from '@services/geo/geo.service';
@@ -18,6 +18,8 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {Coordinates} from '@models/coordinates';
 import {List} from 'immutable';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-selection',
@@ -26,6 +28,9 @@ import {List} from 'immutable';
     providers: [CallNumber],
 })
 export class SelectionPage implements OnInit {
+
+    private unsubscribe$ = new Subject<void>();
+
     district: District;
     districtColors: string[];
 
@@ -68,37 +73,49 @@ export class SelectionPage implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        console.log('ngOnDestroy');
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
     private fetchShuttlesByDistrict(districtId: string) {
-        this.districtsService.getDistrict(districtId).subscribe((district: District) => {
-            this.district = district;
-            this.districtColors = this.colorGenerator.getDistrictColors(this.district);
-            this.shuttlesService.allShuttles.subscribe((allShuttles) => {
-                let shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
-                    return shuttle.districtIds.indexOf(districtId) > -1;
-                }).toList();
-                shuttles = this.shuttlesService.rankShuttlesByScore(shuttles);
-                this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
-                    this.listsService.favorites.getValue(),
-                    this.listsService.blacklist.getValue()).toArray();
+        this.districtsService.getDistrict(districtId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((district: District) => {
+                this.district = district;
+                this.districtColors = this.colorGenerator.getDistrictColors(this.district);
+                this.shuttlesService.allShuttles
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((allShuttles) => {
+                        let shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
+                            return shuttle.districtIds.indexOf(districtId) > -1;
+                        }).toList();
+                        shuttles = this.shuttlesService.rankShuttlesByScore(shuttles);
+                        this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
+                            this.listsService.favorites.getValue(),
+                            this.listsService.blacklist.getValue()).toArray();
+                    });
             });
-        });
     }
 
     private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';
-        this.shuttlesService.allShuttles.subscribe((allShuttles) => {
-            let shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 22000);
-            if (shuttles.count() < 3) {
-                shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 27000);
-            }
-            if (!shuttles || shuttles.count() < 1) {
-                this.outOfRange = true;
-            } else {
-                this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
-                    this.listsService.favorites.getValue(),
-                    this.listsService.blacklist.getValue()).toArray();
-            }
-        });
+        this.shuttlesService.allShuttles
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((allShuttles) => {
+                let shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 22000);
+                if (shuttles.count() < 3) {
+                    shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 27000);
+                }
+                if (!shuttles || shuttles.count() < 1) {
+                    this.outOfRange = true;
+                } else {
+                    this.shuttles = this.shuttlesService.mergeShuttles(shuttles,
+                        this.listsService.favorites.getValue(),
+                        this.listsService.blacklist.getValue()).toArray();
+                }
+            });
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;

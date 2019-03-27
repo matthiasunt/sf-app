@@ -39,6 +39,15 @@
     "REALLY_CALL_2": "?",
     "ALL_SHUTTLES": "Tutti i shuttle"
   },
+  "shuttle": {
+    "CALL": "Chiama",
+    "RATE": "Valuta",
+    "MY_RATINGS": "Le mie valutazioni",
+    "RATINGS": "Valutazioni",
+    "OVERALL": "In totale",
+    "SHUTTLE_ADDED_TO_FAVORITES": "Lo shuttle é stato aggiunto ai tuoi preferiti",
+    "SHUTTLE_REMOVED_FROM_FAVORITES": "Lo shuttle é stato tolto dai tuoi preferiti"
+  },
   "rate": {
     "RATE": "Valuta",
     "RELIABILITY_AND_PUNCTUALITY": "Affidabilità e puntualità",

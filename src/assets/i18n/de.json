@@ -43,9 +43,10 @@
     "CALL": "Anrufen",
     "RATE": "Bewerten",
     "MY_RATINGS": "Meine Bewertungen",
-    "RATINGS": "BEWERTUNGEN",
+    "RATINGS": "Bewertungen",
+    "OVERALL": "Insgesamt",
     "SHUTTLE_ADDED_TO_FAVORITES": "Shuttle würde zu deinen Favoriten hinzugefügt",
-    "SHUTTLE_REMOVED_FROM_FAVORITES": "Shuttle würde zu deinen Favoriten hinzugefügt"
+    "SHUTTLE_REMOVED_FROM_FAVORITES": "Shuttle würde von deinen Favoriten entfernt"
   },
   "rate": {
     "RATE": "Bewerte",

@@ -39,6 +39,15 @@
     "REALLY_CALL_2": " unriafen?",
     "ALL_SHUTTLES": "Olle Shutles"
   },
+  "shuttle": {
+    "CALL": "Unriafn",
+    "RATE": "Bewerten",
+    "MY_RATINGS": "Meine Bewertungen",
+    "RATINGS": "Bewertungen",
+    "OVERALL": "Insgesomt",
+    "SHUTTLE_ADDED_TO_FAVORITES": "Hon in Shuttle zu deine Favoriten dorzua",
+    "SHUTTLE_REMOVED_FROM_FAVORITES": "Hon in Shuttle fa deine Favoriten entfernt"
+  },
   "rate": {
     "RATE": "Bewert",
     "RELIABILITY_AND_PUNCTUALITY": "Verlässlichkeit & Pünktlichkeit",

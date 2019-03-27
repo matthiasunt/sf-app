@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
@@ -12,6 +12,8 @@ import {ListsService} from '@services/data/lists/lists.service';
 import {ElementType, ListElement} from '@models/list-element';
 import {List} from 'immutable';
 import {AuthService} from '@services/auth/auth.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'app-add',
@@ -19,7 +21,7 @@ import {AuthService} from '@services/auth/auth.service';
     styleUrls: ['./add.page.scss'],
 })
 export class AddPage implements OnInit {
-
+    private unsubscribe$ = new Subject<void>();
     addToFavorites: boolean;
     private unavailable: boolean;
     private noConnection: boolean;
@@ -45,18 +47,29 @@ export class AddPage implements OnInit {
     async ngOnInit() {
         const splitUrl = this.router.url.split('/');
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
-        this.shuttlesService.allShuttles.subscribe((data) => {
-            this.allShuttles = data.toList().toArray();
-            this.queryResult = this.allShuttles;
-        });
+        this.shuttlesService.allShuttles
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => {
+                this.allShuttles = data.toList().toArray();
+                this.queryResult = this.allShuttles;
+            });
 
-        this.listsService.favorites.subscribe((list) => {
-            this.favorites = list;
-        });
-        this.listsService.blacklist.subscribe((list) => {
-            this.blacklist = list;
-        });
+        this.listsService.favorites
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((list) => {
+                this.favorites = list;
+            });
+        this.listsService.blacklist
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((list) => {
+                this.blacklist = list;
+            });
         this.resultIndex = 0;
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public shuttleClicked(shuttle: Shuttle) {
