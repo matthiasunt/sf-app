@@ -190,7 +190,6 @@ const districts = [
             'longitude': '11.350951'
         },
         '_id': 'italien-suedtirol-bozenumgebung',
-        '_rev': '1-84fd4d7b656e3fb8eea9456ce5823a36'
     },
     {
         'type': 'district',
@@ -212,7 +211,6 @@ const districts = [
             'longitude': '11.144957'
         },
         '_id': 'italien-suedtirol-burggrafenamt',
-        '_rev': '1-4874eed1834030ae9ede49e767063fe6'
     },
     {
         'type': 'district',
@@ -234,7 +232,6 @@ const districts = [
             'longitude': '11.658568'
         },
         '_id': 'italien-suedtirol-eisacktal',
-        '_rev': '1-d42d123b9f31735f6761c766e6aeeca0'
     },
     {
         'type': 'district',
@@ -256,7 +253,6 @@ const districts = [
             'longitude': '11.951079'
         },
         '_id': 'italien-suedtirol-pustertal',
-        '_rev': '1-2eb7fdeee3e394bb69e2c0f0032cb4ee'
     },
     {
         'type': 'district',
@@ -278,7 +274,6 @@ const districts = [
             'longitude': '11.653147'
         },
         '_id': 'italien-suedtirol-schlerngebietgroeden',
-        '_rev': '1-47fa2f218cf576de34bbb5e5dbaa2f32'
     },
     {
         'type': 'district',
@@ -300,7 +295,6 @@ const districts = [
             'longitude': '11.296343'
         },
         '_id': 'italien-suedtirol-ueberetschunterland',
-        '_rev': '1-5679e48a46300f7f462bf462486d1830'
     },
     {
         'type': 'district',
@@ -322,7 +316,6 @@ const districts = [
             'longitude': '10.732828'
         },
         '_id': 'italien-suedtirol-vinschgau',
-        '_rev': '1-33e91eacbbcd52c7a68a7d125f1faf73'
     },
     {
         'type': 'district',
@@ -344,7 +337,6 @@ const districts = [
             'longitude': '11.463419'
         },
         '_id': 'italien-suedtirol-wipptal',
-        '_rev': '1-04f132aad1fddd62884c72e25f7a822c'
     }
 ];
 

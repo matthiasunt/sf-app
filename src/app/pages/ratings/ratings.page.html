@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-    <ng-container *ngIf="ratings.length > 0">
+    <ng-container *ngIf="ratings?.length > 0">
         <ion-item>
             <ion-label></ion-label>
             <ion-select (ionChange)="orderByChanged($event)" interface="popover" value="date_dsc">
@@ -57,5 +57,5 @@
         </ion-card>
     </ng-container>
 
-    <p *ngIf="ratings.length < 1" class="no-data-p">{{"ratings.NO_RATINGS" | translate}}</p>
+    <p *ngIf="ratings?.length < 1" class="no-data-p">{{"ratings.NO_RATINGS" | translate}}</p>
 </ion-content>

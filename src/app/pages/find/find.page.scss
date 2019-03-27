@@ -89,8 +89,13 @@ ion-chip > ion-avatar {
   border-radius: 40px;
   background-color: white;
 
-  ion-card-content > h3 {
-    display: inline-block;
+  ion-card-content {
+    overflow: hidden;
+    white-space: nowrap;
+
+    h3 {
+      display: inline-block;
+    }
   }
 }
 

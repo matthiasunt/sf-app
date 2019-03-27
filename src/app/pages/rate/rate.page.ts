@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Shuttle} from '@models/shuttle';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
