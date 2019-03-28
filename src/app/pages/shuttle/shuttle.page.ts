@@ -130,7 +130,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
     public async addToFavorites() {
         const userId = await this.authService.getUserId();
         const listElement: ListElement = {
-            _id: `${userId}-${ElementType.Favorite}-${this.shuttle._id}`,
+            _id: `${userId}--${ElementType.Favorite}--${this.shuttle._id}`,
             userId: userId,
             shuttleId: this.shuttle._id,
             date: new Date().toISOString(),

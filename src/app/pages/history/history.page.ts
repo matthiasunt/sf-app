@@ -39,19 +39,22 @@ export class HistoryPage implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.locale = await this.localDataService.getLocaleFromPrefLang();
     }
 
     ngOnDestroy() {
         console.log('Destroyed');
     }
 
-    ionViewWillEnter() {
+    async ionViewWillEnter() {
+
         this.localDataService.history
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((history) => {
                 this.history = history.toArray();
             });
+        this.localDataService.lang
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((lang) => this.locale = lang === 'de_st' ? 'de' : lang);
     }
 
     ionViewWillLeave() {
@@ -82,7 +85,7 @@ export class HistoryPage implements OnInit, OnDestroy {
     public myHeaderFn(record, recordIndex, records) {
         if (recordIndex === 0
             || new Date(record.date).toDateString() !== new Date(records[recordIndex - 1].date).toDateString()) {
-            return getBeautifulDateString(record.date, 'de');
+            return record.date;
         }
         return null;
     }

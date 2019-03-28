@@ -27,14 +27,13 @@ export class RatingsPage implements OnInit, OnDestroy {
 
     constructor(private activatedRoute: ActivatedRoute,
                 public translate: TranslateService,
-                private localData: LocalDataService,
+                private localDataService: LocalDataService,
                 private shuttlesService: ShuttlesService,
                 private ratingsService: RatingsService,
     ) {
     }
 
     async ngOnInit() {
-        this.locale = this.localData.getLocaleFromPrefLang();
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
 
@@ -48,6 +47,9 @@ export class RatingsPage implements OnInit, OnDestroy {
                     }
                 );
             });
+        this.localDataService.lang
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((lang) => this.locale = lang === 'de_st' ? 'de' : lang);
     }
 
     ngOnDestroy() {

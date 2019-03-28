@@ -34,8 +34,8 @@
 
     <ng-container *ngIf="localDataService.history.getValue().count() > 0">
         <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="73px">
-            <ion-item-divider *virtualHeader="let header">
-                {{header}}
+            <ion-item-divider *virtualHeader="let dateHeader">
+                {{getDate(dateHeader)}}
             </ion-item-divider>
             <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
                 <ion-thumbnail slot="start">

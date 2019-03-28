@@ -16,7 +16,6 @@ export class AuthService {
 
     private url: string;
     private headers: HttpHeaders;
-    private deviceInfo: any;
     private userId: string;
 
     constructor(
@@ -37,7 +36,7 @@ export class AuthService {
 
         const user = {
             username: this.userId,
-            email: this.userId + '@shuttlefinder.it',
+            email: this.userId + '@shuttlefinder.app',
             password: 'softlogin',
             confirmPassword: 'softlogin',
             uuid: uuid,

@@ -1,6 +1,3 @@
-import {Shuttle} from '../models/shuttle';
-
-
 export function shadeHexColor(color, percent) {
     const f = parseInt(color.slice(1), 16), t = percent < 0 ? 0 : 255, p = percent < 0 ? percent * -1 : percent, R = f >> 16,
         G = f >> 8 & 0x00FF, B = f & 0x0000FF;
