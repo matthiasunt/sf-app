@@ -102,7 +102,7 @@ export class CallsService {
         if (!(await this.deviceService.isDevice())) {
             const userId = await this.authService.getUserId();
             this.addCall({
-                _id: `${userId}-${DocType.Call}-${new Date().toISOString()}-${this.lastCallShuttleId}`,
+                _id: `${userId}--${DocType.Call}--${new Date().toISOString()}--${this.lastCallShuttleId}`,
                 type: DocType.Call,
                 startDate: new Date(),
                 endDate: new Date(),
@@ -128,7 +128,7 @@ export class CallsService {
                         callEndDate = new Date();
                         if (userId) {
                             const call: Call = {
-                                _id: `${userId}-${DocType.Call}-${callStartDate.toISOString()}-${this.lastCallShuttleId}`,
+                                _id: `${userId}--${DocType.Call}--${callStartDate.toISOString()}--${this.lastCallShuttleId}`,
                                 type: DocType.Call,
                                 startDate: callStartDate,
                                 endDate: callEndDate,

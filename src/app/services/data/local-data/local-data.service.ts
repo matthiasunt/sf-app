@@ -94,14 +94,8 @@ export class LocalDataService {
 
     public async setLang(lang: string) {
         this._lang.next(lang);
+        console.log(this._lang.value);
         await this.saveItem('lang', lang);
-    }
-
-    public getLocaleFromPrefLang(): string {
-        if (this._lang.value === 'de_st') {
-            return 'de';
-        }
-        return this._lang.value;
     }
 
     public shuttleCalledLately(shuttleId: string): boolean {

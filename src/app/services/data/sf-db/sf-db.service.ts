@@ -19,12 +19,12 @@ export class SfDbService {
     constructor() {
         PouchDB.plugin(pouchdbDebug);
         // PouchDB.debug.enable('*');
-        this.db = new PouchDB('dsf-public');
+        this.db = new PouchDB('prod-sf-public');
 
         this._syncSubject = new Subject<boolean>();
 
         this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
-            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/dev-shuttle-finder-public';
+            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/prod-sf-public';
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
