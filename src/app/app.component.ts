@@ -47,7 +47,7 @@ export class AppComponent {
                 // StatusBar.setStyle({style: StatusBarStyle.Light});
                 // StatusBar.setBackgroundColor({color: 'white'});
             }
-            this.authService.doSoftLogin();
+            // this.authService.doSoftLogin();
         });
     }
 

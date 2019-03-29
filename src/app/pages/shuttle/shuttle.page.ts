@@ -87,6 +87,10 @@ export class ShuttlePage implements OnInit, OnDestroy {
             });
     }
 
+    ionViewDidEnter() {
+        this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+    }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
