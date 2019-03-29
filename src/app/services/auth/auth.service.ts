@@ -26,6 +26,7 @@ export class AuthService {
         private userDb: UserDbService,
     ) {
         this.headers = new HttpHeaders().set('Content-Type', 'application/json');
+        this.fetchUuid();
         this.url = ENV.API_URL;
     }
 
@@ -64,11 +65,12 @@ export class AuthService {
 
     private async fetchUuid() {
         let uuid: string;
-        if (await this.deviceService.isDevice()) {
+        // if (await this.deviceService.isDevice()) {
             uuid = await this.uniqueDeviceID.get();
-        } else {
-            uuid = 'browser-uuid-2';
-        }
+        // } else {
+        //     uuid = 'browser-uuid-2';
+        // }
+        console.log(uuid);
         return uuid;
     }
 
