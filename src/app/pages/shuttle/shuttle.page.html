@@ -48,7 +48,11 @@
     </ion-row>
     <ion-card>
         <ion-card-header>
-            <ion-card-title>{{shuttle?.name}}</ion-card-title>
+            <ion-card-title>{{shuttle?.name}}
+                <ion-badge *ngIf="shuttle?.avgRating?.totalAvg" color="tertiary">
+                    ★ {{shuttle?.avgRating?.totalAvg}}
+                </ion-badge>
+            </ion-card-title>
             <ion-card-subtitle>{{getPhoneNumber(shuttle)}}</ion-card-subtitle>
         </ion-card-header>
     </ion-card>
@@ -85,11 +89,13 @@
                     <ion-badge color="tertiary">{{userRating?.service}} {{"rate.OF" | translate}} 5</ion-badge>
                 </p>
                 <p><span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">{{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5</ion-badge>
+                    <ion-badge color="tertiary">{{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
                 </p>
                 <p>
                     <span>{{"rate.PRICE" | translate}}</span>

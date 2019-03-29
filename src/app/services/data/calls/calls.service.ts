@@ -98,6 +98,7 @@ export class CallsService {
     public async setCallHandlerData(shuttleId: string, origin: CallOrigin) {
         this.lastCallShuttleId = shuttleId;
         this.lastCallOrigin = origin;
+
         /* Only for testing */
         if (!(await this.deviceService.isDevice())) {
             const userId = await this.authService.getUserId();
@@ -124,9 +125,10 @@ export class CallsService {
         if (await this.deviceService.isDevice()) {
             App.addListener('appStateChange', async (state: AppState) => {
                 if (state.isActive) {
+                    console.log('Resume');
                     if (this.afterCall) {
                         callEndDate = new Date();
-                        if (userId) {
+                        if (userId && this.lastCallShuttleId && this.lastCallOrigin) {
                             const call: Call = {
                                 _id: `${userId}--${DocType.Call}--${callStartDate.toISOString()}--${this.lastCallShuttleId}`,
                                 type: DocType.Call,
@@ -139,13 +141,15 @@ export class CallsService {
                             };
                             await this.addCall(call);
                         } else {
-                            console.log('No User Id!');
+                            console.error('Call data invalid');
                         }
                         console.log('Call time: ' + (callEndDate.getTime() - callStartDate.getTime()) / 1000);
-
                         this.afterCall = false;
+                        this.lastCallOrigin = null;
+                        this.lastCallShuttleId = null;
                     }
                 } else {
+                    console.log('Pause');
                     callStartDate = new Date();
                     this.afterCall = true;
                 }

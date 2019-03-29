@@ -4,7 +4,6 @@ import {RouteReuseStrategy} from '@angular/router';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {IonicStorageModule} from '@ionic/storage';
-// import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -35,7 +34,6 @@ import {Diagnostic} from '@ionic-native/diagnostic/ngx';
         }),
     ],
     providers: [
-        // StatusBar,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         UniqueDeviceID,
         Geolocation,

@@ -24,14 +24,17 @@ export class UserDbService {
     public init(details) {
         this.userId = details.user_id;
         this.details = details;
-        this.remote = ENV.production ? details.userDBs.sf : details.userDBs.dev_sf;
+        this.remote = ENV.production ? details.userDBs.prod_sf : details.userDBs.dev_sf;
         this.db.sync(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
+            console.log(info);
             this._syncSubject.next(true);
         }).on('paused', (err) => {
+            console.log(err);
             this._syncSubject.next(true);
         }).on('complete', (info) => {
+            console.log(info);
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
