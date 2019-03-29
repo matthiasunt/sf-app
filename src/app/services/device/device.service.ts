@@ -48,6 +48,7 @@ export class DeviceService {
 
     private async fetchInfo() {
         this.info = await Device.getInfo();
+        console.log(this.info);
         return this.info;
     }
 
