@@ -41,3 +41,4 @@ line-count.txt
 android/*
 ios/*
 src/environments/*
+/resources
