@@ -98,7 +98,7 @@ export class CallsService {
     public async setCallHandlerData(shuttleId: string, origin: CallOrigin) {
         this.lastCallShuttleId = shuttleId;
         this.lastCallOrigin = origin;
-
+        this.afterCall = true;
         /* Only for testing */
         if (!(await this.deviceService.isDevice())) {
             const userId = await this.authService.getUserId();
@@ -151,7 +151,6 @@ export class CallsService {
                 } else {
                     console.log('Pause');
                     callStartDate = new Date();
-                    this.afterCall = true;
                 }
             });
         }
