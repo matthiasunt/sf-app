@@ -3,9 +3,6 @@ import PouchDB from 'pouchdb';
 import {ENV} from '@env';
 import {from, Observable, Subject} from 'rxjs';
 
-import pouchdbDebug from 'pouchdb-debug';
-
-
 @Injectable({
     providedIn: 'root'
 })
@@ -17,8 +14,6 @@ export class SfDbService {
     private readonly _syncSubject: Subject<boolean>;
 
     constructor() {
-        PouchDB.plugin(pouchdbDebug);
-        // PouchDB.debug.enable('*');
         this.db = new PouchDB('prod-sf-public');
 
         this._syncSubject = new Subject<boolean>();
@@ -29,19 +24,17 @@ export class SfDbService {
             retry: true, live: true
         }).on('change', (info) => {
             console.log('change');
-            console.log(info);
+            // console.log(info);
             // this._syncSubject.next(true);
         }).on('paused', (err) => {
             console.log('pause');
-            console.log(err);
-            // const res = this.db.allDocs();
-            // console.log(res);
+            // console.log(err);
             this._syncSubject.next(true);
         }).on('denied', (err) => {
             console.log('Denied');
-            console.log(err);
+            // console.log(err);
         }).on('error', (err) => {
-            console.log('ERROR');
+            console.log('Error');
             console.error(err);
         });
 

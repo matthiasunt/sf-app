@@ -88,7 +88,9 @@ export class ShuttlePage implements OnInit, OnDestroy {
     }
 
     ionViewDidEnter() {
-        this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+        if (this.shuttle) {
+            this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
+        }
     }
 
     ngOnDestroy() {
@@ -97,25 +99,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
     }
 
     public async callClicked() {
-        const url = this.router.url.split('/');
-
-        let callOrigin: CallOrigin;
-        if (url.includes('history')) {
-            callOrigin = {
-                name: CallOriginName.History,
-                value: ''
-            };
-        } else if (url.includes('district')) {
-            callOrigin = {
-                name: CallOriginName.District,
-                value: url[url.indexOf('district') + 1]
-            };
-        } else {
-            callOrigin = {
-                name: CallOriginName.Gps,
-                value: await this.geoService.getCurrentPosition()
-            };
-        }
+        const callOrigin = await this.getCallOrigin();
         this.callsService.setCallHandlerData(this.shuttle._id, callOrigin);
         this.callNumber.callNumber(this.shuttle.phone, true);
         this.localDataService.addToHistory({shuttle: this.shuttle, date: new Date()});
@@ -177,14 +161,38 @@ export class ShuttlePage implements OnInit, OnDestroy {
         toast.present();
     }
 
-    getToolbarStyle() {
+    private async getCallOrigin(): Promise<CallOrigin> {
+        let callOrigin: CallOrigin;
+        const url: string[] = this.router.url.split('/');
+        if (url.includes('history')) {
+            callOrigin = {name: CallOriginName.History, value: ''};
+        } else if (url.includes('district')) {
+            callOrigin = {
+                name: CallOriginName.District,
+                value: url[url.indexOf('district') + 1]
+            };
+        } else if (url.includes('gps')) {
+            callOrigin = {
+                name: CallOriginName.Gps,
+                value: await this.geoService.getCurrentPosition()
+            };
+        } else if (url.includes('find') && url.indexOf('find') === url.indexOf('shuttle') - 1) {
+            console.log('Favorite');
+            callOrigin = {name: CallOriginName.Favorite, value: ''};
+        } else {
+            callOrigin = {name: CallOriginName.Other, value: this.router.url};
+        }
+        return callOrigin;
+    }
+
+    public getToolbarStyle() {
         return {
             'background-color': this.shuttleColor,
             'color': getContrastColor(this.shuttleColor)
         };
     }
 
-    getPhoneNumber(shuttle: Shuttle) {
+    public getPhoneNumber(shuttle: Shuttle): string {
         if (shuttle) {
             return getFormattedPhoneNumber(shuttle.phone);
         }

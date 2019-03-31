@@ -20,6 +20,8 @@ import {Coordinates} from '@models/coordinates';
 import {List} from 'immutable';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {DeviceService} from '@services/device/device.service';
+
 
 @Component({
     selector: 'app-selection',
@@ -48,6 +50,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                 private activatedRoute: ActivatedRoute,
                 private alertCtrl: AlertController,
                 private callNumber: CallNumber,
+                private deviceService: DeviceService,
                 private translate: TranslateService,
                 private districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
@@ -74,6 +77,8 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.coordinates = await this.geoService.getCurrentPosition();
             this.fetchShuttlesByPosition();
         }
+
+
     }
 
     ngOnDestroy() {
@@ -97,6 +102,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                     });
             });
     }
+
 
     private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';

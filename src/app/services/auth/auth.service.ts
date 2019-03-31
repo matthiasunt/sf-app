@@ -65,11 +65,11 @@ export class AuthService {
 
     private async fetchUuid() {
         let uuid: string;
-        // if (await this.deviceService.isDevice()) {
+        if (await this.deviceService.isDevice() && ENV.production) {
             uuid = await this.uniqueDeviceID.get();
-        // } else {
-        //     uuid = 'browser-uuid-2';
-        // }
+        } else {
+            uuid = 'browser-uuid-2';
+        }
         console.log(uuid);
         return uuid;
     }

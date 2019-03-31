@@ -18,4 +18,6 @@ export enum CallOriginName {
     History = 'history',
     District = 'district',
     Gps = 'gps',
+    Favorite = 'favorite',
+    Other = 'other',
 }
