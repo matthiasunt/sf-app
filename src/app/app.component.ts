@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins, StatusBarStyle} from '@capacitor/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
@@ -23,7 +22,6 @@ const {StatusBar} = Plugins;
 })
 export class AppComponent {
     constructor(
-        private platform: Platform,
         private deviceService: DeviceService,
         private sfDbService: SfDbService,
         private userDbService: UserDbService,
@@ -41,14 +39,14 @@ export class AppComponent {
     }
 
     private async initializeApp() {
-        this.platform.ready().then(async () => {
-            if (await this.deviceService.isDevice()) {
-                SplashScreen.hide();
-                // StatusBar.setStyle({style: StatusBarStyle.Light});
-                // StatusBar.setBackgroundColor({color: 'white'});
+        if (await this.deviceService.isDevice()) {
+            SplashScreen.hide();
+            if (await this.deviceService.getPlatform() === 'android') {
+                StatusBar.setStyle({style: StatusBarStyle.Dark});
+                StatusBar.setBackgroundColor({color: 'black'});
             }
-            // this.authService.doSoftLogin();
-        });
+        }
+        // this.authService.doSoftLogin();
     }
 
     private async setLang() {

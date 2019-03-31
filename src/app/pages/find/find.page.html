@@ -22,30 +22,6 @@
             <ion-label>{{getDistrictName(d)}}</ion-label>
         </ion-chip>
     </div>
-    <!--<ng-container *ngIf="remainingDistricts && remainingDistricts.length > 0">-->
-    <!--<div>-->
-    <!--<ion-chip (click)="districtClicked(d)" *ngFor="let d of remainingDistricts"-->
-    <!--[style.background-color]="colorGenerator.getDistrictColors(d)[0]"-->
-    <!--[style.color]="colorGenerator.getDistrictColors(d)[1]">-->
-    <!--<ion-label>{{getDistrictName(d)}}</ion-label>-->
-    <!--</ion-chip>-->
-    <!--</div>-->
-    <!--</ng-container>-->
-
-    <!--<ng-container *ngIf="districts && districts.length > 0">-->
-    <!--<div id="district-chip-row">-->
-    <!--<ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"-->
-    <!--[style.background-color]="colorGenerator.getDistrictColors(d)[0]"-->
-    <!--[style.color]="colorGenerator.getDistrictColors(d)[1]">-->
-    <!--<ion-label>{{getDistrictName(d)}}</ion-label>-->
-    <!--</ion-chip>-->
-    <!--</div>-->
-    <!--</ng-container>-->
-    <!--<ion-button fill="solid" *ngFor="let d of districts" shape="round"-->
-    <!--(click)="districtClicked(d)"-->
-    <!--[ngStyle]="getDistrictStyle(d)" color="{{getDistrictColors(d)[0]}}">-->
-    <!--{{getDistrictName(d)}}-->
-    <!--</ion-button>-->
     <hr>
     <ng-container *ngIf="favorites?.length > 0 && favorites[0]">
         <div id="favorites-div">
