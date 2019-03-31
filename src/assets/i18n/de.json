@@ -16,7 +16,7 @@
   "page_titles": {
     "HISTORY": "Verlauf",
     "SETTINGS": "Einstellungen",
-    "FAVORITES": "Favoriten",
+    "FAVORITES": "Meine Favoriten",
     "ABOUT": "Über diese App",
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung"
@@ -53,6 +53,7 @@
     "DRIVING_STYLE_AND_SECURITY": "Fahrstil & Sicherheit",
     "PRICE": "Preis",
     "REVIEW": "Rezension",
+    "REVIEW_PLACEHOLDER": "Super Shuttle...",
     "OF": "von"
   },
   "ratings": {

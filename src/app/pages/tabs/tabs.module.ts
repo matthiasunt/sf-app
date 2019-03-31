@@ -7,6 +7,7 @@ import {FormsModule} from '@angular/forms';
 import {TabsPageRoutingModule} from './tabs.router.module';
 
 import {TabsPage} from './tabs.page';
+import {TranslateModule} from '@ngx-translate/core';
 @NgModule({
     imports: [
         IonicModule,
@@ -14,6 +15,7 @@ import {TabsPage} from './tabs.page';
         FormsModule,
         TabsPageRoutingModule,
         RouterModule,
+        TranslateModule,
     ],
     declarations: [TabsPage]
 })

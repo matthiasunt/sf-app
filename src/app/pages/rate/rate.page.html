@@ -54,7 +54,8 @@
     <ion-card>
         <ion-item lines="none">
             <ion-label position="stacked" color="primary">{{"rate.REVIEW" | translate}}</ion-label>
-            <ion-textarea [(ngModel)]="ratingForm.review" name="review" rows="9">
+            <ion-textarea [(ngModel)]="ratingForm.review" name="review" rows="9"
+                          placeholder="{{'rate.REVIEW_PLACEHOLDER' | translate}}">
             </ion-textarea>
         </ion-item>
     </ion-card>

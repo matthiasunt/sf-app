@@ -16,7 +16,7 @@
   "page_titles": {
     "HISTORY": "Call History",
     "SETTINGS": "Settings",
-    "FAVORITES": "Favorites",
+    "FAVORITES": "My Favorites",
     "ABOUT": "About this app",
     "IMPRINT": "Imprint",
     "PRIVACY": "Privacy"
@@ -53,6 +53,7 @@
     "DRIVING_STYLE_AND_SECURITY": "Driving Style & Security",
     "PRICE": "Price",
     "REVIEW": "Review",
+    "REVIEW_PLACEHOLDER": "Awesome Shuttle...",
     "OF": "of"
   },
   "ratings": {
