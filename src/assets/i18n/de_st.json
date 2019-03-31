@@ -16,7 +16,7 @@
   "page_titles": {
     "HISTORY": "Unruafliste",
     "SETTINGS": "Einstellungen",
-    "FAVORITES": "Favoriten",
+    "FAVORITES": "Meine Favoriten",
     "ABOUT": "Über de App",
     "IMPRINT": "Impressum",
     "PRIVACY": "Datenschutzerklärung"
@@ -53,6 +53,7 @@
     "DRIVING_STYLE_AND_SECURITY": "Fohrstil & Sicherheit",
     "PRICE": "Preis",
     "REVIEW": "Rezension",
+    "REVIEW_PLACEHOLDER": "Supor Shuttle...",
     "OF": "von"
   },
   "ratings": {

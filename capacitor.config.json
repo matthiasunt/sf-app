@@ -2,9 +2,5 @@
   "appId": "coffeerush.apps.shuttlefinder",
   "appName": "Shuttle Finder",
   "bundledWebRuntime": false,
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-    }
-  }
+  "webDir": "www"
 }

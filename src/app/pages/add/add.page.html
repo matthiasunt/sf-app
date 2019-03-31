@@ -7,7 +7,7 @@
             {{ addToFavorites ? ("add.ADD_FAVORITE" | translate) : ("add.LOCK_SHUTTLE" | translate) }}
         </ion-title>
     </ion-toolbar>
-    <ion-searchbar [showCancelButton]="false" (ionInput)="getQueryResult($event)"
+    <ion-searchbar [showCancelButton]="true" (ionInput)="getQueryResult($event)"
                    placeholder="{{ 'add.NAME_OR_PHONE' | translate }}" animated="true" debounce="500">
     </ion-searchbar>
 </ion-header>
