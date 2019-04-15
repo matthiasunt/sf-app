@@ -37,6 +37,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
     lang: string;
 
     userRating: Rating;
+    reviewsToDisplay: string[];
     ratingsFromShuttle: Rating[];
 
     constructor(private zone: NgZone,
@@ -59,6 +60,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
         this.shuttleColor = '#99CC33';
         this.isFavorite = false;
         this.ratingsFromShuttle = [];
+        this.reviewsToDisplay = [];
     }
 
     async ngOnInit() {
@@ -72,6 +74,12 @@ export class ShuttlePage implements OnInit, OnDestroy {
         this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
+
+        /* Display last three reviews */
+        if (this.shuttle.avgRating.reviews) {
+            this.reviewsToDisplay = this.shuttle.avgRating.reviews;
+            this.reviewsToDisplay.slice(0, 2);
+        }
         this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
 
         /* Update Shuttle Ratings if Shuttles changed */

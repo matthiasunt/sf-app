@@ -17,15 +17,15 @@ export class DeviceService {
     }
 
     public async styleStatusBar(color: string) {
-        if (await this.getPlatform() === 'android') {
-            const backgroundColor = shadeHexColor(color, -0.08);
-            const style = getContrastColor(backgroundColor) === 'white'
-                ? StatusBarStyle.Dark : StatusBarStyle.Light;
-            setTimeout(() => {
-                StatusBar.setStyle({style});
-                StatusBar.setBackgroundColor({color: backgroundColor});
-            }, 250);
-        }
+        // if (await this.getPlatform() === 'android') {
+        //     const backgroundColor = shadeHexColor(color, -0.08);
+        //     const style = getContrastColor(backgroundColor) === 'white'
+        //         ? StatusBarStyle.Dark : StatusBarStyle.Light;
+        //     setTimeout(() => {
+        //         StatusBar.setStyle({style});
+        //         StatusBar.setBackgroundColor({color: backgroundColor});
+        //     }, 250);
+        // }
     }
 
     public async getInfo(): Promise<DeviceInfo> {
@@ -54,15 +54,12 @@ export class DeviceService {
         if (!this.info) {
             await this.getInfo();
         }
-        if (await this.getPlatform() === 'android' || await this.getPlatform() === 'ios') {
-            return true;
-        }
-        return false;
+        return await this.getPlatform() === 'android' || await this.getPlatform() === 'ios';
     }
 
     private async fetchInfo() {
         this.info = await Device.getInfo();
-        console.log(this.info);
+        // console.log(this.info);
         return this.info;
     }
 

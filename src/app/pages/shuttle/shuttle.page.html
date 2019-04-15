@@ -147,10 +147,10 @@
                         {{shuttle?.avgRating?.price}} {{"rate.OF" | translate}} 5
                     </ion-badge>
                 </p>
-                <!--<hr>-->
-                <!--<p *ngFor="let review of shuttle?.avgRating?.reviews">-->
-                <!--<i>"{{review}}"</i>-->
-                <!--</p>-->
+                <hr>
+                <p *ngFor="let review of reviewsToDisplay">
+                    <i>"{{review}}"</i>
+                </p>
             </ion-card-content>
         </ion-card>
     </ng-container>

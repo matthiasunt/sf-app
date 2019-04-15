@@ -14,12 +14,11 @@ export class SfDbService {
     private readonly _syncSubject: Subject<boolean>;
 
     constructor() {
-        this.db = new PouchDB('prod-sf-public');
+        this.db = new PouchDB(ENV.SF_PUBLIC_DB);
 
         this._syncSubject = new Subject<boolean>();
 
-        this.remote = ENV.DB_PROTOCOL + '://' + ENV.DB_USER + ':'
-            + ENV.DB_PASS + '@' + ENV.DB_HOST + '/prod-sf-public';
+        this.remote = `${ENV.DB_PROTOCOL}://${ENV.DB_USER}:${ENV.DB_PASS}@${ENV.DB_HOST}/${ENV.SF_PUBLIC_DB}`;
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
@@ -36,6 +35,8 @@ export class SfDbService {
         }).on('error', (err) => {
             console.log('Error');
             console.error(err);
+            // If offline
+            this._syncSubject.next(true);
         });
 
         this.db.info().then(function (info) {
