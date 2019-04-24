@@ -99,6 +99,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                             return shuttle.districtIds.indexOf(districtId) > -1;
                         }).toList();
                         this.mergeShuttles(shuttles);
+
                     });
             });
     }
@@ -130,6 +131,12 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.shuttlesService.rankShuttlesByScore(shuttles),
             this.listsService.favorites.getValue(),
             this.listsService.blacklist.getValue()).toArray();
+
+        /* Unsubscribe from changes if Shuttles fetched */
+        if (this.shuttles.length > 3) {
+            this.unsubscribe$.next();
+            this.unsubscribe$.complete();
+        }
     }
 
     public shuttleClicked(shuttle: Shuttle) {

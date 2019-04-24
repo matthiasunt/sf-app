@@ -76,7 +76,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
 
         /* Display last three reviews */
-        if (this.shuttle.avgRating.reviews) {
+        if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
             this.reviewsToDisplay = this.shuttle.avgRating.reviews;
             this.reviewsToDisplay.slice(0, 2);
         }
