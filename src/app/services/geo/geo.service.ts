@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {getDistance} from 'geolib';
-import {NativeGeocoder, NativeGeocoderReverseResult} from '@ionic-native/native-geocoder/ngx';
+import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DeviceService} from '@services/device/device.service';
 import {Coordinates} from '@models/coordinates';
@@ -46,7 +46,7 @@ export class GeoService {
     public async getLocalityName(coordinates: Coordinates, lang: string): Promise<string> {
         if (await this.deviceService.isDevice()) {
             try {
-                const res: NativeGeocoderReverseResult[] = await this.nativeGeocoder.reverseGeocode(
+                const res: any[] = await this.nativeGeocoder.reverseGeocode(
                     coordinates.latitude,
                     coordinates.longitude,
                     {useLocale: true, defaultLocale: lang, maxResults: 5}
