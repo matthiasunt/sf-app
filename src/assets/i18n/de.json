@@ -13,6 +13,7 @@
   "VERIFY_CONNECTION": "Bitte überprüfe deine Internetverbindung.",
   "NO_CONNECTION": "Keine Verbindung.",
   "NOT_AVAILABLE": "Shuttle Finder ist zurzeit nicht verfügbar, versuche es später erneut.",
+  "YOU": "Du",
   "page_titles": {
     "HISTORY": "Verlauf",
     "SETTINGS": "Einstellungen",
@@ -58,7 +59,7 @@
   },
   "ratings": {
     "RATINGS": "Bewertungen",
-    "NO_RATINGS": "Keine Bewertungen :("
+    "NO_RATINGS": "Keine Bewertungen :(",
   },
   "call": {
     "msg": {

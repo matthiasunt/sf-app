@@ -38,7 +38,7 @@ export class RatePage implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 public translate: TranslateService,
                 private authService: AuthService,
-                private ratingService: RatingsService,
+                private ratingsService: RatingsService,
                 private shuttlesService: ShuttlesService,
                 private colorGenerator: ColorGeneratorService,
     ) {
@@ -72,9 +72,9 @@ export class RatePage implements OnInit {
             type: DocType.Rating,
         };
         if (this.alreadyRatedByUser) {
-            this.ratingService.updateRating(rating);
+            this.ratingsService.updateRating(rating);
         } else {
-            this.ratingService.putRating(rating);
+            this.ratingsService.putRating(rating);
         }
         this.navCtrl.pop();
     }
@@ -91,7 +91,7 @@ export class RatePage implements OnInit {
     }
 
     private fetchRatingByUser(shuttleId: string) {
-        this.userRating = this.ratingService.getRatingByUserForShuttle(shuttleId);
+        this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
         if (this.userRating) {
             this.alreadyRatedByUser = true;
             this.ratingForm = {
@@ -114,7 +114,7 @@ export class RatePage implements OnInit {
                     text: this.translate.instant('YES'),
                     handler: () => {
                         if (this.userRating) {
-                            this.ratingService.deleteRating(this.userRating);
+                            this.ratingsService.deleteRating(this.userRating);
                         }
                         this.navCtrl.pop();
                     }
