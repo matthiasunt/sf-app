@@ -25,6 +25,10 @@
   text-align: center;
 }
 
+ion-chip {
+  pointer-events: none;
+}
+
 #facebook-button {
   background: #3b5998;
   color: white;

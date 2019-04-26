@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 
 import {RatingsService} from '@services/data/ratings/ratings.service';
@@ -12,6 +12,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {List, Map} from 'immutable';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
+import {NavController} from '@ionic/angular';
 
 @Component({
     selector: 'app-ratings',
@@ -29,6 +30,8 @@ export class RatingsPage implements OnInit, OnDestroy {
     shuttleColor: string;
 
     constructor(private activatedRoute: ActivatedRoute,
+                private navCtrl: NavController,
+                private router: Router,
                 public translate: TranslateService,
                 private localDataService: LocalDataService,
                 private shuttlesService: ShuttlesService,
@@ -65,6 +68,11 @@ export class RatingsPage implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    userRatingClicked() {
+        const currentUrl = this.router.url;
+        this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle._id);
     }
 
     public orderByChanged(event) {

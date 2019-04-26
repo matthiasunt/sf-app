@@ -6,6 +6,7 @@ const routes: Routes = [
     {path: '', component: ShuttlePage},
     {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'},
     {path: 'ratings/:id', loadChildren: '../ratings/ratings.module#RatingsPageModule'},
+    {path: 'ratings/:id/rate/:id', loadChildren: '../ratings/ratings.module#RatePageModule'},
 ];
 
 @NgModule({
