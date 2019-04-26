@@ -6,7 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {AlertController, NavController} from '@ionic/angular';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {getContrastColor} from '../../tools/sf-tools';
+import {getContrastColor} from '@tools/sf-tools';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';

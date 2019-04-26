@@ -12,9 +12,9 @@
 <ion-content>
     <ng-container *ngIf="ratings?.length > 0">
         <!-- User Rating -->
-        <ion-card *ngIf="userRating" class="rating-card">
+        <ion-card *ngIf="userRating" (click)="userRatingClicked()" class="rating-card">
             <ion-card-header>
-                <ion-card-title>{{"YOU" | translate}} - {{getDate(userRating?.date)}}</ion-card-title>
+                <ion-card-subtitle color="black">{{"YOU" | translate}} - {{getDate(userRating?.date)}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <p>
