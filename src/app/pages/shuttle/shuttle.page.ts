@@ -13,13 +13,15 @@ import {ColorGeneratorService} from '@services/color-generator/color-generator.s
 import {Shuttle} from '@models/shuttle';
 import {CallOrigin, CallOriginName} from '@models/call';
 import {ElementType, ListElement} from '@models/list-element';
-import {getContrastColor, getFormattedPhoneNumber} from '../../tools/sf-tools';
+import {getContrastColor, getFormattedPhoneNumber} from '@tools/sf-tools';
 import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {District} from '@models/district';
+import {DistrictsService} from '@services/data/districts/districts.service';
 
 @Component({
     selector: 'app-shuttle',
@@ -35,6 +37,8 @@ export class ShuttlePage implements OnInit, OnDestroy {
     shuttleColor: string;
     isFavorite: boolean;
     lang: string;
+
+    shuttleDistricts: District[];
 
     userRating: Rating;
     reviewsToDisplay: string[];
@@ -53,6 +57,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
                 private localDataService: LocalDataService,
                 private listsService: ListsService,
                 private shuttlesService: ShuttlesService,
+                private districtsService: DistrictsService,
                 public callsService: CallsService,
                 public colorGenerator: ColorGeneratorService,
                 private ratingsService: RatingsService,
@@ -93,6 +98,10 @@ export class ShuttlePage implements OnInit, OnDestroy {
                     }
                 });
             });
+
+        this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
+            return this.shuttle.districtIds.indexOf(district._id) > -1;
+        }).toArray();
     }
 
     ionViewDidEnter() {
@@ -216,6 +225,19 @@ export class ShuttlePage implements OnInit, OnDestroy {
                 ret = locality.de;
             }
             return this.geoService.getBeatifulCityName(ret);
+        }
+    }
+
+    public getDistrictName(district: District) {
+        if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
+            switch (this.lang) {
+                case 'de_st':
+                    return district.name.de_st;
+                case 'it':
+                    return district.name.it;
+                default:
+                    return district.name.de;
+            }
         }
     }
 

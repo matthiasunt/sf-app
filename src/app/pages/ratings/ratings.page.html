@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="tertiary">
+    <ion-toolbar color="{{shuttleColor}}" [ngStyle]="getToolbarStyle()">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
@@ -11,18 +11,10 @@
 
 <ion-content>
     <ng-container *ngIf="ratings?.length > 0">
-        <ion-item>
-            <ion-label></ion-label>
-            <ion-select (ionChange)="orderByChanged($event)" interface="popover" value="date_dsc">
-                <ion-select-option value="date_dsc">↓ Date</ion-select-option>
-                <ion-select-option value="date_asc">↑ Date</ion-select-option>
-                <ion-select-option value="rating_dsc">↓ Rating</ion-select-option>
-                <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
-            </ion-select>
-        </ion-item>
-        <ion-card *ngIf="userRating" class="rating-card" color="tertiary">
+        <!-- User Rating -->
+        <ion-card *ngIf="userRating" class="rating-card">
             <ion-card-header>
-                <ion-card-subtitle>{{"YOU" | translate}}, {{getDate(userRating?.date)}}</ion-card-subtitle>
+                <ion-card-title>{{"YOU" | translate}} - {{getDate(userRating?.date)}}</ion-card-title>
             </ion-card-header>
             <ion-card-content>
                 <p>
@@ -55,10 +47,20 @@
                 </p>
             </ion-card-content>
         </ion-card>
-        <hr>
+
+        <!-- All Ratings -->
+        <ion-item>
+            <ion-label></ion-label>
+            <ion-select (ionChange)="orderByChanged($event)" interface="popover" value="date_dsc">
+                <ion-select-option value="date_dsc">↓ Date</ion-select-option>
+                <ion-select-option value="date_asc">↑ Date</ion-select-option>
+                <ion-select-option value="rating_dsc">↓ Rating</ion-select-option>
+                <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
+            </ion-select>
+        </ion-item>
         <ion-card *ngFor="let rating of ratings" class="rating-card">
             <ion-card-header>
-                <ion-card-subtitle>Anonymous, {{getDate(rating?.date)}}</ion-card-subtitle>
+                <ion-card-subtitle>Anonymous - {{getDate(rating?.date)}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <p>
