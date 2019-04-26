@@ -42,7 +42,7 @@
                     </ion-badge>
                 </p>
                 <hr>
-                <p *ngIf="userRating?.review?.length > 0">
+                <p *ngIf="userRating?.review?.length > 0" class="review-p">
                     <i>"{{userRating?.review}}"</i>
                 </p>
             </ion-card-content>
@@ -88,7 +88,7 @@
                     </ion-badge>
                 </p>
                 <hr>
-                <p *ngIf="rating?.review?.length > 0">
+                <p *ngIf="rating?.review?.length > 0" class="review-p">
                     <i>"{{rating?.review}}"</i>
                 </p>
             </ion-card-content>
