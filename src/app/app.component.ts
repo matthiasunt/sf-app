@@ -46,7 +46,7 @@ export class AppComponent {
                 StatusBar.setBackgroundColor({color: 'black'});
             }
         }
-        // this.authService.doSoftLogin();3
+        this.authService.doSoftLogin();
     }
 
     private async setLang() {
