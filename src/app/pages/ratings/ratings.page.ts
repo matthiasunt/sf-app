@@ -23,6 +23,7 @@ export class RatingsPage implements OnInit, OnDestroy {
 
     shuttle: Shuttle;
     ratings: Rating[];
+    userRating: Rating;
     locale: string;
 
     constructor(private activatedRoute: ActivatedRoute,
@@ -46,6 +47,11 @@ export class RatingsPage implements OnInit, OnDestroy {
                         return (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0);
                     }
                 );
+                // Fetch User Rating and remove it from Ratings
+                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
+                if (this.userRating) {
+                    this.ratings.filter(rating => rating._id !== this.userRating._id);
+                }
             });
         this.localDataService.lang
             .pipe(takeUntil(this.unsubscribe$))
@@ -61,10 +67,10 @@ export class RatingsPage implements OnInit, OnDestroy {
         if (this.ratings.length > 1) {
             switch (event.detail.value) {
                 case 'date_dsc':
-                    this.ratings.sort((a, b) => (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0));
+                    this.ratings.sort((a, b) => (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0));
                     break;
                 case 'date_asc':
-                    this.ratings.sort((a, b) => (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0));
+                    this.ratings.sort((a, b) => (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0));
                     break;
                 case 'rating_dsc':
                     this.ratings.sort((a, b) => (a.totalAvg < b.totalAvg) ? 1 : ((a.totalAvg > b.totalAvg) ? -1 : 0));

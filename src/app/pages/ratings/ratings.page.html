@@ -20,6 +20,42 @@
                 <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
             </ion-select>
         </ion-item>
+        <ion-card *ngIf="userRating" class="rating-card" color="tertiary">
+            <ion-card-header>
+                <ion-card-subtitle>{{"YOU" | translate}}, {{getDate(userRating?.date)}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <p>
+                    <span>Service</span>
+                    <ion-badge color="tertiary">
+                        {{userRating?.service}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+                    <ion-badge color="tertiary">
+                        {{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+                    <ion-badge color="tertiary">
+                        {{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
+                </p>
+                <p>
+                    <span>{{"rate.PRICE" | translate}}</span>
+                    <ion-badge color="tertiary">
+                        {{userRating?.price}} {{"rate.OF" | translate}} 5
+                    </ion-badge>
+                </p>
+                <hr>
+                <p *ngIf="userRating?.review?.length > 0">
+                    <i>"{{userRating?.review}}"</i>
+                </p>
+            </ion-card-content>
+        </ion-card>
+        <hr>
         <ion-card *ngFor="let rating of ratings" class="rating-card">
             <ion-card-header>
                 <ion-card-subtitle>Anonymous, {{getDate(rating?.date)}}</ion-card-subtitle>
