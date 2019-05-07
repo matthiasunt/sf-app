@@ -48,17 +48,17 @@ export class RatingsPage implements OnInit, OnDestroy {
         this.ratingsService.ratingsByShuttles
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((ratingsByShuttles: Map<string, List<Rating>>) => {
+                // Fetch User Rating and remove it from Ratings
+                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
                 const ratings: List<Rating> = ratingsByShuttles.get(shuttleId);
                 this.ratings = ratings ? ratings.toArray() : [];
+                if (this.userRating) {
+                    this.ratings.filter(rating => rating._id !== this.userRating._id);
+                }
                 this.ratings.sort((a, b) => {
                         return (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0);
                     }
                 );
-                // Fetch User Rating and remove it from Ratings
-                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-                if (this.userRating) {
-                    this.ratings.filter(rating => rating._id !== this.userRating._id);
-                }
             });
         this.localDataService.lang
             .pipe(takeUntil(this.unsubscribe$))
