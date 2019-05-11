@@ -8,7 +8,6 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 
 import {DistrictsService} from '@services/data/districts/districts.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {GeoService} from '@services/geo/geo.service';
 import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {ListsService} from '@services/data/lists/lists.service';
@@ -16,7 +15,7 @@ import {DeviceService} from '@services/device/device.service';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
-import {getContrastColor} from '../../tools/sf-tools';
+import {getContrastColor} from '@tools/sf-tools';
 import {ListElement} from '@models/list-element';
 
 @Component({
@@ -30,7 +29,7 @@ export class FindPage implements OnInit {
     favorites: Shuttle[];
 
     lang: string;
-    districts = districts;
+    districts: District[] = districts;
 
     constructor(private zone: NgZone,
                 private navCtrl: NavController,
@@ -186,8 +185,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.501696',
-            'longitude': '11.350951'
+            'latitude': 46.501696,
+            'longitude': 11.350951
         },
         '_id': 'italien-suedtirol-bozenumgebung',
     },
@@ -207,8 +206,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.669695',
-            'longitude': '11.144957'
+            'latitude': 46.669695,
+            'longitude': 11.144957
         },
         '_id': 'italien-suedtirol-burggrafenamt',
     },
@@ -228,8 +227,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.711143',
-            'longitude': '11.658568'
+            'latitude': 46.711143,
+            'longitude': 11.658568
         },
         '_id': 'italien-suedtirol-eisacktal',
     },
@@ -249,8 +248,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.799584',
-            'longitude': '11.951079'
+            'latitude': 46.799584,
+            'longitude': 11.951079
         },
         '_id': 'italien-suedtirol-pustertal',
     },
@@ -270,8 +269,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.567705',
-            'longitude': '11.653147'
+            'latitude': 46.567705,
+            'longitude': 11.653147
         },
         '_id': 'italien-suedtirol-schlerngebietgroeden',
     },
@@ -291,8 +290,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.345476',
-            'longitude': '11.296343'
+            'latitude': 46.345476,
+            'longitude': 11.296343
         },
         '_id': 'italien-suedtirol-ueberetschunterland',
     },
@@ -312,8 +311,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.640144',
-            'longitude': '10.732828'
+            'latitude': 46.640144,
+            'longitude': 10.732828
         },
         '_id': 'italien-suedtirol-vinschgau',
     },
@@ -333,8 +332,8 @@ const districts = [
             'it': 'Italia'
         },
         'coordinates': {
-            'latitude': '46.89412',
-            'longitude': '11.463419'
+            'latitude': 46.89412,
+            'longitude': 11.463419
         },
         '_id': 'italien-suedtirol-wipptal',
     }
