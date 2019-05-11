@@ -1,3 +1,5 @@
+import {Coordinates} from '@models/coordinates';
+
 export interface District {
     _id: string;
     type: string;
