@@ -35,6 +35,8 @@ export class UserDbService {
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
+            // Offline?
+            this._syncSubject.next(true);
         });
     }
 
