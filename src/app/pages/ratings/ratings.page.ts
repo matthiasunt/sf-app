@@ -11,7 +11,6 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {List, Map} from 'immutable';
 import {NavController} from '@ionic/angular';
-import {getBeautifulDateString} from '@tools/sf-tools';
 
 @Component({
     selector: 'app-ratings',
@@ -91,9 +90,4 @@ export class RatingsPage implements OnInit, OnDestroy {
             }
         }
     }
-
-    getDate(date: string) {
-        return getBeautifulDateString(date, this.locale);
-    }
-
 }

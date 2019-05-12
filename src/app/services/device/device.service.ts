@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {DeviceInfo, Plugins, StatusBarStyle} from '@capacitor/core';
-import {getContrastColor, shadeHexColor} from '@tools/sf-tools';
 
 const {StatusBar} = Plugins;
 const {Device} = Plugins;

@@ -98,14 +98,6 @@ export class LocalDataService {
         await this.saveItem('lang', lang);
     }
 
-    public shuttleCalledLately(shuttleId: string): boolean {
-        const calledLast = this.history.value.filter((h) => {
-            return ((new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5);
-        });
-        return calledLast.findIndex((c) => c.shuttle._id === shuttleId) > -1;
-    }
-
-
     public getDirectMode(): boolean {
         return this.directMode;
     }

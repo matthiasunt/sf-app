@@ -9,6 +9,9 @@ import {ContrastColorPipe} from './contrast-color/contrast-color.pipe';
 import {ShadeColorPipe} from './shade-color/shade-color.pipe';
 import {DistrictColorPipe} from '@pipes/district-color/district-color.pipe';
 import {ColorStylingPipe} from '@pipes/color-styling/color-styling.pipe';
+import {BeautifulTimePipe} from '@pipes/beautiful-time/beautiful-time.pipe';
+import {BeautifulDatePipe} from '@pipes/beautiful-date/beautiful-date.pipe';
+import {ShuttleCalledLatelyPipe} from '@pipes/shuttle-called-lately/shuttle-called-lately.pipe';
 
 
 @NgModule({
@@ -21,6 +24,9 @@ import {ColorStylingPipe} from '@pipes/color-styling/color-styling.pipe';
         ContrastColorPipe,
         ShadeColorPipe,
         ColorStylingPipe,
+        BeautifulTimePipe,
+        BeautifulDatePipe,
+        ShuttleCalledLatelyPipe,
     ],
     imports: [
         CommonModule,
@@ -35,6 +41,9 @@ import {ColorStylingPipe} from '@pipes/color-styling/color-styling.pipe';
         ContrastColorPipe,
         ShadeColorPipe,
         ColorStylingPipe,
+        BeautifulTimePipe,
+        BeautifulDatePipe,
+        ShuttleCalledLatelyPipe,
     ]
 })
 export class PipesModule {
