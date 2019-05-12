@@ -35,7 +35,7 @@
     <ng-container *ngIf="localDataService.history.getValue().count() > 0">
         <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="73px">
             <ion-item-divider *virtualHeader="let dateHeader">
-                {{getDate(dateHeader)}}
+                {{dateHeader | beautifulDate: locale}}
             </ion-item-divider>
             <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
                 <ion-thumbnail slot="start">
@@ -45,7 +45,7 @@
                 <ion-label text-wrap>
                     <ion-text>
                         <h2>{{historyElement?.shuttle?.name}}</h2>
-                        <p>{{getTime(historyElement?.date)}}</p>
+                        <p>{{historyElement?.date | beautifulTime: locale}}</p>
                     </ion-text>
                 </ion-label>
                 <div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">

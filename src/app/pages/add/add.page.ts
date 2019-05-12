@@ -1,10 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {SfDbService} from '@services/data/sf-db/sf-db.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {Shuttle} from '@models/shuttle';
-import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {Router} from '@angular/router';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {ListsService} from '@services/data/lists/lists.service';
@@ -19,7 +16,7 @@ import {Subject} from 'rxjs';
     templateUrl: './add.page.html',
     styleUrls: ['./add.page.scss'],
 })
-export class AddPage implements OnInit {
+export class AddPage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
     addToFavorites: boolean;
     private unavailable: boolean;

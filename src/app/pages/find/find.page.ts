@@ -110,36 +110,6 @@ export class FindPage implements OnInit {
         });
         await alert.present();
     }
-
-    /* Toasts */
-    public async presentConnectionToast() {
-        const toast = await this.toastCtrl.create({
-            message: this.translate.instant('VERIFY_CONNECTION'),
-            showCloseButton: true,
-            closeButtonText: this.translate.instant('OK'),
-            position: 'bottom'
-        });
-        await toast.present();
-    }
-
-
-    public async presentNoShuttleFoundToast() {
-        const toast = await this.toastCtrl.create({
-            message: this.translate.instant('NO_SHUTTLE_FOUND'),
-            showCloseButton: true,
-            closeButtonText: this.translate.instant('OK'),
-            position: 'bottom'
-        });
-        await toast.present();
-    }
-
-    public getTMMUrl() {
-        if (this.translate.currentLang === 'it') {
-            return 'http://bit.ly/zero-compromessi';
-        } else {
-            return 'http://bit.ly/keine-kompromisse';
-        }
-    }
 }
 
 const districts = [

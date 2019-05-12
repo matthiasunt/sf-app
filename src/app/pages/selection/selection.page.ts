@@ -74,6 +74,13 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.fetchShuttlesByPosition();
         }
 
+        // Not available, if no data after 7 secs.
+        setTimeout(() => {
+            if (this.shuttles.length < 1) {
+                this.presentShuttleFinderUnavailableAlert();
+            }
+        }, 7000);
+
 
     }
 
@@ -157,6 +164,22 @@ export class SelectionPage implements OnInit, OnDestroy {
         this.callsService.setCallHandlerData(shuttle._id, callOrigin);
         this.callNumber.callNumber(shuttle.phone, true);
         this.localDataService.addToHistory({shuttle, date: new Date()});
+    }
+
+    /* Alerts */
+    private async presentShuttleFinderUnavailableAlert() {
+        const alert = await this.alertCtrl.create({
+            header: this.translate.instant('NOT_AVAILABLE'),
+            buttons: [
+                {
+                    text: this.translate.instant('OK'),
+                    handler: () => {
+                        this.navCtrl.pop();
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
 }

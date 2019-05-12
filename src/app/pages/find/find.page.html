@@ -46,7 +46,8 @@
         <ion-card id="tmm-card">
             <ion-card-content>
                 <h3> {{"departure.WHO_DRIVES" | translate}}</h3>
-                <a href="{{getTMMUrl()}}">
+                <a href="{{ lang === 'it' ?
+                'http://bit.ly/zero-compromessi' : 'http://bit.ly/keine-kompromisse' }}">
                     <img id="tmm-logo-img" src="assets/img/tmm-logo.svg"/>
                 </a>
                 <h3>{{"departure.DOESNT_DRINK" | translate}}</h3>

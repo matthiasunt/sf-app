@@ -37,9 +37,6 @@
       "@pipes/*": [
         "app/pipes/*"
       ],
-      "@tools/*": [
-        "app/tools/*"
-      ]
     }
   }
 }

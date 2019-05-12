@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="{{shuttleColor}}" [ngStyle]="getToolbarStyle()">
+    <ion-toolbar color="{{shuttle | shuttleColor}}" [ngStyle]="shuttle | shuttleColor | colorStyling">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
@@ -14,7 +14,8 @@
         <!-- User Rating -->
         <ion-card *ngIf="userRating" (click)="userRatingClicked()" class="rating-card">
             <ion-card-header>
-                <ion-card-subtitle color="black">{{"YOU" | translate}} - {{getDate(userRating?.date)}}</ion-card-subtitle>
+                <ion-card-subtitle color="black">{{"YOU" | translate}}
+                    - {{userRating?.date | beautifulDate: locale}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <p>
@@ -60,7 +61,7 @@
         </ion-item>
         <ion-card *ngFor="let rating of ratings" class="rating-card">
             <ion-card-header>
-                <ion-card-subtitle>Anonymous - {{getDate(rating?.date)}}</ion-card-subtitle>
+                <ion-card-subtitle>Anonymous - {{rating?.date | beautifulDate: locale}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <p>

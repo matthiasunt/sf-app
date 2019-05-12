@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {shadeHexColor} from '../../tools/sf-tools';
 
 @Component({
     selector: 'app-sf-shuttle-icon',
@@ -11,14 +10,7 @@ export class SfShuttleIconComponent implements OnInit {
     @Input()
     color = '#99CC33';
 
-    constructor() {
-    }
-
     ngOnInit() {
-    }
-
-    getShadeColor() {
-        return shadeHexColor(this.color, -0.05);
     }
 
 }
