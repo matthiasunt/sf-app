@@ -3,7 +3,6 @@ import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {Shuttle} from '@models/shuttle';
 import {getFormattedPhoneNumber} from '../../tools/sf-tools';
 import {Router} from '@angular/router';
@@ -38,9 +37,6 @@ export class AddPage implements OnInit {
                 private authService: AuthService,
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
-                private sfDb: SfDbService,
-                private localData: LocalDataService,
-                private colorGenerator: ColorGeneratorService
     ) {
     }
 
@@ -107,23 +103,11 @@ export class AddPage implements OnInit {
         }
     }
 
-
+    // TODO: Refactor
     public isInList(shuttle: Shuttle): boolean {
         const list = this.addToFavorites ? this.favorites : this.blacklist;
         if (shuttle) {
             return list.findIndex(e => e && e.shuttleId && e.shuttleId === shuttle._id) > -1;
-        }
-    }
-
-    public getShuttleColor(shuttle: Shuttle) {
-        if (shuttle) {
-            return this.colorGenerator.getShuttleColor(shuttle);
-        }
-    }
-
-    public getPhoneNumber(shuttle: Shuttle) {
-        if (shuttle) {
-            return getFormattedPhoneNumber(shuttle.phone);
         }
     }
 

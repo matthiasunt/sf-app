@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="{{shuttleColor}}" [ngStyle]="getToolbarStyle()">
+    <ion-toolbar color="{{shuttle | shuttleColor}}" [ngStyle]="shuttle | shuttleColor | colorStyling">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>

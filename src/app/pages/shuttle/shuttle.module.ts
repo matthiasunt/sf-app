@@ -9,6 +9,7 @@ import {ShuttlePage} from './shuttle.page';
 import {ComponentsModule} from '@components/components.module';
 import {ShuttlePageRoutingModule} from './shuttle-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {PipesModule} from '@pipes/pipes.module';
 
 const routes: Routes = [
     {
@@ -26,6 +27,7 @@ const routes: Routes = [
         ShuttlePageRoutingModule,
         RouterModule.forChild(routes),
         TranslateModule,
+        PipesModule
     ],
     declarations: [ShuttlePage]
 })

@@ -17,9 +17,8 @@
     <div id="district-chip-row">
         <!--<ion-chip (click)="districtClicked(d)" *ngFor="let d of districtsService.districts | async"-->
         <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
-                  [style.background-color]="colorGenerator.getDistrictColors(d)[0]"
-                  [style.color]="colorGenerator.getDistrictColors(d)[1]">
-            <ion-label>{{getDistrictName(d)}}</ion-label>
+                  [ngStyle]="d._id | districtColor | colorStyling">
+            <ion-label>{{ d.name | districtName: lang }}</ion-label>
         </ion-chip>
     </div>
     <hr>
@@ -34,10 +33,9 @@
             </ion-row>
             <ion-chip *ngFor="let shuttle of favorites"
                       (click)="shuttleClicked(shuttle)"
-                      [style.background-color]="colorGenerator.getShuttleColor(shuttle)"
-                      [style.color]="getContrastColor(colorGenerator.getShuttleColor(shuttle))">
+                      [ngStyle]="shuttle | shuttleColor | colorStyling">
                 <ion-avatar *ngIf="shuttle">
-                    <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
+                    <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                     </app-sf-shuttle-icon>
                 </ion-avatar>
                 <ion-label>{{ shuttle?.name }}</ion-label>

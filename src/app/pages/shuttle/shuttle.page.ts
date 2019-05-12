@@ -8,12 +8,10 @@ import {CallsService} from '@services/data/calls/calls.service';
 import {ListsService} from '@services/data/lists/lists.service';
 import {AuthService} from '@services/auth/auth.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 
 import {Shuttle} from '@models/shuttle';
 import {CallOrigin, CallOriginName} from '@models/call';
 import {ElementType, ListElement} from '@models/list-element';
-import {getContrastColor, getFormattedPhoneNumber} from '@tools/sf-tools';
 import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
@@ -34,7 +32,6 @@ export class ShuttlePage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
 
     shuttle: Shuttle;
-    shuttleColor: string;
     isFavorite: boolean;
     lang: string;
 
@@ -59,10 +56,8 @@ export class ShuttlePage implements OnInit, OnDestroy {
                 private shuttlesService: ShuttlesService,
                 private districtsService: DistrictsService,
                 public callsService: CallsService,
-                public colorGenerator: ColorGeneratorService,
                 private ratingsService: RatingsService,
     ) {
-        this.shuttleColor = '#99CC33';
         this.isFavorite = false;
         this.ratingsFromShuttle = [];
         this.reviewsToDisplay = [];
@@ -76,7 +71,6 @@ export class ShuttlePage implements OnInit, OnDestroy {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-        this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.isFavorite = this.listsService.favorites.getValue()
             .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
 
@@ -200,45 +194,6 @@ export class ShuttlePage implements OnInit, OnDestroy {
             callOrigin = {name: CallOriginName.Other, value: this.router.url};
         }
         return callOrigin;
-    }
-
-    public getToolbarStyle() {
-        return {
-            'background-color': this.shuttleColor,
-            'color': getContrastColor(this.shuttleColor)
-        };
-    }
-
-    public getPhoneNumber(shuttle: Shuttle): string {
-        if (shuttle) {
-            return getFormattedPhoneNumber(shuttle.phone);
-        }
-    }
-
-    public getLocalityName(): string {
-        let ret: string;
-        if (this.shuttle && this.shuttle.address && this.shuttle.address.locality) {
-            const locality = this.shuttle.address.locality;
-            if (this.lang === 'it') {
-                ret = locality.it;
-            } else {
-                ret = locality.de;
-            }
-            return this.geoService.getBeatifulCityName(ret);
-        }
-    }
-
-    public getDistrictName(district: District) {
-        if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
-            switch (this.lang) {
-                case 'de_st':
-                    return district.name.de_st;
-                case 'it':
-                    return district.name.it;
-                default:
-                    return district.name.de;
-            }
-        }
     }
 
 }

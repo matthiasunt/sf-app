@@ -8,7 +8,7 @@
         <ion-item *ngFor="let shuttle of shuttlesService.getShuttlesFromList(listsService.favorites | async)"
                   lines="full" (click)="shuttleClicked(shuttle)">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="colorGeneratorService.getShuttleColor(shuttle)">
+                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label>{{ shuttle?.name }}</ion-label>

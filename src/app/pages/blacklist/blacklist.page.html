@@ -15,7 +15,7 @@
                   (click)="shuttleClicked(s)"
                   lines="full">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="colorGeneratorService.getShuttleColor(s)">
+                <app-sf-shuttle-icon [color]="s | shuttleColor">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label>

@@ -8,6 +8,7 @@ import {IonicModule} from '@ionic/angular';
 import {SettingsPage} from './settings.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {SettingsPageRoutingModule} from './settings-routing.module';
+import {PipesModule} from '@pipes/pipes.module';
 
 const routes: Routes = [
     {
@@ -23,7 +24,8 @@ const routes: Routes = [
         IonicModule,
         SettingsPageRoutingModule,
         RouterModule.forChild(routes),
-        TranslateModule
+        TranslateModule,
+        PipesModule
     ],
     declarations: [SettingsPage]
 })

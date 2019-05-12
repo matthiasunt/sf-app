@@ -7,6 +7,7 @@ import {FavoritesPage} from './favorites.page';
 import {ComponentsModule} from '../../components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {FavoritesPageRoutingModule} from './favorites-routing.module';
+import {PipesModule} from '@pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {FavoritesPageRoutingModule} from './favorites-routing.module';
         FavoritesPageRoutingModule,
         RouterModule.forChild([{path: '', component: FavoritesPage}]),
         ComponentsModule,
+        PipesModule,
         TranslateModule,
     ],
     declarations: [FavoritesPage]

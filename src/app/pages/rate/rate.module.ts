@@ -6,6 +6,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {IonicModule} from '@ionic/angular';
 
 import {RatePage} from './rate.page';
+import {PipesModule} from '@pipes/pipes.module';
 
 const routes: Routes = [
     {
@@ -21,6 +22,7 @@ const routes: Routes = [
         IonicModule,
         RouterModule.forChild(routes),
         TranslateModule,
+        PipesModule
 
     ],
     declarations: [RatePage]

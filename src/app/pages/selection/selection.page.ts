@@ -1,6 +1,5 @@
-import {Component, NgZone, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {GeoService} from '@services/geo/geo.service';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -34,7 +33,6 @@ export class SelectionPage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
 
     district: District;
-    districtColors: string[];
 
     coordinates: Coordinates;
     currentLocality: string;
@@ -59,9 +57,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                 private listsService: ListsService,
                 public localDataService: LocalDataService,
                 private geoService: GeoService,
-                public colorGenerator: ColorGeneratorService,
     ) {
-        this.districtColors = ['#99CC33', '#FFFFFF'];
 
     }
 
@@ -91,7 +87,6 @@ export class SelectionPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((district: District) => {
                 this.district = district;
-                this.districtColors = this.colorGenerator.getDistrictColors(this.district);
                 this.shuttlesService.allShuttles
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe((allShuttles) => {
@@ -162,52 +157,6 @@ export class SelectionPage implements OnInit, OnDestroy {
         this.callsService.setCallHandlerData(shuttle._id, callOrigin);
         this.callNumber.callNumber(shuttle.phone, true);
         this.localDataService.addToHistory({shuttle, date: new Date()});
-    }
-
-    getToolbarStyle() {
-        if (this.districtColors && this.districtColors.length > 0) {
-            return {
-                'background-color': this.districtColors[0],
-                'color': this.districtColors[1]
-            };
-        }
-    }
-
-    // Tool
-    public getDistrictName(district: District): string {
-        if (
-            district &&
-            district.name
-            && district.name.de
-            && district.name.it
-            && district.name.de_st) {
-            switch (this.lang) {
-                case 'de_st':
-                    return district.name.de_st;
-                case 'it':
-                    return district.name.it;
-                default:
-                    return district.name.de;
-            }
-        } else {
-            console.log('Error getting district name');
-        }
-    }
-
-
-    public getLocalityName(shuttle: Shuttle): string {
-        let ret: string;
-        if (shuttle && shuttle.address && shuttle.address.locality) {
-            const locality = shuttle.address.locality;
-            switch (this.lang) {
-                case 'it':
-                    ret = locality.it;
-                    break;
-                default:
-                    ret = locality.de;
-            }
-            return this.geoService.getBeatifulCityName(ret);
-        }
     }
 
 }

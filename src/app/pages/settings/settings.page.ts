@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {PopoverController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {SfDbService} from '../../services/data/sf-db/sf-db.service';
-import {LocalDataService} from '../../services/data/local-data/local-data.service';
+import {SfDbService} from '@services/data/sf-db/sf-db.service';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
 
 @Component({
     selector: 'app-settings',

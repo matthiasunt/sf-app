@@ -40,7 +40,7 @@
             <ion-item *virtualItem="let historyElement" lines="full" (click)="shuttleClicked(historyElement.shuttle)">
                 <ion-thumbnail slot="start">
                     <app-sf-shuttle-icon
-                            [color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>
+                            [color]="historyElement.shuttle | shuttleColor"></app-sf-shuttle-icon>
                 </ion-thumbnail>
                 <ion-label text-wrap>
                     <ion-text>
