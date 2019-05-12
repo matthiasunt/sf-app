@@ -8,14 +8,12 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 
 import {DistrictsService} from '@services/data/districts/districts.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {ListsService} from '@services/data/lists/lists.service';
 import {DeviceService} from '@services/device/device.service';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
-import {getContrastColor} from '@tools/sf-tools';
 import {ListElement} from '@models/list-element';
 
 @Component({
@@ -45,7 +43,6 @@ export class FindPage implements OnInit {
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
                 private localDataService: LocalDataService,
-                public colorGenerator: ColorGeneratorService,
     ) {
     }
 
@@ -142,29 +139,6 @@ export class FindPage implements OnInit {
         } else {
             return 'http://bit.ly/keine-kompromisse';
         }
-    }
-
-    public getDistrictColors(district: District) {
-        if (district) {
-            return this.colorGenerator.getDistrictColors(district);
-        }
-    }
-
-    public getDistrictName(district: District) {
-        if (district && district.name && district.name.de && district.name.it && district.name.de_st) {
-            switch (this.lang) {
-                case 'de_st':
-                    return district.name.de_st;
-                case 'it':
-                    return district.name.it;
-                default:
-                    return district.name.de;
-            }
-        }
-    }
-
-    getContrastColor(shuttleColor: string) {
-        return getContrastColor(shuttleColor);
     }
 }
 

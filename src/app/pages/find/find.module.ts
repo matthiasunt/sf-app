@@ -3,9 +3,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {FindPage} from './find.page';
-import {ComponentsModule} from '../../components/components.module';
+import {ComponentsModule} from '@components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {FindPageRoutingModule} from './find-routing.module';
+import {PipesModule} from '@pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {FindPageRoutingModule} from './find-routing.module';
         FormsModule,
         FindPageRoutingModule,
         ComponentsModule,
-        TranslateModule
+        TranslateModule,
+        PipesModule
     ],
     declarations: [FindPage]
 })

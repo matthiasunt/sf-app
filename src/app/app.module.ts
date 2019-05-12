@@ -13,6 +13,7 @@ import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
+import {PipesModule} from '@pipes/pipes.module';
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import {Diagnostic} from '@ionic-native/diagnostic/ngx';
                 deps: [HttpClient]
             }
         }),
+        PipesModule
     ],
     providers: [
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
@@ -40,6 +42,7 @@ import {Diagnostic} from '@ionic-native/diagnostic/ngx';
         NativeGeocoder,
         Diagnostic
     ],
+    exports: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

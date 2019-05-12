@@ -1,68 +1,14 @@
-import {Injectable} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Shuttle} from '@models/shuttle';
 
-@Injectable({
-    providedIn: 'root'
+@Pipe({
+    name: 'shuttleColor'
 })
-export class ColorGeneratorService {
+export class ShuttleColorPipe implements PipeTransform {
 
-    public getShuttleColor(shuttle: any): string {
-        let ret = '';
-        if (shuttle && shuttle.name && shuttle.phone) {
-            let tone = this.djb2(shuttle.phone, 14);
-            const color = this.djb2(shuttle.name, 15);
-            if (tone === 9) {
-                tone++;
-            }
-            ret = this.DEFAULT_PALETTE[tone][color];
-        }
-        return ret;
-    }
-
-    public getDistrictColors(district: any): string[] {
-        if (district) {
-            switch (district._id) {
-                case 'italien-suedtirol-bozenumgebung':
-                    return ['#DD2C00', '#FFFFFF']; // deep orange
-                case 'italien-suedtirol-burggrafenamt':
-                    return ['#0091EA', '#FFFFFF']; // cyan
-                case 'italien-suedtirol-eisacktal':
-                    return ['#3F51B5', '#FFFFFF']; // indigo
-                case 'italien-suedtirol-pustertal':
-                    return ['#FFD600', '#000000']; // yellow
-                case 'italien-suedtirol-schlerngebietgroeden':
-                    return ['#673AB7', '#FFFFFF']; // deep purple
-                case 'italien-suedtirol-ueberetschunterland':
-                    return ['#CDDC39', '#000000']; // lime
-                case 'italien-suedtirol-vinschgau':
-                    return ['#4CAF50', '#FFFFFF']; // green
-                case 'italien-suedtirol-wipptal':
-                    return ['#FF6D00', '#FFFFFF']; // orange
-                // case 'italien-suedtirol-schlerngebietgroeden':
-                // return ['#4CAF50', '#FFFFFF']; //green
-                // case 'italien-suedtirol-schlerngebietgroeden':
-                // return ['#4CAF50', '#FFFFFF']; //green
-                default:
-                    return ['#009688', '#FFFFFF']; // teal
-            }
-        } else {
-            console.error('District not defined.');
-        }
-
-        // let tone = this.djb2(index+'', 15);
-        // let color = 13;
-        // return [this.DEFAULT_PALETTE[tone][color], '#000000']
-    }
-
-    private djb2(s: string, max: number): number {
-        let c = 5381;
-        for (let i = 0; i < s.length; i++) {
-            const char = s.charCodeAt(i);
-            c = (c * 32) + c + char; /* hash * 33 + c */
-        }
-        return Math.abs(c) % max;
-    }
 
     private DEFAULT_PALETTE = [
+        // tslint:disable:max-line-length
         // 19 x 14
         // 300 - 900, 6 options per color, 19 colors = 114 options
         // Red, Pink, Purple, Deep Purple, Indigo, Blue, Light Blue, Cyan, Teal, Green, Light Green, Lime, Yellow, Amber, Orange, Deep Orange, Brown, Grey, Blue Grey
@@ -81,5 +27,27 @@ export class ColorGeneratorService {
         /*A400*/['#FF1744', '#F50057', '#D500F9', '#651FFF', '#3D5AFE', '#2979FF', '#00B0FF', '#00E5FF', '#1DE9B6', '#00E676', '#76FF03', '#C6FF00', '#FFEA00', '#FFC400', '#FF9100', '#FF3D00'],
         /*A700*/['#D50000', '#C51162', '#AA00FF', '#6200EA', '#304FFE', '#2962FF', '#0091EA', '#00B8D4', '#00BFA5', '#00C853', '#64DD17', '#AEEA00', '#FFD600', '#FFAB00', '#FF6D00', '#DD2C00']
     ];
+
+    transform(shuttle: Shuttle): any {
+        let ret = '';
+        if (shuttle && shuttle.name && shuttle.phone) {
+            let tone = this.djb2(shuttle.phone, 14);
+            const color = this.djb2(shuttle.name, 15);
+            if (tone === 9) {
+                tone++;
+            }
+            ret = this.DEFAULT_PALETTE[tone][color];
+        }
+        return ret;
+    }
+
+    private djb2(s: string, max: number): number {
+        let c = 5381;
+        for (let i = 0; i < s.length; i++) {
+            const char = s.charCodeAt(i);
+            c = (c * 32) + c + char; /* hash * 33 + c */
+        }
+        return Math.abs(c) % max;
+    }
 
 }

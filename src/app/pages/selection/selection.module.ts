@@ -6,8 +6,9 @@ import {Routes, RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 
 import {SelectionPage} from './selection.page';
-import {ComponentsModule} from '../../components/components.module';
+import {ComponentsModule} from '@components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {PipesModule} from '@pipes/pipes.module';
 
 const routes: Routes = [
     {
@@ -24,6 +25,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         TranslateModule,
         ComponentsModule,
+        PipesModule
     ],
     declarations: [SelectionPage]
 })

@@ -16,14 +16,13 @@
     <ion-virtual-scroll [items]="queryResult" approxItemHeight="60px">
         <ion-item *virtualItem="let shuttle" (click)="shuttleClicked(shuttle)" lines="full">
             <ion-thumbnail slot="start" *ngIf="shuttle">
-                <app-sf-shuttle-icon [color]="getShuttleColor(shuttle)">
+                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
                 <ion-text>
                     <h2>{{ shuttle?.name }}</h2>
-                    <p>{{ getPhoneNumber(shuttle) }}</p>
-
+                    <p>{{ shuttle?.phone | phoneNumber }}</p>
                 </ion-text>
             </ion-label>
             <div *ngIf="!isInList(shuttle)" (click)="addToList(shuttle, $event)" class="add-remove-button-div">

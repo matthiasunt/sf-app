@@ -1,3 +1,7 @@
+// Colors
+import {District, DistrictName} from '@models/district';
+
+// TODO: Use Pipe
 export function shadeHexColor(color, percent) {
     const f = parseInt(color.slice(1), 16), t = percent < 0 ? 0 : 255, p = percent < 0 ? percent * -1 : percent, R = f >> 16,
         G = f >> 8 & 0x00FF, B = f & 0x0000FF;
@@ -6,8 +10,7 @@ export function shadeHexColor(color, percent) {
         + (Math.round((t - B) * p) + B)).toString(16).slice(1);
 }
 
-
-
+// TODO: Use Pipe
 export function getContrastColor(hexcolor: string): string {
     if (hexcolor && hexcolor.length > 0) {
         const r = parseInt(hexcolor.substr(1, 2), 16);
@@ -20,6 +23,7 @@ export function getContrastColor(hexcolor: string): string {
     }
 }
 
+// TODO: Use Pipe
 export function getFormattedPhoneNumber(phone: string): string {
     let ret = '';
     if (phone && phone.length > -1) {
@@ -44,4 +48,18 @@ export function getBeautifulDateString(dateString: string, locale: string): stri
     const ret = new Date(dateString).toLocaleString(locale,
         {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
     return ret.charAt(0).toUpperCase() + ret.slice(1);
+}
+
+// TODO: Use Pipe
+export function getDistrictName(districtName: DistrictName, lang: string): string {
+    if (districtName.de && districtName.it && districtName.de_st) {
+        switch (lang) {
+            case 'de_st':
+                return districtName.de_st;
+            case 'it':
+                return districtName.it;
+            default:
+                return districtName.de;
+        }
+    }
 }

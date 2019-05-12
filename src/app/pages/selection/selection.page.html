@@ -1,10 +1,10 @@
 <ion-header>
-    <ion-toolbar color="{{districtColors[0]}}" [ngStyle]="getToolbarStyle()">
+    <ion-toolbar color="{{district?._id | districtColor}}" [ngStyle]="district?._id | districtColor | colorStyling">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-            <ng-container *ngIf="district">{{getDistrictName(district)}}
+            <ng-container *ngIf="district">{{ district.name | districtName: lang }}
                 <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
             </ng-container>
             <ng-container *ngIf="currentLocality">{{currentLocality}}
@@ -20,9 +20,9 @@
 <ion-content>
     <ion-virtual-scroll [items]="shuttles" approxItemHeight="60px">
         <ion-item color="{{localDataService.shuttleCalledLately(shuttle._id)?'medium':''}}" lines="full"
-                  *virtualItem="let shuttle" approxItemHeight="59px" (click)="shuttleClicked(shuttle)">
+                  *virtualItem="let shuttle" (click)="shuttleClicked(shuttle)">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="colorGenerator.getShuttleColor(shuttle)">
+                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label text-wrap>
@@ -40,12 +40,11 @@
                         <ion-badge
                                 *ngIf="coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
                                 color="secondary">
-                            {{ getLocalityName(shuttle) }}
+                            {{ shuttle.address.locality | localityName: lang}}
                         </ion-badge>
                         <ion-badge *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it
-                                   && districtColors" [style.background-color]="districtColors[0]"
-                                   [style.color]="districtColors[1]">
-                            {{ getLocalityName(shuttle) }}
+                                   && districtColors" [ngStyle]="district._id | districtColor | colorStyling">
+                            {{ shuttle.address.locality | localityName: lang }}
                         </ion-badge>
                     </p>
                 </ion-text>

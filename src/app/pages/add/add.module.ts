@@ -7,8 +7,9 @@ import {IonicModule} from '@ionic/angular';
 
 import {AddPage} from './add.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {ComponentsModule} from '../../components/components.module';
+import {ComponentsModule} from '@components/components.module';
 import {AddPageRoutingModule} from './add-routing.module';
+import {PipesModule} from '@pipes/pipes.module';
 
 const routes: Routes = [
     {
@@ -26,6 +27,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         TranslateModule,
         ComponentsModule,
+        PipesModule
     ],
     declarations: [AddPage]
 })

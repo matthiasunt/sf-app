@@ -2,11 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Shuttle} from '@models/shuttle';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-
-import {ColorGeneratorService} from '@services/color-generator/color-generator.service';
 import {AlertController, NavController} from '@ionic/angular';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {getContrastColor} from '@tools/sf-tools';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
@@ -21,7 +18,6 @@ export class RatePage implements OnInit {
 
 
     shuttle: Shuttle;
-    shuttleColor: string;
     alreadyRatedByUser = false;
     ratingForm: any = {
         service: 3,
@@ -40,14 +36,12 @@ export class RatePage implements OnInit {
                 private authService: AuthService,
                 private ratingsService: RatingsService,
                 private shuttlesService: ShuttlesService,
-                private colorGenerator: ColorGeneratorService,
     ) {
     }
 
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-        this.shuttleColor = this.colorGenerator.getShuttleColor(this.shuttle);
         this.fetchRatingByUser(shuttleId);
     }
 
@@ -81,13 +75,6 @@ export class RatePage implements OnInit {
 
     public deleteClicked() {
         this.deleteRatingAlert();
-    }
-
-    getToolbarStyle() {
-        return {
-            'background-color': this.shuttleColor,
-            'color': getContrastColor(this.shuttleColor)
-        };
     }
 
     private fetchRatingByUser(shuttleId: string) {

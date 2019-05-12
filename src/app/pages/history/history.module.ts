@@ -7,6 +7,7 @@ import {HistoryPage} from './history.page';
 import {ComponentsModule} from '../../components/components.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {HistoryPageRoutingModule} from './history-routing.module';
+import {PipesModule} from '@pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {HistoryPageRoutingModule} from './history-routing.module';
         HistoryPageRoutingModule,
         RouterModule.forChild([{path: '', component: HistoryPage}]),
         ComponentsModule,
+        PipesModule,
         TranslateModule,
     ],
     declarations: [HistoryPage]
