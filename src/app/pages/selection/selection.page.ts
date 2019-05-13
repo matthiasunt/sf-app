@@ -75,11 +75,11 @@ export class SelectionPage implements OnInit, OnDestroy {
         }
 
         // Not available, if no data after 7 secs.
-        setTimeout(() => {
-            if (this.shuttles.length < 1) {
-                this.presentShuttleFinderUnavailableAlert();
-            }
-        }, 7000);
+        // setTimeout(() => {
+        //     if (this.shuttles.length < 1) {
+        //         this.presentShuttleFinderUnavailableAlert();
+        //     }
+        // }, 7000);
 
 
     }
