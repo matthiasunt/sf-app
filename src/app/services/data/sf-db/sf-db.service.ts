@@ -38,10 +38,6 @@ export class SfDbService {
             // If offline
             this._syncSubject.next(true);
         });
-
-        this.db.info().then(function (info) {
-            console.log(info);
-        });
     }
 
     get syncSubject() {

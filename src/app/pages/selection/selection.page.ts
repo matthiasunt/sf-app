@@ -89,6 +89,7 @@ export class SelectionPage implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+    // Subscribe to Districts and then take Shuttles?
     private fetchShuttlesByDistrict(districtId: string) {
         this.districtsService.getDistrict(districtId)
             .pipe(takeUntil(this.unsubscribe$))
