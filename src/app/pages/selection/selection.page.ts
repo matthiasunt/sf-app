@@ -17,8 +17,9 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {Coordinates} from '@models/coordinates';
 import {List} from 'immutable';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Subject, timer} from 'rxjs';
+import {takeUntil, map, switchMap, filter, debounce} from 'rxjs/operators';
+
 import {DeviceService} from '@services/device/device.service';
 
 
@@ -97,6 +98,10 @@ export class SelectionPage implements OnInit, OnDestroy {
                 this.district = district;
                 this.shuttlesService.allShuttles
                     .pipe(takeUntil(this.unsubscribe$))
+                    // Debounce
+                    // .pipe(debounce(() => {
+                    //     return timer(1000);
+                    // }))
                     .subscribe((allShuttles) => {
                         const shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
                             return shuttle.districtIds.indexOf(districtId) > -1;
@@ -105,6 +110,16 @@ export class SelectionPage implements OnInit, OnDestroy {
 
                     });
             });
+        // this.districtsService.getDistrict(districtId).pipe(
+        //     map(district => district)).pipe(
+        //     switchMap((district: District) => {
+        //         this.district = district;
+        //         console.log(this.district);
+        //         return null;
+        //         // return this.shuttlesService.allShuttles.pipe(filter(((element, index) => {
+        //         //     return element.districtIds.indexOf(districtId) > -1;
+        //         // }));
+        //     }));
     }
 
 
@@ -182,5 +197,4 @@ export class SelectionPage implements OnInit, OnDestroy {
         });
         await alert.present();
     }
-
 }

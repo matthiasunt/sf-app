@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
-import {from, Observable, Subject} from 'rxjs';
+import {from, fromEvent, Observable, Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +39,17 @@ export class SfDbService {
             // If offline
             this._syncSubject.next(true);
         });
+
+        fromEvent(
+            this.db.changes({live: true, since: 'now', include_docs: true}),
+            'change').pipe(map((info) => {
+            console.log(`Event via rxjs: ${info}`);
+        }));
+        fromEvent(
+            this.db.changes({live: true, since: 'now', include_docs: true}),
+            'pause').pipe(map((info) => {
+            console.log(`Event via rxjs: ${info}`);
+        }));
     }
 
     get syncSubject() {
