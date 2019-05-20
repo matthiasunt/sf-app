@@ -8,8 +8,8 @@ import {ListsService} from '@services/data/lists/lists.service';
 import {ElementType, ListElement} from '@models/list-element';
 import {List} from 'immutable';
 import {AuthService} from '@services/auth/auth.service';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {debounce, takeUntil} from 'rxjs/operators';
+import {Subject, timer} from 'rxjs';
 
 @Component({
     selector: 'app-add',
@@ -42,6 +42,10 @@ export class AddPage implements OnInit, OnDestroy {
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
         this.shuttlesService.allShuttles
             .pipe(takeUntil(this.unsubscribe$))
+            // Debounce
+            // .pipe(debounce(() => {
+            //     return timer(1000);
+            // }))
             .subscribe((data) => {
                 this.allShuttles = data.toList().toArray();
                 this.queryResult = this.allShuttles;

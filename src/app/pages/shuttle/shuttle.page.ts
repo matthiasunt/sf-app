@@ -16,8 +16,8 @@ import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Subject, timer} from 'rxjs';
+import {debounce, takeUntil} from 'rxjs/operators';
 import {District} from '@models/district';
 import {DistrictsService} from '@services/data/districts/districts.service';
 
@@ -84,6 +84,10 @@ export class ShuttlePage implements OnInit, OnDestroy {
         /* Update Shuttle Ratings if Shuttles changed */
         this.shuttlesService.allShuttles
             .pipe(takeUntil(this.unsubscribe$))
+            // Debounce
+            .pipe(debounce(() => {
+                return timer(1000);
+            }))
             .subscribe((allShuttles) => {
                 this.zone.run(() => {
                     this.shuttle = allShuttles.get(shuttleId);
