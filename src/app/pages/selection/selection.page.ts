@@ -17,8 +17,8 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {Coordinates} from '@models/coordinates';
 import {List} from 'immutable';
-import {Subject, timer} from 'rxjs';
-import {takeUntil, map, switchMap, filter, debounce} from 'rxjs/operators';
+import {Observable, Subject, timer} from 'rxjs';
+import {takeUntil, map, switchMap, filter, debounce, withLatestFrom} from 'rxjs/operators';
 
 import {DeviceService} from '@services/device/device.service';
 
@@ -32,7 +32,7 @@ import {DeviceService} from '@services/device/device.service';
 export class SelectionPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
-
+    shuttles$: Observable<any>;
     district: District;
 
     coordinates: Coordinates;
@@ -90,44 +90,30 @@ export class SelectionPage implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    // Subscribe to Districts and then take Shuttles?
     private fetchShuttlesByDistrict(districtId: string) {
-        this.districtsService.getDistrict(districtId)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((district: District) => {
+        this.shuttles$ = this.districtsService.getDistrict(districtId).pipe(
+            withLatestFrom(this.shuttlesService.allShuttles),
+            map(([district, allShuttles]) => {
                 this.district = district;
-                this.shuttlesService.allShuttles
-                    .pipe(takeUntil(this.unsubscribe$))
-                    // Debounce
-                    // .pipe(debounce(() => {
-                    //     return timer(1000);
-                    // }))
-                    .subscribe((allShuttles) => {
-                        const shuttles: List<Shuttle> = allShuttles.filter((shuttle: Shuttle) => {
-                            return shuttle.districtIds.indexOf(districtId) > -1;
-                        }).toList();
-                        this.mergeShuttles(shuttles);
-
-                    });
-            });
-        // this.districtsService.getDistrict(districtId).pipe(
-        //     map(district => district)).pipe(
-        //     switchMap((district: District) => {
-        //         this.district = district;
-        //         console.log(this.district);
-        //         return null;
-        //         // return this.shuttlesService.allShuttles.pipe(filter(((element, index) => {
-        //         //     return element.districtIds.indexOf(districtId) > -1;
-        //         // }));
-        //     }));
+                const ret = allShuttles
+                    .filter((shuttle: Shuttle) => shuttle.districtIds.indexOf(district._id) > -1)
+                    .toList();
+                return ret;
+            }),
+            map((shuttles: List<Shuttle>) => this.mergeShuttles(shuttles))
+        );
     }
 
 
+    // TODO: Outsource this
     private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';
+        
         this.shuttlesService.allShuttles
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((allShuttles) => {
+
+
                 let shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 22000);
                 if (shuttles.count() < 3) {
                     shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 27000);
@@ -138,6 +124,8 @@ export class SelectionPage implements OnInit, OnDestroy {
                     this.mergeShuttles(shuttles);
                 }
             });
+
+        // Get Locality Name
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
@@ -145,16 +133,16 @@ export class SelectionPage implements OnInit, OnDestroy {
     }
 
     private mergeShuttles(shuttles: List<Shuttle>) {
-        this.shuttles = this.shuttlesService.mergeShuttles(
+        return this.shuttlesService.mergeShuttles(
             this.shuttlesService.rankShuttlesByScore(shuttles),
             this.listsService.favorites.getValue(),
             this.listsService.blacklist.getValue()).toArray();
 
         /* Unsubscribe from changes if Shuttles fetched */
-        if (this.shuttles.length > 3) {
-            this.unsubscribe$.next();
-            this.unsubscribe$.complete();
-        }
+        // if (this.shuttles.length > 3) {
+        //     this.unsubscribe$.next();
+        //     this.unsubscribe$.complete();
+        // }
     }
 
     public shuttleClicked(shuttle: Shuttle) {
