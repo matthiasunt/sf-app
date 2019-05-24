@@ -40,8 +40,6 @@ export class SelectionPage implements OnInit, OnDestroy {
 
     noValidLocalityName: boolean;
     outOfRange: boolean;
-
-    shuttles: Shuttle[] = [];
     lang: string;
 
     constructor(private navCtrl: NavController,
@@ -108,22 +106,25 @@ export class SelectionPage implements OnInit, OnDestroy {
     // TODO: Outsource this
     private async fetchShuttlesByPosition() {
         const lang = this.lang === 'it' ? 'it' : 'de';
-        
-        this.shuttlesService.allShuttles
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((allShuttles) => {
 
-
-                let shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 22000);
+        // Fetch
+        this.shuttles$ = this.shuttlesService.allShuttles.pipe(
+            map((allShuttles) => {
+                let shuttles = this.shuttlesService.filterShuttlesByPosition(
+                    allShuttles.toList(), this.coordinates, 22000
+                );
                 if (shuttles.count() < 3) {
-                    shuttles = this.shuttlesService.filterShuttlesByPosition(allShuttles.toList(), this.coordinates, 27000);
+                    shuttles = this.shuttlesService.filterShuttlesByPosition(
+                        allShuttles.toList(), this.coordinates, 27000
+                    );
                 }
                 if (!shuttles || shuttles.count() < 1) {
                     this.outOfRange = true;
                 } else {
-                    this.mergeShuttles(shuttles);
+                    return this.mergeShuttles(shuttles);
                 }
-            });
+            })
+        );
 
         // Get Locality Name
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
