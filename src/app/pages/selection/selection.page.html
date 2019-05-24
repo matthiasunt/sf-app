@@ -18,7 +18,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="shuttles" approxItemHeight="60px">
+    <ion-virtual-scroll [items]="shuttles$ | async" approxItemHeight="60px">
         <ion-item
                 color="{{(shuttle._id | shuttleCalledLately: localDataService.history.getValue().toArray())
                 ? 'medium' : ''}}"
@@ -47,7 +47,7 @@
                         </ion-badge>
                         <ion-badge
                                 *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-                                [ngStyle]="district._id | districtColor | colorStyling">
+                                [ngStyle]="district?._id | districtColor | colorStyling">
                             {{ shuttle.address.locality | localityName: lang }}
                         </ion-badge>
                     </p>
@@ -63,6 +63,6 @@
         <p padding class="no-data-p"> {{ "NO_SHUTTLE_FOUND" | translate }} </p>
     </div>
 
-    <ion-spinner id="big-spinner" *ngIf="shuttles?.length < 1 && !outOfRange" color="tertiary"
-                 name="crescent"></ion-spinner>
+<!--    <ion-spinner id="big-spinner" *ngIf="shuttles?.length < 1 && !outOfRange" color="tertiary"-->
+<!--                 name="crescent"></ion-spinner>-->
 </ion-content>
