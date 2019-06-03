@@ -32,8 +32,8 @@
     <!--</ng-container>-->
     <!--</ion-list>-->
 
-    <ng-container *ngIf="localDataService.history.getValue().count() > 0">
-        <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="73px">
+    <ng-container>
+        <ion-virtual-scroll [items]="localDataService.history | async" [headerFn]="myHeaderFn" approxItemHeight="73px">
             <ion-item-divider *virtualHeader="let dateHeader">
                 {{dateHeader | beautifulDate: locale}}
             </ion-item-divider>
@@ -62,11 +62,11 @@
         </ion-virtual-scroll>
     </ng-container>
 
-    <p *ngIf="localDataService.history.getValue().count() < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
+<!--    <p *ngIf="localDataService.history.getValue().count() < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>-->
 
-    <ion-fab *ngIf="localDataService.history.getValue().count() > 0" vertical="center" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">
-            <ion-icon name="trash"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+<!--    <ion-fab *ngIf="localDataService.history.getValue().count() > 0" vertical="center" horizontal="end" slot="fixed">-->
+<!--        <ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">-->
+<!--            <ion-icon name="trash"></ion-icon>-->
+<!--        </ion-fab-button>-->
+<!--    </ion-fab>-->
 </ion-content>

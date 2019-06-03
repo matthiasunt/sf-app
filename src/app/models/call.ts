@@ -1,5 +1,6 @@
-export interface Call {
-    _id: string;
+import {CouchDoc} from '@models/couch-doc';
+
+export interface Call extends CouchDoc {
     type: string;
     startDate: Date;
     endDate: Date;

@@ -15,7 +15,7 @@ import {AuthService} from '@services/auth/auth.service';
 import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
-import {Coordinates} from '@models/coordinates';
+import {MyCoordinates} from '@models/my-coordinates';
 import {List} from 'immutable';
 import {Observable, Subject, timer} from 'rxjs';
 import {takeUntil, map, switchMap, filter, debounce, withLatestFrom} from 'rxjs/operators';
@@ -35,7 +35,7 @@ export class SelectionPage implements OnInit, OnDestroy {
     shuttles$: Observable<any>;
     district: District;
 
-    coordinates: Coordinates;
+    coordinates: MyCoordinates;
     currentLocality: string;
 
     noValidLocalityName: boolean;

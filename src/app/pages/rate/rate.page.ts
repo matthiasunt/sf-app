@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Shuttle} from '@models/shuttle';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
@@ -8,14 +8,18 @@ import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
 import {DocType} from '@models/doctype';
+import {map, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Subject} from 'rxjs';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-rate',
     templateUrl: './rate.page.html',
     styleUrls: ['./rate.page.scss'],
 })
-export class RatePage implements OnInit {
+export class RatePage implements OnInit, OnDestroy {
 
+    private unsubscribe$ = new Subject<void>();
 
     shuttle: Shuttle;
     alreadyRatedByUser = false;
@@ -41,11 +45,24 @@ export class RatePage implements OnInit {
 
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-        this.fetchRatingByUser(shuttleId);
+
+        combineLatest(
+            this.shuttlesService.allShuttles,
+            this.ratingsService.userRatings)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(([allShuttles, userRatings]) => {
+                this.shuttle = allShuttles.find((shuttle: Shuttle) => shuttle._id === shuttleId);
+                this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === this.shuttle._id);
+            });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     async rateClicked() {
+
         const totalAvg = (this.ratingForm.service
             + this.ratingForm.reliabilityAndPunctuality
             + this.ratingForm.drivingStyleAndSecurity
@@ -75,20 +92,6 @@ export class RatePage implements OnInit {
 
     public deleteClicked() {
         this.deleteRatingAlert();
-    }
-
-    private fetchRatingByUser(shuttleId: string) {
-        this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-        if (this.userRating) {
-            this.alreadyRatedByUser = true;
-            this.ratingForm = {
-                service: this.userRating.service,
-                reliabilityAndPunctuality: this.userRating.reliabilityAndPunctuality,
-                drivingStyleAndSecurity: this.userRating.drivingStyleAndSecurity,
-                price: this.userRating.price,
-                review: this.userRating.review,
-            };
-        }
     }
 
     async deleteRatingAlert() {

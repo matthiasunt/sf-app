@@ -1,11 +1,11 @@
 import {Injectable, NgZone} from '@angular/core';
-import {BehaviorSubject, from} from 'rxjs';
+import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List, Map} from 'immutable';
 
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {DistrictsService} from '@services/data/districts/districts.service';
 import {GeoService} from '@services/geo/geo.service';
-import {Coordinates} from '@models/coordinates';
+import {MyCoordinates} from '@models/my-coordinates';
 import {ListElement} from '@models/list-element';
 import {Shuttle} from '@models/shuttle';
 import {DocType} from '@models/doctype';
@@ -38,7 +38,7 @@ export class ShuttlesService {
         return this._allShuttles;
     }
 
-    public filterShuttlesByPosition(shuttles: List<Shuttle>, coordinates: Coordinates, radius: number): List<Shuttle> {
+    public filterShuttlesByPosition(shuttles: List<Shuttle>, coordinates: MyCoordinates, radius: number): List<Shuttle> {
         let ret: List<Shuttle> = List([]);
         if (coordinates) {
             shuttles.map((shuttle: Shuttle) => {
@@ -97,8 +97,8 @@ export class ShuttlesService {
         return shuttles;
     }
 
-    public async getShuttle(shuttleId: string): Promise<Shuttle> {
-        return this._allShuttles.value.get(shuttleId);
+    public getShuttle(shuttleId: string): Observable<any> {
+        return this.sfDbService.getDoc(shuttleId);
     }
 
     private emitShuttles() {
@@ -118,18 +118,6 @@ export class ShuttlesService {
     }
 
     private loadInitialData() {
-        this.sfDbService.syncSubject.subscribe(() => {
-            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        let shuttles: Map<string, Shuttle> = Map();
-                        res.rows.map(row => {
-                            shuttles = shuttles.set(row.doc._id, row.doc);
-                        });
-                        this._allShuttles.next(shuttles);
-                    },
-                    err => console.log('Error retrieving Shuttles')
-                );
-        });
+        this.emitShuttles();
     }
 }

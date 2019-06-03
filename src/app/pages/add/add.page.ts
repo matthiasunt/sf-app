@@ -42,10 +42,6 @@ export class AddPage implements OnInit, OnDestroy {
         this.addToFavorites = splitUrl[splitUrl.length - 2] === 'favorites';
         this.shuttlesService.allShuttles
             .pipe(takeUntil(this.unsubscribe$))
-            // Debounce
-            // .pipe(debounce(() => {
-            //     return timer(1000);
-            // }))
             .subscribe((data) => {
                 this.allShuttles = data.toList().toArray();
                 this.queryResult = this.allShuttles;
@@ -56,6 +52,7 @@ export class AddPage implements OnInit, OnDestroy {
             .subscribe((list) => {
                 this.favorites = list;
             });
+
         this.listsService.blacklist
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((list) => {

@@ -1,9 +1,9 @@
 import {Address} from './address';
-import {Coordinates} from './coordinates';
+import {MyCoordinates} from './my-coordinates';
 import {AvgRating} from '@models/avg-rating';
+import {CouchDoc} from '@models/couch-doc';
 
-export interface Shuttle {
-    _id: string;
+export interface Shuttle extends CouchDoc {
     type: string;
     name: string;
     phone: string;
@@ -16,7 +16,7 @@ export interface Shuttle {
     customColor?: string;
 
     address?: Address;
-    coordinates?: Coordinates;
+    coordinates?: MyCoordinates;
 
     lastName?: string;
     firstName?: string;

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
 
-import {Subject} from 'rxjs';
+import {from, Observable, Subject} from 'rxjs';
 import {ENV} from '@env';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class UserDbService {
     private _syncSubject: Subject<boolean>;
 
     constructor(public http: HttpClient) {
-        this.db = new PouchDB(ENV.SF_USER_DB, {auto_compaction: true});
+        this.db = new PouchDB(ENV.SF_USER_DB);
         this._syncSubject = new Subject<boolean>();
     }
 
@@ -49,37 +49,30 @@ export class UserDbService {
         return this._syncSubject;
     }
 
-    public async getDoc(docId: any) {
-        try {
-            return await this.db.get(docId);
-        } catch (err) {
-            console.error(err);
-        }
+    public getUserId() {
+        return this.userId;
     }
 
-    public async putDoc(doc: any) {
-        try {
-            const res = await this.db.put(doc);
-            console.log(res);
-        } catch (err) {
-            console.error(err);
-        }
+    public getDoc(docId: any): Observable<any> {
+        return from(this.db.get(docId));
+
     }
 
-    public async updateDoc(doc: any) {
-        try {
-            const docFromDb = await this.db.get(doc._id);
+    public putDoc(doc: any): Observable<any> {
+        return from(this.db.put(doc));
+    }
+
+    public updateDoc(doc: any): Observable<any> {
+        return from(this.db.get(doc._id).then((docFromDb) => {
             if (docFromDb) {
                 doc._rev = docFromDb._rev;
             }
-            await this.putDoc(doc);
-        } catch (err) {
-            console.error(err);
-        }
+            return from(this.putDoc(doc));
+        }));
     }
 
-    public async removeDoc(doc: any) {
+    public removeDoc(doc: any): Observable<any> {
         doc._deleted = true;
-        await this.updateDoc(doc);
+        return this.updateDoc(doc);
     }
 }
