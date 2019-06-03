@@ -11,6 +11,7 @@ import {CallOriginName} from '@models/call';
 import {Shuttle} from '@models/shuttle';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {HistoryElement} from '@models/history-element';
 
 @Component({
     selector: 'app-history',
@@ -22,7 +23,7 @@ export class HistoryPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
     locale: string;
-    history;
+    history: HistoryElement[];
 
     constructor(private navCtrl: NavController,
                 private zone: NgZone,
@@ -33,29 +34,22 @@ export class HistoryPage implements OnInit, OnDestroy {
                 public localDataService: LocalDataService,
                 private callsService: CallsService,
     ) {
+        this.history = [];
     }
 
     async ngOnInit() {
-    }
-
-    ngOnDestroy() {
-        console.log('Destroyed');
-    }
-
-    async ionViewWillEnter() {
-
-        // this.localDataService.history
-        //     .pipe(takeUntil(this.unsubscribe$))
-        //     .subscribe((history) => {
-        //         this.history = history.toArray();
-        //     });
+        this.localDataService.history
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((history) => {
+                this.history = history.toArray();
+            });
 
         this.localDataService.lang
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((lang) => this.locale = lang === 'de_st' ? 'de' : lang);
     }
 
-    ionViewWillLeave() {
+    ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
