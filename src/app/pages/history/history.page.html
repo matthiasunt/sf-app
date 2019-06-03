@@ -3,37 +3,8 @@
 </ion-header>
 
 <ion-content>
-    <!--<ion-list>-->
-    <!--<ng-container *ngFor="let dateGroup of historyByDate">-->
-    <!--<ion-item-divider> {{getDate(dateGroup[0].date)}}</ion-item-divider>-->
-    <!--<ion-item *ngFor="let historyElement of dateGroup" (click)="shuttleClicked(historyElement.shuttle)"-->
-    <!--lines="full">-->
-    <!--<ion-thumbnail slot="start">-->
-    <!--<app-sf-shuttle-icon-->
-    <!--[color]="colorGeneratorService.getShuttleColor(historyElement.shuttle)"></app-sf-shuttle-icon>-->
-    <!--</ion-thumbnail>-->
-    <!--<ion-label text-wrap>-->
-    <!--<ion-text>-->
-    <!--<h2>{{historyElement?.shuttle?.name}}</h2>-->
-    <!--<p>{{getTime(historyElement?.date)}}</p>-->
-    <!--</ion-text>-->
-    <!--</ion-label>-->
-    <!--<div (click)="rateClicked(historyElement.shuttle, $event)" class="add-remove-button-div">-->
-    <!--<ion-button color="tertiary" slot="end">-->
-    <!--{{"shuttle.RATE" | translate}}-->
-    <!--<ion-icon name="star" slot="end"></ion-icon>-->
-    <!--</ion-button>-->
-    <!--</div>-->
-    <!--<div class="call-icon-div" (click)="callClicked(historyElement.shuttle, $event)">-->
-    <!--<ion-icon id="call-icon" slot="end" name="call"-->
-    <!--size="large" color="secondary"></ion-icon>-->
-    <!--</div>-->
-    <!--</ion-item>-->
-    <!--</ng-container>-->
-    <!--</ion-list>-->
-
     <ng-container>
-        <ion-virtual-scroll [items]="localDataService.history | async" [headerFn]="myHeaderFn" approxItemHeight="73px">
+        <ion-virtual-scroll [items]="history" [headerFn]="myHeaderFn" approxItemHeight="73px">
             <ion-item-divider *virtualHeader="let dateHeader">
                 {{dateHeader | beautifulDate: locale}}
             </ion-item-divider>
@@ -62,11 +33,11 @@
         </ion-virtual-scroll>
     </ng-container>
 
-<!--    <p *ngIf="localDataService.history.getValue().count() < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>-->
+    <p *ngIf="history.length < 1" class="no-data-p"> {{ "history.EMPTY" | translate }}</p>
 
-<!--    <ion-fab *ngIf="localDataService.history.getValue().count() > 0" vertical="center" horizontal="end" slot="fixed">-->
-<!--        <ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">-->
-<!--            <ion-icon name="trash"></ion-icon>-->
-<!--        </ion-fab-button>-->
-<!--    </ion-fab>-->
+    <ion-fab *ngIf="history.length > 0" vertical="center" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="clearHistoryAlert()" color="danger" type="button">
+            <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>

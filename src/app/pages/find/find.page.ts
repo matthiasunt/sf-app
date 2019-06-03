@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, NavController, ToastController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
@@ -16,6 +16,8 @@ import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {ListElement} from '@models/list-element';
 import {Districts} from '../../../assets/data/districts';
+import {combineLatest, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-find',
@@ -23,7 +25,9 @@ import {Districts} from '../../../assets/data/districts';
     styleUrls: ['find.page.scss'],
     providers: [CallNumber],
 })
-export class FindPage implements OnInit {
+export class FindPage implements OnInit, OnDestroy {
+
+    private unsubscribe$ = new Subject<void>();
 
     favorites: Shuttle[];
 
@@ -45,25 +49,25 @@ export class FindPage implements OnInit {
                 public listsService: ListsService,
                 private localDataService: LocalDataService,
     ) {
+
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.localDataService.lang.subscribe((lang: string) => this.lang = lang);
 
         console.log(ENV.message);
-        this.fetchFavorites();
 
+        combineLatest(this.shuttlesService.allShuttles, this.listsService.favorites)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(([allShuttles, favorites]) => {
+                this.favorites = [];
+                favorites.map((favorite: ListElement) => this.favorites.push(allShuttles.get(favorite.shuttleId)));
+            });
     }
 
-    private fetchFavorites() {
-        this.listsService.favorites.subscribe((favorites) => {
-            this.shuttlesService.allShuttles.subscribe((allShuttles) => {
-                this.favorites = [];
-                favorites.map((favorite: ListElement) => {
-                    this.favorites.push(allShuttles.get(favorite.shuttleId));
-                });
-            });
-        });
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     private async districtClicked(district) {
