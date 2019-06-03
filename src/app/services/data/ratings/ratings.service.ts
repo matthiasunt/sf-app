@@ -5,15 +5,15 @@ import {Rating} from '@models/rating';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {UserDbService} from '@services/data/user-db/user-db.service';
 import {Shuttle} from '@models/shuttle';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, from, Observable, pipe} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RatingsService {
 
-    private _ratingsByShuttles: BehaviorSubject<Map<string, List<Rating>>> = new BehaviorSubject(Map({}));
-    private ratingsFromUser: Map<string, Rating> = Map({});
+    private _userRatings: BehaviorSubject<List<Rating>> = new BehaviorSubject(List());
 
     constructor(private sfDbService: SfDbService,
                 private userDbService: UserDbService,
@@ -22,73 +22,62 @@ export class RatingsService {
         this.loadInitialData();
     }
 
-    get ratingsByShuttles() {
-        return this._ratingsByShuttles;
+
+    get userRatings(): Observable<List<Rating>> {
+        return this._userRatings;
     }
 
-    public getRatingByUserForShuttle(shuttleId: string): Rating {
-        return this.ratingsFromUser.get(shuttleId);
+
+    // Add to initial Data? Currently fetching always from db
+    public getShuttleRatings(shuttleId: string): Observable<List<Rating>> {
+        return from(this.sfDbService.db.query('ratings/by_shuttle', {
+            include_docs: true, key: shuttleId,
+        })).pipe(map((res: any) => {
+            return List(res.rows.map(row => row.doc));
+        }));
     }
 
-    public async putRating(rating: Rating) {
-        try {
-            const res = await this.userDbService.putDoc(rating);
-            console.log(res);
-            this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
-        } catch (err) {
-            console.error(err);
-        }
+    public putRating(rating: Rating) {
+        const res$ = this.userDbService.putDoc(rating);
+        res$.subscribe((res) => {
+            this._userRatings.next(this._userRatings.getValue().push(rating));
+        });
     }
 
-    public async updateRating(rating: Rating) {
-        try {
-            const res = await this.userDbService.updateDoc(rating);
-            console.log(res);
-            this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
-        } catch (err) {
-            console.error(err);
-        }
+    public updateRating(rating: Rating) {
+        const res$ = this.userDbService.updateDoc(rating);
+        const ratings = this._userRatings.getValue();
+
+        res$.subscribe((res) => {
+            const userRatings = ratings
+                .set(
+                    ratings.findIndex((userRating: Rating) => userRating._id === rating._id),
+                    rating);
+            this._userRatings.next(userRatings);
+        });
     }
 
-    public async deleteRating(rating: Rating) {
-        try {
-            const res = await this.userDbService.removeDoc(rating);
-            console.log(res);
-            this.ratingsFromUser = this.ratingsFromUser.remove(rating.shuttleId);
-        } catch (err) {
-            console.error(err);
-        }
+    public deleteRating(rating: Rating) {
+        rating._deleted = true;
+        return this.updateRating(rating);
     }
 
     private async loadInitialData() {
-        this.shuttlesService.allShuttles.subscribe((shuttles) => {
-            let ratingsByShuttles: Map<string, List<Rating>> = Map({});
-            shuttles.map(async (shuttle: Shuttle) => {
-                try {
-                    const res = await this.sfDbService.db.query('ratings/by_shuttle', {
-                        include_docs: true, key: shuttle._id,
-                    });
-                    const ratings: Rating[] = res.rows.map(row => {
-                        return row.doc;
-                    });
-                    ratingsByShuttles = ratingsByShuttles.set(shuttle._id, List(ratings));
-                    this._ratingsByShuttles.next(ratingsByShuttles);
-                } catch (err) {
-                    console.error(err);
-                }
-            });
+        this.loadInitialUserRatings();
+    }
 
-        });
-        try {
-            const res = await this.userDbService.db.query('ratings/all', {
-                include_docs: true
-            });
-            res.rows.map(row => {
-                const rating: Rating = row.doc;
-                this.ratingsFromUser = this.ratingsFromUser.set(rating.shuttleId, rating);
-            });
-        } catch (err) {
-            console.error(err);
-        }
+    private loadInitialUserRatings() {
+        from(this.userDbService.db.query('ratings/all', {
+            include_docs: true
+        })).pipe(map((res: any) => {
+            const userRatings: List<Rating> = List(res.rows.map(row => row.doc));
+            console.log(userRatings.toArray());
+            this._userRatings.next(userRatings);
+        }));
+    }
+
+    // TODO
+    private loadInitialShuttleRatings() {
+
     }
 }

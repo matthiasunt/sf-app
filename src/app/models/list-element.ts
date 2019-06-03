@@ -1,5 +1,6 @@
-export interface ListElement {
-    _id: string;
+import {CouchDoc} from '@models/couch-doc';
+
+export interface ListElement extends CouchDoc {
     type: ElementType;
     userId: string;
     shuttleId: string;

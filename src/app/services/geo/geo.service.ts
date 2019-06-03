@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {getDistance} from 'geolib';
+
+import getDistance from 'geolib/es/getDistance';
+
 import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DeviceService} from '@services/device/device.service';
-import {Coordinates} from '@models/coordinates';
+import {MyCoordinates} from '@models/my-coordinates';
 
 
 @Injectable({
@@ -12,7 +14,7 @@ import {Coordinates} from '@models/coordinates';
 })
 export class GeoService {
 
-    private position: { coordinates: Coordinates, time: Date };
+    private position: { coordinates: MyCoordinates, time: Date };
     private geocodedCityName: any;
 
     constructor(
@@ -23,7 +25,7 @@ export class GeoService {
     ) {
     }
 
-    public async getCurrentPosition(): Promise<Coordinates> {
+    public async getCurrentPosition(): Promise<MyCoordinates> {
         /* If position not obtained yet or older than 1 minute */
         if (!this.position || (new Date().getTime() - this.position.time.getTime()) / 1000 > (60 * 2)) {
             if (await this.deviceService.isDevice()) {
@@ -43,7 +45,7 @@ export class GeoService {
         }
     }
 
-    public async getLocalityName(coordinates: Coordinates, lang: string): Promise<string> {
+    public async getLocalityName(coordinates: MyCoordinates, lang: string): Promise<string> {
         if (await this.deviceService.isDevice()) {
             try {
                 const res: any[] = await this.nativeGeocoder.reverseGeocode(
@@ -65,7 +67,7 @@ export class GeoService {
     */
     public getDistance(pos1: any, pos2: any): number {
         if (this.checkPosition(pos1) && this.checkPosition(pos2)) {
-            return getDistance(pos1, pos2, 1, 1);
+            return getDistance(pos1, pos2);
         }
     }
 
@@ -81,7 +83,7 @@ export class GeoService {
         }
     }
 
-    private getRandomPosition(): Coordinates {
+    private getRandomPosition(): MyCoordinates {
         const rLat = this.getRandom(4596669237, 4702921307) * Math.pow(10, -8);
         const rLng = this.getRandom(1007811939, 1279174244) * Math.pow(10, -8);
         const coordinates = {

@@ -14,8 +14,8 @@
     </ion-toolbar>
 </ion-header>
 
-<!-- TODO: Confirmed badge, Services, Add to Favorites, report Shuttle -->
-<ion-content padding *ngIf="shuttle">
+<!-- TODO: Confirmed badge, Services, report Shuttle -->
+<ion-content *ngIf="shuttle" padding>
 
     <ion-fab vertical="top" horizontal="end" slot="fixed">
         <ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">
@@ -53,7 +53,7 @@
                     ★ {{shuttle?.avgRating?.totalAvg}}
                 </ion-badge>
             </ion-card-title>
-            <ion-card-subtitle>{{shuttle.phone | phoneNumber}}</ion-card-subtitle>
+            <ion-card-subtitle>{{shuttle?.phone | phoneNumber}}</ion-card-subtitle>
         </ion-card-header>
 
         <!-- Districts Chips -->
@@ -83,7 +83,7 @@
         <ion-item lines="full">
             <ion-icon name="pin" slot="start"></ion-icon>
             <ion-label text-wrap>
-                <ion-text>{{shuttle.address.locality | localityName: lang}}</ion-text>
+                <ion-text>{{shuttle?.address.locality | localityName: lang}}</ion-text>
             </ion-label>
         </ion-item>
     </ion-card>

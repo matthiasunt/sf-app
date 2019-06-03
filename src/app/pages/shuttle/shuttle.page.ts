@@ -16,10 +16,11 @@ import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Subject, timer} from 'rxjs';
-import {debounce, takeUntil} from 'rxjs/operators';
+import {combineLatest, Subject} from 'rxjs';
+import {takeUntil, withLatestFrom} from 'rxjs/operators';
 import {District} from '@models/district';
 import {DistrictsService} from '@services/data/districts/districts.service';
+import {List} from 'immutable';
 
 @Component({
     selector: 'app-shuttle',
@@ -70,42 +71,32 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
-        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
-        this.isFavorite = this.listsService.favorites.getValue()
-            .findIndex((e: ListElement) => e.shuttleId === this.shuttle._id) > -1;
-
-        /* Display last three reviews */
-        if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
-            this.reviewsToDisplay = this.shuttle.avgRating.reviews;
-            this.reviewsToDisplay.slice(0, 2);
-        }
-        this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-
-        /* Update Shuttle Ratings if Shuttles changed */
-        this.shuttlesService.allShuttles
+        combineLatest(this.shuttlesService.getShuttle(shuttleId),
+            this.ratingsService.userRatings,
+            this.listsService.favorites)
             .pipe(takeUntil(this.unsubscribe$))
-            // Debounce
-            .pipe(debounce(() => {
-                return timer(1000);
-            }))
-            .subscribe((allShuttles) => {
-                this.zone.run(() => {
-                    this.shuttle = allShuttles.get(shuttleId);
-                    if (this.shuttle) {
-                        this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
-                    }
-                });
+            .subscribe(([shuttle, ratings, favorites]) => {
+                this.shuttle = shuttle;
+
+                // Districts
+                this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
+                    return this.shuttle.districtIds.indexOf(district._id) > -1;
+                }).toArray();
+
+                // Reviews
+                if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
+                    this.reviewsToDisplay = this.shuttle.avgRating.reviews;
+                    this.reviewsToDisplay.slice(0, 1);
+                }
+
+                // User Rating
+                this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
+
+                // Is Shuttle Favorite?
+                this.isFavorite =
+                    favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
             });
 
-        this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
-            return this.shuttle.districtIds.indexOf(district._id) > -1;
-        }).toArray();
-    }
-
-    ionViewDidEnter() {
-        if (this.shuttle) {
-            this.userRating = this.ratingsService.getRatingByUserForShuttle(this.shuttle._id);
-        }
     }
 
     ngOnDestroy() {

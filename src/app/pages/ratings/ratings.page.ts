@@ -7,9 +7,8 @@ import {RatingsService} from '@services/data/ratings/ratings.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {Rating} from '@models/rating';
 import {Shuttle} from '@models/shuttle';
-import {Subject} from 'rxjs';
+import {combineLatest, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {List, Map} from 'immutable';
 import {NavController} from '@ionic/angular';
 
 @Component({
@@ -38,26 +37,26 @@ export class RatingsPage implements OnInit, OnDestroy {
 
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.shuttle = await this.shuttlesService.getShuttle(shuttleId);
 
-        this.ratingsService.ratingsByShuttles
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((ratingsByShuttles: Map<string, List<Rating>>) => {
-                // Fetch User Rating and remove it from Ratings
-                this.userRating = this.ratingsService.getRatingByUserForShuttle(shuttleId);
-                const ratings: List<Rating> = ratingsByShuttles.get(shuttleId);
-                this.ratings = ratings ? ratings.toArray() : [];
-                if (this.userRating) {
-                    this.ratings.filter(rating => rating._id !== this.userRating._id);
-                }
-                this.ratings.sort((a, b) => {
-                        return (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0);
-                    }
-                );
-            });
         this.localDataService.lang
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((lang) => this.locale = lang === 'de_st' ? 'de' : lang);
+
+        combineLatest(
+            this.shuttlesService.allShuttles,
+            this.ratingsService.userRatings,
+            this.ratingsService.getShuttleRatings(shuttleId))
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(([allShuttles, userRatings, shuttleRatings]) => {
+                this.shuttle = allShuttles.find((shuttle: Shuttle) => shuttle._id === shuttleId);
+                this.userRating = userRatings.find((rating) => rating.shuttleId === this.shuttle._id);
+                if (this.userRating) {
+                    this.ratings = shuttleRatings.filter(rating => rating._id !== this.userRating._id).toArray();
+                } else {
+                    this.ratings = shuttleRatings.toArray();
+                }
+
+            });
     }
 
     ngOnDestroy() {
