@@ -33,6 +33,7 @@ export class UserDbService {
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
+            this._syncSubject.next(true);
             console.error(err);
         });
     }

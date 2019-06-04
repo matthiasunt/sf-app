@@ -117,6 +117,4 @@ export class RatePage implements OnInit, OnDestroy {
         });
         await alert.present();
     }
-
-
 }
