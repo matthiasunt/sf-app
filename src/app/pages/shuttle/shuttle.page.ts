@@ -76,27 +76,28 @@ export class ShuttlePage implements OnInit, OnDestroy {
             this.listsService.favorites)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, ratings, favorites]) => {
-                this.shuttle = shuttle;
+                this.zone.run(() => {
+                    this.shuttle = shuttle;
 
-                // Districts
-                this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
-                    return this.shuttle.districtIds.indexOf(district._id) > -1;
-                }).toArray();
+                    // TODO: Refactor
+                    this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
+                        return this.shuttle.districtIds.indexOf(district._id) > -1;
+                    }).toArray();
 
-                // Reviews
-                if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
-                    this.reviewsToDisplay = this.shuttle.avgRating.reviews;
-                    this.reviewsToDisplay.slice(0, 1);
-                }
+                    // Reviews
+                    if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
+                        this.reviewsToDisplay = this.shuttle.avgRating.reviews;
+                        this.reviewsToDisplay.slice(0, 1);
+                    }
 
-                // User Rating
-                this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
+                    // User Rating
+                    this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
 
-                // Is Shuttle Favorite?
-                this.isFavorite =
-                    favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                    // Is Shuttle Favorite?
+                    this.isFavorite =
+                        favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                });
             });
-
     }
 
     ngOnDestroy() {

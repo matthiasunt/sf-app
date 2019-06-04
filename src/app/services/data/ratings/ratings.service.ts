@@ -2,18 +2,17 @@ import {Injectable} from '@angular/core';
 import {List, Map} from 'immutable';
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {Rating} from '@models/rating';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {UserDbService} from '@services/data/user-db/user-db.service';
-import {Shuttle} from '@models/shuttle';
 import {BehaviorSubject, from, Observable, pipe} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RatingsService {
 
-    private _userRatings: BehaviorSubject<List<Rating>> = new BehaviorSubject(List());
+    private _userRatings: BehaviorSubject<List<Rating>> = new BehaviorSubject(List([]));
+    private _ratings: BehaviorSubject<List<Rating>> = new BehaviorSubject(List([]));
 
     constructor(private sfDbService: SfDbService,
                 private userDbService: UserDbService,
@@ -26,14 +25,14 @@ export class RatingsService {
         return this._userRatings;
     }
 
+    get ratings(): Observable<List<Rating>> {
+        return this._ratings;
+    }
 
-    // Add to initial Data? Currently fetching always from db
     public getShuttleRatings(shuttleId: string): Observable<List<Rating>> {
-        return from(this.sfDbService.db.query('ratings/by_shuttle', {
-            include_docs: true, key: shuttleId,
-        })).pipe(map((res: any) => {
-            return List(res.rows.map(row => row.doc));
-        }));
+        return this._ratings.pipe(
+            map(ratings => ratings.filter(r => r.shuttleId === shuttleId)));
+
     }
 
     public putRating(rating: Rating) {
@@ -46,15 +45,12 @@ export class RatingsService {
 
     public updateRating(rating: Rating) {
         const res$ = this.userDbService.updateDoc(rating);
-        const ratings = this._userRatings.getValue();
-
+        const currentRatings = this._userRatings.getValue();
         res$.subscribe((res) => {
-            console.log(res);
-            const userRatings = ratings
-                .set(
-                    ratings.findIndex((userRating: Rating) => userRating._id === rating._id),
-                    rating);
-            this._userRatings.next(userRatings);
+            const updatedRatings = currentRatings.set(
+                currentRatings.findIndex(r => r._id === rating._id),
+                rating);
+            this._userRatings.next(updatedRatings);
         });
     }
 
@@ -65,16 +61,23 @@ export class RatingsService {
 
     private async loadInitialData() {
         this.loadInitialUserRatings();
+        this.loadInitialRatings();
     }
 
     private loadInitialUserRatings() {
         from(this.userDbService.db.query('ratings/all', {
             include_docs: true
-        })).pipe(map((res: any) => {
-            const userRatings: List<Rating> = List(res.rows.map(row => row.doc));
-            console.log(userRatings.toArray());
-            this._userRatings.next(userRatings);
-        }));
+        })).subscribe((res: any) => {
+            this._userRatings.next(List(res.rows.map(row => row.doc)));
+        });
+    }
+
+    private loadInitialRatings() {
+        from(this.sfDbService.db.query('ratings/all', {
+            include_docs: true
+        })).subscribe((res: any) => {
+            this._ratings.next(List(res.rows.map(row => row.doc)));
+        });
     }
 
     // TODO

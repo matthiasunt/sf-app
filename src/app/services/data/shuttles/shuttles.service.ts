@@ -3,13 +3,12 @@ import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List, Map} from 'immutable';
 
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
-import {DistrictsService} from '@services/data/districts/districts.service';
 import {GeoService} from '@services/geo/geo.service';
 import {MyCoordinates} from '@models/my-coordinates';
 import {ListElement} from '@models/list-element';
 import {Shuttle} from '@models/shuttle';
 import {DocType} from '@models/doctype';
-import {filter, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -25,21 +24,15 @@ export class ShuttlesService {
                 private geoService: GeoService,
                 public zone: NgZone) {
         this.loadInitialData();
-
-        // this.sfDbService.syncSubject.subscribe(() => {
         this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-            console.log(change);
             if (change.doc.type === DocType.Shuttle) {
-                console.log('Shuttles changed');
+                console.log(`Change ${change.doc._id}`);
                 const newShuttle: Shuttle = change.doc;
-                console.log(newShuttle);
-                const shuttles = this._allShuttles.value;
-                shuttles.set(shuttles.findIndex(s => s._id === newShuttle._id), newShuttle);
+                let shuttles = this._allShuttles.value;
+                shuttles = shuttles.set(shuttles.findIndex(s => s._id === newShuttle._id), newShuttle);
                 this._allShuttles.next(shuttles);
             }
         });
-        // });
-
     }
 
     get allShuttles() {

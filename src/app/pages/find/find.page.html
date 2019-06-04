@@ -3,6 +3,9 @@
 </ion-header>
 
 <ion-content>
+
+    <p *ngIf="devMessage">{{devMessage}}</p>
+
     <ion-row id="gps-row">
         <ion-col>
             <ion-label color="primary" class="section-headline">
@@ -22,8 +25,8 @@
         </ion-chip>
     </div>
     <hr>
-    <ng-container *ngIf="favoriteShuttles$ | async as favoriteShuttles">
-        <div id="favorites-div">
+    <ng-container>
+        <div *ngIf="(favoriteShuttles$ | async)?.length > 0" id="favorites-div">
             <ion-row>
                 <ion-col>
                     <ion-label color="primary" class="section-headline-small">
@@ -31,7 +34,7 @@
                     </ion-label>
                 </ion-col>
             </ion-row>
-            <ion-chip *ngFor="let shuttle of favoriteShuttles"
+            <ion-chip *ngFor="let shuttle of (favoriteShuttles$ | async)"
                       (click)="shuttleClicked(shuttle)"
                       [ngStyle]="shuttle | shuttleColor | colorStyling">
                 <ion-avatar *ngIf="shuttle">
