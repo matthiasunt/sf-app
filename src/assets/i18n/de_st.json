@@ -55,7 +55,10 @@
     "PRICE": "Preis",
     "REVIEW": "Rezension",
     "REVIEW_PLACEHOLDER": "Supor Shuttle...",
-    "OF": "von"
+    "OF": "von",
+    "msg": {
+      "DELETE_RATING": "Willsch deine Bewertung wirklich löschen? 🤔"
+    }
   },
   "ratings": {
     "RATINGS": "Bewertungen",

@@ -55,7 +55,10 @@
     "PRICE": "Prezzo",
     "REVIEW": "Recensione",
     "REVIEW_PLACEHOLDER": "Super shuttle...",
-    "OF": "di"
+    "OF": "di",
+    "msg": {
+      "DELETE_RATING": "Vuoi veramente cancellare la tua valutazione?"
+    }
   },
   "ratings": {
     "RATINGS": "Valutazioni",

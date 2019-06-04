@@ -80,22 +80,25 @@ export class ShuttlePage implements OnInit, OnDestroy {
                 this.zone.run(() => {
                     this.shuttle = shuttle;
 
-                    // Districts
-                    this.shuttleDistricts = districts.filter(d =>
-                        this.shuttle.districtIds.indexOf(d._id) > -1).toArray();
-
-                    // Reviews
-                    if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
-                        this.reviewsToDisplay = this.shuttle.avgRating.reviews;
-                        this.reviewsToDisplay.slice(0, 1);
-                    }
-
                     // User Rating
                     this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
 
-                    // Is Shuttle Favorite?
-                    this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                    // Reviews
+                    if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
+                        let reviews = this.shuttle.avgRating.reviews;
+                        if (this.userRating) {
+                            reviews = reviews.filter(r => r !== this.userRating.review);
+                        }
+                        this.reviewsToDisplay = reviews.slice(0, 1);
+                    }
                 });
+
+                // Districts
+                this.shuttleDistricts = districts.filter(d =>
+                    this.shuttle.districtIds.indexOf(d._id) > -1).toArray();
+
+                // Is Shuttle Favorite?
+                this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
             });
     }
 

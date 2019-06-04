@@ -10,9 +10,7 @@
 </ion-header>
 
 <ion-content>
-    <p *ngIf="(blacklistedShuttles$ | async)?.length < 1" padding
-       class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
-
+    <p *ngIf="(blacklistedShuttles$ | async)?.length < 1" class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
     <ion-list>
         <ion-item *ngFor="let shuttle of (blacklistedShuttles$ | async)"
                   (click)="shuttleClicked(shuttle)"

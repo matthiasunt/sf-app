@@ -55,7 +55,10 @@
     "PRICE": "Price",
     "REVIEW": "Review",
     "REVIEW_PLACEHOLDER": "Awesome Shuttle...",
-    "OF": "of"
+    "OF": "of",
+    "msg": {
+      "DELETE_RATING": "Do you really want to delete your rating?"
+    }
   },
   "ratings": {
     "RATINGS": "Ratings",

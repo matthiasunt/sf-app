@@ -101,7 +101,7 @@ export class RatePage implements OnInit, OnDestroy {
     async deleteRatingAlert() {
         const alert = await this.alertCtrl.create({
             header: '',
-            subHeader: this.translate.instant('history.msg.DELETE_ALL'),
+            subHeader: this.translate.instant('rate.msg.DELETE_RATING'),
             buttons: [
                 {text: this.translate.instant('NO')},
                 {
