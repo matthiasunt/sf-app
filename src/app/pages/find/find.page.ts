@@ -28,13 +28,14 @@ import {AuthService} from '@services/auth/auth.service';
 })
 export class FindPage implements OnInit, OnDestroy {
 
-    private devMessage: string;
     private unsubscribe$ = new Subject<void>();
 
     public favoriteShuttles$: Observable<Shuttle[]>;
 
     lang: string;
     districts: District[] = Districts;
+
+    public devMessage: string;
 
     constructor(private zone: NgZone,
                 private navCtrl: NavController,
