@@ -37,13 +37,6 @@ export class CallsService {
                 private shuttlesService: ShuttlesService,
                 public zone: NgZone) {
         this.loadInitialData();
-
-        // this.userDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-        //     if (change.doc.type === DocType.Call) {
-        //         this.emitCalls();
-        //     }
-        // });
-
         this.handleCalls();
     }
 
@@ -156,9 +149,9 @@ export class CallsService {
         }
     }
 
-    private async addCall(call: Call) {
+    private addCall(call: Call) {
         this._calls.next(this._calls.getValue().push(call));
-        await this.userDbService.db.put(call);
+        return this.userDbService.db.put(call);
     }
 
     private loadInitialData() {

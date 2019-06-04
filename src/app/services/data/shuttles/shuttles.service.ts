@@ -9,12 +9,13 @@ import {MyCoordinates} from '@models/my-coordinates';
 import {ListElement} from '@models/list-element';
 import {Shuttle} from '@models/shuttle';
 import {DocType} from '@models/doctype';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ShuttlesService {
-    private _allShuttles: BehaviorSubject<Map<string, Shuttle>> = new BehaviorSubject(Map({}));
+    private _allShuttles: BehaviorSubject<List<Shuttle>> = new BehaviorSubject(List([]));
     private shuttlesByDistrict: Map<string, any> = Map({});
 
     constructor(private sfDbService: SfDbService,
@@ -36,6 +37,23 @@ export class ShuttlesService {
 
     get allShuttles() {
         return this._allShuttles;
+    }
+
+    public getShuttle(shuttleId: string): Observable<Shuttle> {
+        return this._allShuttles.pipe(
+            map(shuttles => shuttles.find(s => s._id === shuttleId))
+        );
+    }
+
+    public getShuttlesByDistrict(districtId: string): Observable<List<Shuttle>> {
+        return this._allShuttles.pipe(
+            map(shuttles => shuttles.filter((shuttle: Shuttle) =>
+                shuttle.districtIds.indexOf(districtId) > -1)));
+
+    }
+
+    public getShuttlesByPosition(position: MyCoordinates) {
+        
     }
 
     public filterShuttlesByPosition(shuttles: List<Shuttle>, coordinates: MyCoordinates, radius: number): List<Shuttle> {
@@ -85,20 +103,17 @@ export class ShuttlesService {
         return ret;
     }
 
+    // TODO: Refactor
     public getShuttlesFromList(list: List<ListElement>): List<Shuttle> {
         let shuttles: List<Shuttle> = List([]);
         if (list) {
             list.map((element) => {
                 if (element && element.shuttleId) {
-                    shuttles = shuttles.push(this._allShuttles.getValue().get(element.shuttleId));
+                    shuttles = shuttles.push(this._allShuttles.getValue().find(s => s._id === element.shuttleId));
                 }
             });
         }
         return shuttles;
-    }
-
-    public getShuttle(shuttleId: string): Observable<any> {
-        return this.sfDbService.getDoc(shuttleId);
     }
 
     private emitShuttles() {
@@ -106,9 +121,9 @@ export class ShuttlesService {
             from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
                 .subscribe(
                     (res: any) => {
-                        let shuttles: Map<string, Shuttle> = Map();
+                        let shuttles: List<Shuttle> = List([]);
                         res.rows.map(row => {
-                            shuttles = shuttles.set(row.doc._id, row.doc);
+                            shuttles = shuttles.push(row.doc);
                         });
                         this._allShuttles.next(shuttles);
                     },

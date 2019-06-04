@@ -3,6 +3,7 @@ import {SfDbService} from '../sf-db/sf-db.service';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List} from 'immutable';
 import {District} from '@models/district';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,12 @@ export class DistrictsService {
 
     get districts() {
         return this._districts;
+    }
+
+    public getDistrict(districtId: string): Observable<District> {
+        return this._districts.pipe(
+            map(districts => districts.find(d => d._id === districtId))
+        );
     }
 
     loadInitialData() {
@@ -35,9 +42,5 @@ export class DistrictsService {
                     }
                 );
         });
-    }
-
-    public getDistrict(districtId: string): Observable<District> {
-        return from(this.sfDbService.db.get(districtId));
     }
 }

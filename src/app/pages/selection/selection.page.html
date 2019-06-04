@@ -1,14 +1,15 @@
 <ion-header>
-    <ion-toolbar color="{{district?._id | districtColor}}" [ngStyle]="district?._id | districtColor | colorStyling">
+    <ion-toolbar color="{{(district$ | async)?._id | districtColor}}"
+                 [ngStyle]="(district$ | async)?._id | districtColor | colorStyling">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-            <ng-container *ngIf="district">{{ district.name | districtName: lang }}
-                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
+            <ng-container *ngIf="(district$ | async) as district">{{ district.name | districtName: lang }}
+                <ng-container *ngIf="(shuttles$ | async) as shuttles"> ({{shuttles?.length}})</ng-container>
             </ng-container>
             <ng-container *ngIf="currentLocality">{{currentLocality}}
-                <ng-container *ngIf="shuttles?.length > 0"> ({{shuttles?.length}})</ng-container>
+                <ng-container *ngIf="(shuttles$ | async) as shuttles"> ({{shuttles?.length}})</ng-container>
             </ng-container>
             <ion-spinner color="light" *ngIf="coordinates && !currentLocality && !noValidLocalityName && !outOfRange"
                          name="dots"
@@ -47,7 +48,7 @@
                         </ion-badge>
                         <ion-badge
                                 *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-                                [ngStyle]="district?._id | districtColor | colorStyling">
+                                [ngStyle]="(district$ | async)?._id | districtColor | colorStyling">
                             {{ shuttle.address.locality | localityName: lang }}
                         </ion-badge>
                     </p>
@@ -63,6 +64,6 @@
         <p padding class="no-data-p"> {{ "NO_SHUTTLE_FOUND" | translate }} </p>
     </div>
 
-<!--    <ion-spinner id="big-spinner" *ngIf="shuttles?.length < 1 && !outOfRange" color="tertiary"-->
-<!--                 name="crescent"></ion-spinner>-->
+    <!--    <ion-spinner id="big-spinner" *ngIf="shuttles?.length < 1 && !outOfRange" color="tertiary"-->
+    <!--                 name="crescent"></ion-spinner>-->
 </ion-content>
