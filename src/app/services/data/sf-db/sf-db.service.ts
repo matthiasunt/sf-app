@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
 import {from, fromEvent, Observable, Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
+import {CouchDoc} from '@models/couch-doc';
 
 @Injectable({
     providedIn: 'root'
@@ -48,16 +49,15 @@ export class SfDbService {
         return from(this.db.put(doc));
     }
 
-    public updateDoc(doc: any) {
-        this.db.get(doc._id).then((docFromDb) => {
-            if (docFromDb) {
-                doc._rev = docFromDb._rev;
-            }
-            return from(this.putDoc(doc));
-        });
+    public updateDoc(doc: any): Observable<any> {
+        return from(this.db.get(doc._id)).pipe(
+            mergeMap((oldDoc: CouchDoc) => {
+                doc._rev = oldDoc._rev;
+                return from(this.putDoc(doc));
+            }));
     }
 
-    public removeDoc(doc: any) {
+    public removeDoc(doc: any): Observable<any> {
         doc._deleted = true;
         return this.updateDoc(doc);
     }

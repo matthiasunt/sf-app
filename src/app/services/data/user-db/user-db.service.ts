@@ -4,6 +4,8 @@ import PouchDB from 'pouchdb';
 
 import {from, Observable, Subject} from 'rxjs';
 import {ENV} from '@env';
+import {flatMap, mergeMap} from 'rxjs/operators';
+import {CouchDoc} from '@models/couch-doc';
 
 @Injectable({
     providedIn: 'root'
@@ -61,12 +63,11 @@ export class UserDbService {
     }
 
     public updateDoc(doc: any): Observable<any> {
-        return from(this.db.get(doc._id).then((docFromDb) => {
-            if (docFromDb) {
-                doc._rev = docFromDb._rev;
-            }
-            return from(this.putDoc(doc));
-        }));
+        return from(this.db.get(doc._id)).pipe(
+            mergeMap((oldDoc: CouchDoc) => {
+                doc._rev = oldDoc._rev;
+                return from(this.putDoc(doc));
+            }));
     }
 
     public removeDoc(doc: any): Observable<any> {

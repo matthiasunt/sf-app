@@ -56,7 +56,13 @@ export class RatingsService {
 
     public deleteRating(rating: Rating) {
         rating._deleted = true;
-        return this.updateRating(rating);
+        const res$ = this.userDbService.updateDoc(rating);
+        const currentRatings = this._userRatings.getValue();
+        res$.subscribe((res) => {
+            const updatedRatings = currentRatings.delete(
+                currentRatings.findIndex(r => r._id === rating._id));
+            this._userRatings.next(updatedRatings);
+        });
     }
 
     private async loadInitialData() {
@@ -65,18 +71,22 @@ export class RatingsService {
     }
 
     private loadInitialUserRatings() {
-        from(this.userDbService.db.query('ratings/all', {
-            include_docs: true
-        })).subscribe((res: any) => {
-            this._userRatings.next(List(res.rows.map(row => row.doc)));
+        this.userDbService.syncSubject.subscribe(() => {
+            from(this.userDbService.db.query('ratings/all', {
+                include_docs: true
+            })).subscribe((res: any) => {
+                this._userRatings.next(List(res.rows.map(row => row.doc)));
+            });
         });
     }
 
     private loadInitialRatings() {
-        from(this.sfDbService.db.query('ratings/all', {
-            include_docs: true
-        })).subscribe((res: any) => {
-            this._ratings.next(List(res.rows.map(row => row.doc)));
+        this.sfDbService.syncSubject.subscribe(() => {
+            from(this.sfDbService.db.query('ratings/all', {
+                include_docs: true
+            })).subscribe((res: any) => {
+                this._ratings.next(List(res.rows.map(row => row.doc)));
+            });
         });
     }
 

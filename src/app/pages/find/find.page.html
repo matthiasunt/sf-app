@@ -25,8 +25,8 @@
         </ion-chip>
     </div>
     <hr>
-    <ng-container>
-        <div *ngIf="(favoriteShuttles$ | async)?.length > 0" id="favorites-div">
+    <ng-container *ngIf="(favoriteShuttles$ | async)?.length > 0">
+        <div id="favorites-div">
             <ion-row>
                 <ion-col>
                     <ion-label color="primary" class="section-headline-small">

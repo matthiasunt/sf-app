@@ -26,7 +26,7 @@ export class ShuttlesService {
         this.loadInitialData();
         this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
             if (change.doc.type === DocType.Shuttle) {
-                console.log(`Change ${change.doc._id}`);
+                // console.log(`Change ${change.doc.name}`);
                 const newShuttle: Shuttle = change.doc;
                 let shuttles = this._allShuttles.value;
                 shuttles = shuttles.set(shuttles.findIndex(s => s._id === newShuttle._id), newShuttle);
@@ -98,16 +98,18 @@ export class ShuttlesService {
     }
 
     private loadInitialData() {
-        from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
-            .subscribe(
-                (res: any) => {
-                    let shuttles: List<Shuttle> = List([]);
-                    res.rows.map(row => {
-                        shuttles = shuttles.push(row.doc);
-                    });
-                    this._allShuttles.next(shuttles);
-                },
-                err => console.log('Error retrieving Shuttles')
-            );
+        this.sfDbService.syncSubject.subscribe(() => {
+            from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
+                .subscribe(
+                    (res: any) => {
+                        let shuttles: List<Shuttle> = List([]);
+                        res.rows.map(row => {
+                            shuttles = shuttles.push(row.doc);
+                        });
+                        this._allShuttles.next(shuttles);
+                    },
+                    err => console.log('Error retrieving Shuttles')
+                );
+        });
     }
 }
