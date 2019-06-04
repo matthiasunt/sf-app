@@ -10,20 +10,23 @@
 </ion-header>
 
 <ion-content>
+    <p *ngIf="(blacklistedShuttles$ | async)?.length < 1" padding
+       class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
+
     <ion-list>
-        <ion-item *ngFor="let s of shuttlesService.getShuttlesFromList(listsService.blacklist | async)"
-                  (click)="shuttleClicked(s)"
+        <ion-item *ngFor="let shuttle of (blacklistedShuttles$ | async)"
+                  (click)="shuttleClicked(shuttle)"
                   lines="full">
             <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="s | shuttleColor">
+                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                 </app-sf-shuttle-icon>
             </ion-thumbnail>
             <ion-label>
                 <ion-text>
-                    <h2>{{ s?.name }}</h2>
+                    <h2>{{ shuttle?.name }}</h2>
                 </ion-text>
             </ion-label>
-            <div (click)="removeFromBlacklist(s, $event)" class="add-remove-button-div">
+            <div (click)="removeFromBlacklist(shuttle, $event)" class="add-remove-button-div">
                 <ion-button color="secondary" slot="end" shape="round" size="small">
                     {{("UNBLOCK" | translate)}}
                     <ion-icon name="checkmark-circle" slot="end"></ion-icon>
@@ -31,8 +34,7 @@
             </div>
         </ion-item>
     </ion-list>
-    <p *ngIf="listsService.blacklist.getValue().size < 1" padding
-       class="no-data-p">{{ "blacklist.EMPTY" | translate }}</p>
+
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="blockClicked()" color="dark">
             <ion-icon name="remove-circle"></ion-icon>

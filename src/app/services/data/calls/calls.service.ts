@@ -49,24 +49,6 @@ export class CallsService {
         return this._history;
     }
 
-    // public getHistoryFromCalls(calls: List<Call>) {
-    //     let ret: List<HistoryElement> = List();
-    //     calls.map((call: Call) => {
-    //         if (call && call.shuttleId) {
-    //             const shuttle = this.shuttlesService.allShuttles.getValue().get(call.shuttleId);
-    //             if (shuttle) {
-    //                 const historyElement: HistoryElement = {
-    //                     shuttle: shuttle,
-    //                     // call: call,
-    //                     date: call.startDate,
-    //                 };
-    //                 ret = ret.push(historyElement);
-    //             }
-    //         }
-    //     });
-    //     return ret.reverse();
-    // }
-
     /**
      *
      */
@@ -151,7 +133,7 @@ export class CallsService {
 
     private addCall(call: Call) {
         this._calls.next(this._calls.getValue().push(call));
-        return this.userDbService.db.put(call);
+        return this.userDbService.putDoc(call);
     }
 
     private loadInitialData() {

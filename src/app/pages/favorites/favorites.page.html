@@ -3,9 +3,9 @@
 </ion-header>
 
 <ion-content>
-    <p *ngIf="listsService.favorites.getValue().size < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
+    <p *ngIf="(favoriteShuttles$ | async)?.length < 1" class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
     <ion-list>
-        <ion-item *ngFor="let shuttle of shuttlesService.getShuttlesFromList(listsService.favorites | async)"
+        <ion-item *ngFor="let shuttle of (favoriteShuttles$ | async)"
                   lines="full" (click)="shuttleClicked(shuttle)">
             <ion-thumbnail slot="start">
                 <app-sf-shuttle-icon [color]="shuttle | shuttleColor">

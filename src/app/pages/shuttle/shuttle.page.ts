@@ -16,7 +16,7 @@ import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
-import {combineLatest, Subject} from 'rxjs';
+import {combineLatest, forkJoin, Subject} from 'rxjs';
 import {takeUntil, withLatestFrom} from 'rxjs/operators';
 import {District} from '@models/district';
 import {DistrictsService} from '@services/data/districts/districts.service';
