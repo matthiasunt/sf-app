@@ -16,9 +16,8 @@ import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {MyCoordinates} from '@models/my-coordinates';
-import {List} from 'immutable';
-import {combineLatest, Observable, Subject, timer} from 'rxjs';
-import {takeUntil, map, switchMap, filter, debounce, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Observable, Subject} from 'rxjs';
+import {takeUntil, map} from 'rxjs/operators';
 
 import {DeviceService} from '@services/device/device.service';
 
@@ -68,21 +67,13 @@ export class SelectionPage implements OnInit, OnDestroy {
 
         this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
         this.district$ = this.districtsService.getDistrict(this.districtId);
+
         if (this.districtId) {
             this.fetchShuttlesByDistrict(this.districtId);
         } else {
             this.coordinates = await this.geoService.getCurrentPosition();
             this.fetchShuttlesByPosition();
         }
-
-        // Not available, if no data after 7 secs.
-        // setTimeout(() => {
-        //     if (this.shuttles.length < 1) {
-        //         this.presentShuttleFinderUnavailableAlert();
-        //     }
-        // }, 7000);
-
-
     }
 
     ngOnDestroy() {
@@ -91,55 +82,50 @@ export class SelectionPage implements OnInit, OnDestroy {
     }
 
     private fetchShuttlesByDistrict(districtId: string) {
-        this.shuttles$ = this.shuttlesService.getShuttlesByDistrict(districtId).pipe(
-            map((shuttles) => {
-                return this.mergeShuttles(shuttles);
-            })
-        );
+        this.shuttles$ = combineLatest(
+            this.shuttlesService.getShuttlesByDistrict(districtId),
+            this.listsService.favorites,
+            this.listsService.blacklist
+        ).pipe(
+            map(([shuttles, favorites, blacklist]) => {
+                return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
+            }));
     }
 
 
-    // TODO: Outsource this
+    // TODO: Refactor/outsource this
     private async fetchShuttlesByPosition() {
-        const lang = this.lang === 'it' ? 'it' : 'de';
 
-        // Fetch
-        this.shuttles$ = this.shuttlesService.allShuttles.pipe(
-            map((allShuttles) => {
+        this.shuttles$ = combineLatest(
+            this.shuttlesService.allShuttles,
+            this.listsService.favorites,
+            this.listsService.blacklist
+        ).pipe(
+            map(([allShuttles, favorites, blacklist]) => {
                 let shuttles = this.shuttlesService.filterShuttlesByPosition(
-                    allShuttles.toList(), this.coordinates, 22000
+                    allShuttles, this.coordinates, 22000
                 );
                 if (shuttles.count() < 3) {
                     shuttles = this.shuttlesService.filterShuttlesByPosition(
-                        allShuttles.toList(), this.coordinates, 27000
+                        allShuttles, this.coordinates, 27000
                     );
                 }
                 if (!shuttles || shuttles.count() < 1) {
                     this.outOfRange = true;
                 } else {
-                    return this.mergeShuttles(shuttles);
+                    return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
                 }
             })
         );
 
         // Get Locality Name
+        const lang = this.lang === 'it' ? 'it' : 'de';
+
+        // TODO: Refactor to rxjs
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {
             this.noValidLocalityName = true;
         }
-    }
-
-    private mergeShuttles(shuttles: List<Shuttle>) {
-        return this.shuttlesService.mergeShuttles(
-            this.shuttlesService.rankShuttlesByScore(shuttles),
-            this.listsService.favorites.getValue(),
-            this.listsService.blacklist.getValue()).toArray();
-
-        /* Unsubscribe from changes if Shuttles fetched */
-        // if (this.shuttles.length > 3) {
-        //     this.unsubscribe$.next();
-        //     this.unsubscribe$.complete();
-        // }
     }
 
     public shuttleClicked(shuttle: Shuttle) {

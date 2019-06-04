@@ -64,32 +64,30 @@ export class ListsService {
     }
 
     public async addListElement(listElement: ListElement) {
-        try {
-            const res = await this.userDbService.db.put(listElement);
+        const res$ = this.userDbService.putDoc(listElement);
+        res$.subscribe((res) => {
             console.log(res);
             if (listElement.type === ElementType.Favorite) {
                 this._favorites.next(this._favorites.getValue().push(listElement));
             } else {
                 this._blacklist.next(this._blacklist.getValue().push(listElement));
             }
-        } catch (err) {
-            console.error(err);
-        }
+        });
+
     }
 
     public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {
         const list = type === ElementType.Favorite ? this._favorites.getValue() : this._blacklist.getValue();
         const listElement = list.find((element) => element.shuttleId === shuttleId);
-        try {
-            await this.userDbService.removeDoc(listElement);
+        const res$ = this.userDbService.removeDoc(listElement);
+        res$.subscribe((res) => {
+            console.log(res);
             const index = list.findIndex((element) => element.shuttleId === shuttleId);
             if (type === ElementType.Favorite) {
                 this._favorites.next(this._favorites.getValue().delete(index));
             } else {
                 this._blacklist.next(this._blacklist.getValue().delete(index));
             }
-        } catch (err) {
-            console.error(err);
-        }
+        });
     }
 }

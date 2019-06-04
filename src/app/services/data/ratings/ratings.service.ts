@@ -17,7 +17,6 @@ export class RatingsService {
 
     constructor(private sfDbService: SfDbService,
                 private userDbService: UserDbService,
-                private shuttlesService: ShuttlesService,
     ) {
         this.loadInitialData();
     }
@@ -40,6 +39,7 @@ export class RatingsService {
     public putRating(rating: Rating) {
         const res$ = this.userDbService.putDoc(rating);
         res$.subscribe((res) => {
+            console.log(res);
             this._userRatings.next(this._userRatings.getValue().push(rating));
         });
     }
@@ -49,6 +49,7 @@ export class RatingsService {
         const ratings = this._userRatings.getValue();
 
         res$.subscribe((res) => {
+            console.log(res);
             const userRatings = ratings
                 .set(
                     ratings.findIndex((userRating: Rating) => userRating._id === rating._id),

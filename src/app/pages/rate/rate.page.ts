@@ -9,7 +9,7 @@ import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
 import {DocType} from '@models/doctype';
 import {map, takeUntil, withLatestFrom} from 'rxjs/operators';
-import {combineLatest, Observable, Subject} from 'rxjs';
+import {combineLatest, forkJoin, Observable, Subject} from 'rxjs';
 import {List} from 'immutable';
 
 @Component({

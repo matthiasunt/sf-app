@@ -16,8 +16,8 @@ import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {ListElement} from '@models/list-element';
 import {Districts} from '../../../assets/data/districts';
-import {combineLatest, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {combineLatest, forkJoin, Observable, Subject} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-find',
@@ -29,7 +29,7 @@ export class FindPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    favorites: Shuttle[];
+    public favoriteShuttles$: Observable<Shuttle[]>;
 
     lang: string;
     districts: District[] = Districts;
@@ -57,14 +57,12 @@ export class FindPage implements OnInit, OnDestroy {
 
         console.log(ENV.message);
 
-        combineLatest(this.shuttlesService.allShuttles, this.listsService.favorites)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([allShuttles, favorites]) => {
-                this.favorites = [];
-                favorites.map((favorite: ListElement) => this.favorites.push(
-                    allShuttles.find(s => s._id === favorite.shuttleId)
-                ));
-            });
+        this.favoriteShuttles$ = combineLatest(this.shuttlesService.allShuttles, this.listsService.favorites)
+            .pipe(
+                map(([allShuttles, favorites]) =>
+                    favorites.map(f =>
+                        allShuttles.find(s => s._id === f.shuttleId)).toArray())
+            );
     }
 
     ngOnDestroy() {

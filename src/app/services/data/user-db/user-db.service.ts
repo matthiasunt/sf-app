@@ -19,6 +19,7 @@ export class UserDbService {
     constructor(public http: HttpClient) {
         this.db = new PouchDB(ENV.SF_USER_DB);
         this._syncSubject = new Subject<boolean>();
+        this._syncSubject.next(true);
     }
 
     public init(details) {
@@ -31,12 +32,10 @@ export class UserDbService {
             // console.log(info);
             this._syncSubject.next(true);
         }).on('paused', (err) => {
-            // console.log(err);
+            console.log('paused');
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);
-            // Offline?
-            this._syncSubject.next(true);
         });
     }
 
