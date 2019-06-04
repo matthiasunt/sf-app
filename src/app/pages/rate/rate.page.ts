@@ -22,7 +22,7 @@ export class RatePage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
 
     shuttle$: Observable<Shuttle>;
-    alreadyRatedByUser = false;
+    alreadyRatedByUser: boolean;
     ratingForm: any = {
         service: 3,
         reliabilityAndPunctuality: 3,
@@ -41,6 +41,7 @@ export class RatePage implements OnInit, OnDestroy {
                 private ratingsService: RatingsService,
                 private shuttlesService: ShuttlesService,
     ) {
+        this.alreadyRatedByUser = false;
     }
 
     async ngOnInit() {
@@ -52,6 +53,10 @@ export class RatePage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, userRatings]) => {
                 this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
+                if (this.userRating) {
+                    this.ratingForm = this.userRating;
+                    this.alreadyRatedByUser = true;
+                }
             });
     }
 

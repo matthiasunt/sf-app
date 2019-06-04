@@ -29,10 +29,8 @@ export class UserDbService {
         this.db.sync(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
-            // console.log(info);
             this._syncSubject.next(true);
         }).on('paused', (err) => {
-            console.log('paused');
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.error(err);

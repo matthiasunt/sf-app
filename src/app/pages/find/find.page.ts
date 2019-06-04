@@ -18,6 +18,7 @@ import {ListElement} from '@models/list-element';
 import {Districts} from '../../../assets/data/districts';
 import {combineLatest, forkJoin, Observable, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
+import {AuthService} from '@services/auth/auth.service';
 
 @Component({
     selector: 'app-find',
@@ -27,6 +28,7 @@ import {map, takeUntil} from 'rxjs/operators';
 })
 export class FindPage implements OnInit, OnDestroy {
 
+    private devMessage: string;
     private unsubscribe$ = new Subject<void>();
 
     public favoriteShuttles$: Observable<Shuttle[]>;
@@ -39,6 +41,7 @@ export class FindPage implements OnInit, OnDestroy {
                 private router: Router,
                 private http: HttpClientModule,
                 private diagnostic: Diagnostic,
+                private authService: AuthService,
                 private deviceService: DeviceService,
                 private callNumber: CallNumber,
                 private toastCtrl: ToastController,
@@ -50,9 +53,10 @@ export class FindPage implements OnInit, OnDestroy {
                 private localDataService: LocalDataService,
     ) {
 
+
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.localDataService.lang.subscribe((lang: string) => this.lang = lang);
 
         console.log(ENV.message);
@@ -63,6 +67,10 @@ export class FindPage implements OnInit, OnDestroy {
                     favorites.map(f =>
                         allShuttles.find(s => s._id === f.shuttleId)).toArray())
             );
+
+        if (!ENV.production) {
+            this.devMessage = `Hey, ${await this.authService.getUserId()}`;
+        }
     }
 
     ngOnDestroy() {
