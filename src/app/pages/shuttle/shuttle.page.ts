@@ -16,11 +16,10 @@ import {GeoService} from '@services/geo/geo.service';
 import {Rating} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
-import {combineLatest, forkJoin, Subject} from 'rxjs';
-import {takeUntil, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {District} from '@models/district';
 import {DistrictsService} from '@services/data/districts/districts.service';
-import {List} from 'immutable';
 
 @Component({
     selector: 'app-shuttle',
@@ -71,18 +70,19 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
-        combineLatest(this.shuttlesService.getShuttle(shuttleId),
+        combineLatest(
+            this.shuttlesService.getShuttle(shuttleId),
             this.ratingsService.userRatings,
-            this.listsService.favorites)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([shuttle, ratings, favorites]) => {
+            this.listsService.favorites,
+            this.districtsService.districts
+        ).pipe(takeUntil(this.unsubscribe$))
+            .subscribe(([shuttle, ratings, favorites, districts]) => {
                 this.zone.run(() => {
                     this.shuttle = shuttle;
 
-                    // TODO: Refactor
-                    this.shuttleDistricts = this.districtsService.districts.getValue().filter((district) => {
-                        return this.shuttle.districtIds.indexOf(district._id) > -1;
-                    }).toArray();
+                    // Districts
+                    this.shuttleDistricts = districts.filter(d =>
+                        this.shuttle.districtIds.indexOf(d._id) > -1).toArray();
 
                     // Reviews
                     if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
@@ -94,8 +94,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
                     this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
 
                     // Is Shuttle Favorite?
-                    this.isFavorite =
-                        favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                    this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
                 });
             });
     }

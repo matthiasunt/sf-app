@@ -28,6 +28,7 @@ export class SfDbService {
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
+            this._syncSubject.next(true);
             console.log('Error');
             console.error(err);
         });
