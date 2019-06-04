@@ -9,7 +9,7 @@ import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
 import {DocType} from '@models/doctype';
 import {map, takeUntil, withLatestFrom} from 'rxjs/operators';
-import {combineLatest, Subject} from 'rxjs';
+import {combineLatest, Observable, Subject} from 'rxjs';
 import {List} from 'immutable';
 
 @Component({
@@ -21,7 +21,7 @@ export class RatePage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    shuttle: Shuttle;
+    shuttle$: Observable<Shuttle>;
     alreadyRatedByUser = false;
     ratingForm: any = {
         service: 3,
@@ -45,14 +45,13 @@ export class RatePage implements OnInit, OnDestroy {
 
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-
+        this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
         combineLatest(
-            this.shuttlesService.allShuttles,
+            this.shuttlesService.getShuttle(shuttleId),
             this.ratingsService.userRatings)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([allShuttles, userRatings]) => {
-                this.shuttle = allShuttles.find((shuttle: Shuttle) => shuttle._id === shuttleId);
-                this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === this.shuttle._id);
+            .subscribe(([shuttle, userRatings]) => {
+                this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
             });
     }
 
@@ -61,7 +60,7 @@ export class RatePage implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    async rateClicked() {
+    async rateClicked(shuttle: Shuttle) {
 
         const totalAvg = (this.ratingForm.service
             + this.ratingForm.reliabilityAndPunctuality
@@ -70,9 +69,9 @@ export class RatePage implements OnInit, OnDestroy {
 
         const userId = await this.authService.getUserId();
         const rating: Rating = {
-            _id: `${this.shuttle._id}--${DocType.Rating}--${userId}`,
+            _id: `${shuttle._id}--${DocType.Rating}--${userId}`,
             userId: userId,
-            shuttleId: this.shuttle._id,
+            shuttleId: shuttle._id,
             date: new Date().toISOString(),
             totalAvg: totalAvg,
             service: this.ratingForm.service,

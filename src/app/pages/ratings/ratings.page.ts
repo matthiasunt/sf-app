@@ -55,6 +55,7 @@ export class RatingsPage implements OnInit, OnDestroy {
                 } else {
                     this.ratings = shuttleRatings.toArray();
                 }
+                this.ratings.sort((a, b) => (a.date < b.date) ? 1 : ((a.date > b.date) ? -1 : 0));
 
             });
     }

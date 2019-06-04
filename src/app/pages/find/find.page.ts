@@ -61,7 +61,9 @@ export class FindPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([allShuttles, favorites]) => {
                 this.favorites = [];
-                favorites.map((favorite: ListElement) => this.favorites.push(allShuttles.get(favorite.shuttleId)));
+                favorites.map((favorite: ListElement) => this.favorites.push(
+                    allShuttles.find(s => s._id === favorite.shuttleId)
+                ));
             });
     }
 

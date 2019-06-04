@@ -1,9 +1,10 @@
 <ion-header>
-    <ion-toolbar color="{{shuttle | shuttleColor}}" [ngStyle]="shuttle | shuttleColor | colorStyling">
+    <ion-toolbar color="{{(shuttle$ | async) | shuttleColor}}"
+                 [ngStyle]="(shuttle$ | async) | shuttleColor | colorStyling">
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>{{"rate.RATE" | translate}} {{shuttle?.name}}</ion-title>
+        <ion-title>{{"rate.RATE" | translate}} {{(shuttle$ | async)?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="deleteClicked()" *ngIf="alreadyRatedByUser">
                 <ion-icon name="trash" slot="icon-only"></ion-icon>
@@ -61,5 +62,9 @@
     </ion-card>
 </ion-content>
 <ion-footer padding>
-    <ion-button (click)="rateClicked()" expand="block" color="tertiary">{{"shuttle.RATE" | translate}}</ion-button>
+    <ng-container *ngIf="shuttle$ | async as shuttle">
+        <ion-button (click)="rateClicked(shuttle)" expand="block"
+                    color="tertiary">{{"shuttle.RATE" | translate}}</ion-button>
+    </ng-container>
 </ion-footer>
+

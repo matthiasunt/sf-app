@@ -141,7 +141,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             message: this.translate.instant('shuttle.SHUTTLE_ADDED_TO_FAVORITES'),
             showCloseButton: true,
             closeButtonText: 'Ok',
-            position: 'top',
+            position: 'bottom',
             duration: 1700,
             color: 'secondary',
         });
@@ -160,7 +160,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             message: this.translate.instant('shuttle.SHUTTLE_REMOVED_FROM_FAVORITES'),
             showCloseButton: true,
             closeButtonText: 'Ok',
-            position: 'top',
+            position: 'bottom',
             duration: 1700,
             color: 'danger',
         });

@@ -17,7 +17,7 @@ import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {MyCoordinates} from '@models/my-coordinates';
 import {List} from 'immutable';
-import {Observable, Subject, timer} from 'rxjs';
+import {combineLatest, Observable, Subject, timer} from 'rxjs';
 import {takeUntil, map, switchMap, filter, debounce, withLatestFrom} from 'rxjs/operators';
 
 import {DeviceService} from '@services/device/device.service';
@@ -32,8 +32,9 @@ import {DeviceService} from '@services/device/device.service';
 export class SelectionPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
-    shuttles$: Observable<any>;
-    district: District;
+    shuttles$: Observable<Shuttle[]>;
+    district$: Observable<District>;
+    districtId: string;
 
     coordinates: MyCoordinates;
     currentLocality: string;
@@ -65,9 +66,10 @@ export class SelectionPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((lang: string) => this.lang = lang);
 
-        const districtId = this.activatedRoute.snapshot.paramMap.get('id');
-        if (districtId) {
-            this.fetchShuttlesByDistrict(districtId);
+        this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
+        this.district$ = this.districtsService.getDistrict(this.districtId);
+        if (this.districtId) {
+            this.fetchShuttlesByDistrict(this.districtId);
         } else {
             this.coordinates = await this.geoService.getCurrentPosition();
             this.fetchShuttlesByPosition();
@@ -89,16 +91,10 @@ export class SelectionPage implements OnInit, OnDestroy {
     }
 
     private fetchShuttlesByDistrict(districtId: string) {
-        this.shuttles$ = this.districtsService.getDistrict(districtId).pipe(
-            withLatestFrom(this.shuttlesService.allShuttles),
-            map(([district, allShuttles]) => {
-                this.district = district;
-                const ret = allShuttles
-                    .filter((shuttle: Shuttle) => shuttle.districtIds.indexOf(district._id) > -1)
-                    .toList();
-                return ret;
-            }),
-            map((shuttles: List<Shuttle>) => this.mergeShuttles(shuttles))
+        this.shuttles$ = this.shuttlesService.getShuttlesByDistrict(districtId).pipe(
+            map((shuttles) => {
+                return this.mergeShuttles(shuttles);
+            })
         );
     }
 
@@ -155,10 +151,10 @@ export class SelectionPage implements OnInit, OnDestroy {
         event.stopPropagation();
         event.preventDefault();
         let callOrigin: CallOrigin;
-        if (this.district) {
+        if (this.districtId) {
             callOrigin = {
                 name: CallOriginName.District,
-                value: this.district._id
+                value: this.districtId
             };
         } else if (this.coordinates) {
             callOrigin = {
