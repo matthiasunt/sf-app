@@ -10,6 +10,9 @@ export class SfShuttleIconComponent implements OnInit {
     @Input()
     color = '#99CC33';
 
+    constructor() {
+    }
+
     ngOnInit() {
     }
 
