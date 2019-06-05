@@ -17,24 +17,26 @@ export class LocalityNamePipe implements PipeTransform {
     }
 
     private beautifyLocalityName(localityName: string): string {
-        const toRemove = [
-            'Valgardena',
-            'all\' Isarco',
-            'allo Sciliar',
-            'in Badia',
-            'Atesino',
-            'sulla strada del vino',
-            'in Passiria',
-            'Venosta',
-            'an der Weinstraße',
-            'am Schlern',
-            'in Gröden',
-            'im Vinschgau',
-            'in Passeier'
-        ];
-        toRemove.map((s) => {
-            localityName = localityName.replace(new RegExp(s, 'ig'), '').trim();
-        });
+        if (localityName) {
+            const toRemove = [
+                'Valgardena',
+                'all\' Isarco',
+                'allo Sciliar',
+                'in Badia',
+                'Atesino',
+                'sulla strada del vino',
+                'in Passiria',
+                'Venosta',
+                'an der Weinstraße',
+                'am Schlern',
+                'in Gröden',
+                'im Vinschgau',
+                'in Passeier'
+            ];
+            toRemove.map((s) => {
+                localityName = localityName.replace(new RegExp(s, 'ig'), '').trim();
+            });
+        }
         return localityName;
     }
 
