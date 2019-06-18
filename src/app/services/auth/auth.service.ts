@@ -44,6 +44,7 @@ export class AuthService {
         };
         try {
             const loginRes = await this.login(user);
+            console.log(loginRes);
             if (loginRes.status === 401) {
                 const res = await this.register(user);
                 console.log(res);

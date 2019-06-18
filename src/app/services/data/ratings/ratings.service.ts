@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {List, Map} from 'immutable';
+import {List} from 'immutable';
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {Rating} from '@models/rating';
 import {UserDbService} from '@services/data/user-db/user-db.service';
-import {BehaviorSubject, from, Observable, pipe} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {BehaviorSubject, from, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'

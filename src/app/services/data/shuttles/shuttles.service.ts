@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject, from, Observable} from 'rxjs';
-import {List, Map} from 'immutable';
+import {List} from 'immutable';
 
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {GeoService} from '@services/geo/geo.service';

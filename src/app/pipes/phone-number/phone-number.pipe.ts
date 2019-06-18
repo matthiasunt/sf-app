@@ -15,5 +15,5 @@ export class PhoneNumberPipe implements PipeTransform {
             }
             return ret;
         }
-
     }
+}
