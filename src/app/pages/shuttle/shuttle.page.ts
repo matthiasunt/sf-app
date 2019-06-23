@@ -77,28 +77,29 @@ export class ShuttlePage implements OnInit, OnDestroy {
             this.districtsService.districts
         ).pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, ratings, favorites, districts]) => {
-                this.zone.run(() => {
-                    this.shuttle = shuttle;
-
-                    // User Rating
-                    this.userRating = ratings.find((rating) => rating.shuttleId === this.shuttle._id);
-
-                    // Reviews
-                    if (this.shuttle && this.shuttle.avgRating && this.shuttle.avgRating.reviews) {
-                        let reviews = this.shuttle.avgRating.reviews;
-                        if (this.userRating) {
-                            reviews = reviews.filter(r => r !== this.userRating.review);
+                if (shuttle) {
+                    this.zone.run(() => {
+                            this.shuttle = shuttle;
+                            // User Rating
+                            this.userRating = ratings.find((rating) => rating.shuttleId === shuttle._id);
+                            // Reviews
+                            if (shuttle.avgRating && shuttle.avgRating.reviews) {
+                                let reviews = shuttle.avgRating.reviews;
+                                if (this.userRating) {
+                                    reviews = reviews.filter(r => r !== this.userRating.review);
+                                }
+                                this.reviewsToDisplay = reviews.slice(0, 1);
+                            }
                         }
-                        this.reviewsToDisplay = reviews.slice(0, 1);
-                    }
-                });
+                    );
 
-                // Districts
-                this.shuttleDistricts = districts.filter(d =>
-                    this.shuttle.districtIds.indexOf(d._id) > -1).toArray();
+                    // Districts
+                    this.shuttleDistricts = districts.filter(d =>
+                        shuttle.districtIds.indexOf(d._id) > -1).toArray();
 
-                // Is Shuttle Favorite?
-                this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                    // Is Shuttle Favorite?
+                    this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                }
             });
     }
 
