@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
-import {from, fromEvent, Observable, Subject} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import {from, Observable, Subject} from 'rxjs';
+import {mergeMap} from 'rxjs/operators';
 import {CouchDoc} from '@models/couch-doc';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -16,7 +15,7 @@ export class SfDbService {
     private readonly _syncSubject: Subject<boolean>;
 
     constructor() {
-        this.db = new PouchDB(ENV.SF_PUBLIC_DB);
+        this.db = new PouchDB(`${ENV.SF_PUBLIC_DB}_v2`);
 
         this._syncSubject = new Subject<boolean>();
         this._syncSubject.next(true);
