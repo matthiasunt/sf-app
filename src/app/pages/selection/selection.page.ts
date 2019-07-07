@@ -16,6 +16,7 @@ import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {MyCoordinates} from '@models/my-coordinates';
+
 import {combineLatest, Observable, Subject} from 'rxjs';
 import {takeUntil, map} from 'rxjs/operators';
 
@@ -41,6 +42,9 @@ export class SelectionPage implements OnInit, OnDestroy {
     noValidLocalityName: boolean;
     outOfRange: boolean;
     lang: string;
+
+    timer: any;
+    disableLoading: boolean;
 
     constructor(private navCtrl: NavController,
                 private router: Router,
@@ -81,6 +85,22 @@ export class SelectionPage implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+    ionViewDidEnter() {
+        this.timer = setTimeout(() => {
+            this.shuttles$
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((shuttles) => {
+                    if (shuttles.length < 1) {
+                        this.presentShuttleFinderUnavailableAlert();
+                    }
+                });
+        }, 6500);
+    }
+
+    ionViewWillLeave() {
+        clearTimeout(this.timer);
+    }
+
     private fetchShuttlesByDistrict(districtId: string) {
         this.shuttles$ = combineLatest(
             this.shuttlesService.getShuttlesByDistrict(districtId),
@@ -88,7 +108,8 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.listsService.blacklist
         ).pipe(
             map(([shuttles, favorites, blacklist]) => {
-                return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
+                return [];
+                // return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
             }));
     }
 
@@ -166,5 +187,6 @@ export class SelectionPage implements OnInit, OnDestroy {
             ]
         });
         await alert.present();
+        this.disableLoading = true;
     }
 }
