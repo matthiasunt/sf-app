@@ -4,6 +4,7 @@ import {ENV} from '@env';
 import {from, Observable, Subject} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
 import {CouchDoc} from '@models/couch-doc';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -24,7 +25,6 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
-            this._syncSubject.next(true);
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {

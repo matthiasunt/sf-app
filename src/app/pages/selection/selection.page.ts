@@ -94,7 +94,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                         this.presentShuttleFinderUnavailableAlert();
                     }
                 });
-        }, 6500);
+        }, 8000);
     }
 
     ionViewWillLeave() {
