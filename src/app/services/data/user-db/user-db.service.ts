@@ -30,8 +30,6 @@ export class UserDbService {
         this.remote = ENV.production ? details.userDBs.prod_sf : details.userDBs.dev_sf;
         this.db.sync(this.remote, {
             retry: true, live: true
-        }).on('change', (info) => {
-            this._syncSubject.next(true);
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
