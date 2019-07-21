@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {GeoService} from '@services/geo/geo.service';
 import {AlertController, NavController} from '@ionic/angular';
@@ -18,7 +18,7 @@ import {Shuttle} from '@models/shuttle';
 import {MyCoordinates} from '@models/my-coordinates';
 
 import {combineLatest, Observable, Subject} from 'rxjs';
-import {takeUntil, map} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 
 import {DeviceService} from '@services/device/device.service';
 
@@ -108,8 +108,7 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.listsService.blacklist
         ).pipe(
             map(([shuttles, favorites, blacklist]) => {
-                return [];
-                // return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
+                return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
             }));
     }
 

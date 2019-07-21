@@ -35,6 +35,8 @@ export class RatingsService {
 
     }
 
+
+
     public putRating(rating: Rating) {
         const res$ = this.userDbService.putDoc(rating);
         res$.subscribe((res) => {
@@ -94,4 +96,6 @@ export class RatingsService {
     private loadInitialShuttleRatings() {
 
     }
+
+    
 }
