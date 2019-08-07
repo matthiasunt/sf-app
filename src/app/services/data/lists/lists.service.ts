@@ -8,9 +8,7 @@ import {LocalDataService} from '@services/data/local-data/local-data.service';
 @Injectable({
     providedIn: 'root'
 })
-/**
- * TODO: Optimization: Story Favorites and Blacklist directly in local storage to provide better UX
- */
+
 export class ListsService {
     private _favorites: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
     private _blacklist: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
@@ -21,14 +19,6 @@ export class ListsService {
         private userDbService: UserDbService
     ) {
         this.loadInitialData();
-    }
-
-    get favorites() {
-        return this._favorites;
-    }
-
-    get blacklist() {
-        return this._blacklist;
     }
 
     private loadInitialData() {
@@ -65,14 +55,12 @@ export class ListsService {
     public async addListElement(listElement: ListElement) {
         const res$ = this.userDbService.putDoc(listElement);
         res$.subscribe((res) => {
-            console.log(res);
             if (listElement.type === ElementType.Favorite) {
                 this._favorites.next(this._favorites.getValue().push(listElement));
             } else {
                 this._blacklist.next(this._blacklist.getValue().push(listElement));
             }
         });
-
     }
 
     public async removeListElementByShuttleId(shuttleId: string, type: ElementType) {

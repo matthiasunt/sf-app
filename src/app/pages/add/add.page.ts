@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Shuttle} from '@models/shuttle';
@@ -8,8 +8,9 @@ import {ListsService} from '@services/data/lists/lists.service';
 import {ElementType, ListElement} from '@models/list-element';
 import {List} from 'immutable';
 import {AuthService} from '@services/auth/auth.service';
-import {debounce, takeUntil} from 'rxjs/operators';
-import {Subject, timer} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
 
 @Component({
     selector: 'app-add',
@@ -19,13 +20,12 @@ import {Subject, timer} from 'rxjs';
 export class AddPage implements OnInit, OnDestroy {
     private unsubscribe$ = new Subject<void>();
     addToFavorites: boolean;
-    private unavailable: boolean;
-    private noConnection: boolean;
     allShuttles: Shuttle[] = [];
     queryResult: Shuttle[] = [];
     resultIndex: number;
-    favorites: List<ListElement> = List([]);
-    blacklist: List<ListElement> = List([]);
+
+    favoriteShuttles: List<Shuttle> = List([]);
+    blacklistedShuttles: List<Shuttle> = List([]);
 
     constructor(private navCtrl: NavController,
                 private router: Router,
@@ -34,6 +34,7 @@ export class AddPage implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
+                private localDataService: LocalDataService,
     ) {
     }
 
@@ -47,17 +48,8 @@ export class AddPage implements OnInit, OnDestroy {
                 this.queryResult = this.allShuttles;
             });
 
-        this.listsService.favorites
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((list) => {
-                this.favorites = list;
-            });
-
-        this.listsService.blacklist
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((list) => {
-                this.blacklist = list;
-            });
+        this.localDataService.favoriteShuttles.subscribe(shuttles => this.favoriteShuttles = shuttles);
+        this.localDataService.blacklistedShuttles.subscribe(shuttles => this.blacklistedShuttles = shuttles);
         this.resultIndex = 0;
     }
 
@@ -74,6 +66,11 @@ export class AddPage implements OnInit, OnDestroy {
     public removeFromList(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
+        if (this.addToFavorites) {
+            this.localDataService.removeFavoriteShuttle(shuttle);
+        } else {
+            this.localDataService.removeBlacklistedShuttle(shuttle);
+        }
         this.listsService.removeListElementByShuttleId(shuttle._id,
             this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
     }
@@ -82,9 +79,9 @@ export class AddPage implements OnInit, OnDestroy {
     private async addToList(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
-        const listToCheck: List<ListElement> = this.addToFavorites ?
-            this.blacklist :
-            this.favorites;
+        const listToCheck: List<Shuttle> = this.addToFavorites ?
+            this.blacklistedShuttles :
+            this.favoriteShuttles;
         const userId = await this.authService.getUserId();
         const type = this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted;
         const listElement: ListElement = {
@@ -94,18 +91,22 @@ export class AddPage implements OnInit, OnDestroy {
             date: new Date().toISOString(),
             type: type
         };
-        if (listToCheck.findIndex(e => e.shuttleId === shuttle._id) < 0) {
+        if (listToCheck.findIndex(e => e._id === shuttle._id) < 0) {
+            if (this.addToFavorites) {
+                this.localDataService.addFavoriteShuttle(shuttle);
+            } else {
+                this.localDataService.addBlacklistedShuttle(shuttle);
+            }
             this.listsService.addListElement(listElement);
         } else {
             this.presentAlreadyAddedInOtherListAlert();
         }
     }
 
-    // TODO: Refactor
     public isInList(shuttle: Shuttle): boolean {
-        const list = this.addToFavorites ? this.favorites : this.blacklist;
+        const list: List<Shuttle> = this.addToFavorites ? this.favoriteShuttles : this.blacklistedShuttles;
         if (shuttle) {
-            return list.findIndex(e => e && e.shuttleId && e.shuttleId === shuttle._id) > -1;
+            return list.findIndex(s => s && s._id && s._id === shuttle._id) > -1;
         }
     }
 

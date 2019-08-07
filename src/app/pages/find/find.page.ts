@@ -29,10 +29,8 @@ export class FindPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    public favoriteShuttles$: Observable<Shuttle[]>;
-
-    lang: string;
-    districts: District[] = Districts;
+    public lang: string;
+    public districts: District[] = Districts;
 
     public devMessage: string;
 
@@ -61,13 +59,6 @@ export class FindPage implements OnInit, OnDestroy {
 
         console.log(ENV.message);
 
-        this.favoriteShuttles$ = combineLatest([this.shuttlesService.allShuttles, this.listsService.favorites])
-            .pipe(
-                map(([allShuttles, favorites]) =>
-                    favorites.map(f =>
-                        allShuttles.find(s => s._id === f.shuttleId)).toArray())
-            );
-
         if (!ENV.production) {
             this.devMessage = `Hey, ${await this.authService.getUserId()}`;
         }
@@ -83,7 +74,7 @@ export class FindPage implements OnInit, OnDestroy {
     }
 
     public async gpsClicked() {
-        // Device testing
+        // Device
         if (await this.deviceService.isDevice()) {
             const locationAuthorized: boolean = await this.diagnostic.isLocationAuthorized();
             if (!locationAuthorized) {
@@ -95,7 +86,7 @@ export class FindPage implements OnInit, OnDestroy {
             } else {
                 this.navCtrl.navigateForward(`/tabs/find/gps`);
             }
-            // Browser testing
+            // Browser
         } else {
             this.navCtrl.navigateForward(`/tabs/find/gps`);
         }
