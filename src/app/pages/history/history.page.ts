@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit, OnDestroy} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {AlertController, NavController} from '@ionic/angular';
@@ -91,7 +91,6 @@ export class HistoryPage implements OnInit, OnDestroy {
                 {
                     text: this.translate.instant('YES'),
                     handler: () => {
-                        this.callsService.hideCalls();
                         this.localDataService.clearHistory();
                     }
                 }

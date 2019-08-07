@@ -24,7 +24,7 @@ export class FavoritesPage implements OnInit {
     }
 
     ngOnInit() {
-        this.favoriteShuttles$ = combineLatest(this.shuttlesService.allShuttles, this.listsService.favorites)
+        this.favoriteShuttles$ = combineLatest([this.shuttlesService.allShuttles, this.listsService.favorites])
             .pipe(
                 map(([allShuttles, favorites]) =>
                     favorites.map(f =>

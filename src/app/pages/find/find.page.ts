@@ -14,10 +14,9 @@ import {DeviceService} from '@services/device/device.service';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
-import {ListElement} from '@models/list-element';
 import {Districts} from '../../../assets/data/districts';
-import {combineLatest, forkJoin, Observable, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {combineLatest, Observable, Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {AuthService} from '@services/auth/auth.service';
 
 @Component({
@@ -62,7 +61,7 @@ export class FindPage implements OnInit, OnDestroy {
 
         console.log(ENV.message);
 
-        this.favoriteShuttles$ = combineLatest(this.shuttlesService.allShuttles, this.listsService.favorites)
+        this.favoriteShuttles$ = combineLatest([this.shuttlesService.allShuttles, this.listsService.favorites])
             .pipe(
                 map(([allShuttles, favorites]) =>
                     favorites.map(f =>

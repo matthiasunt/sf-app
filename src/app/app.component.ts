@@ -23,8 +23,8 @@ const {StatusBar} = Plugins;
 export class AppComponent {
     constructor(
         private deviceService: DeviceService,
-        private sfDbService: SfDbService,
         private userDbService: UserDbService,
+        private sfDbService: SfDbService,
         private districtsService: DistrictsService,
         private shuttlesService: ShuttlesService,
         private listsService: ListsService,

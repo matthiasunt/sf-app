@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
-
 import {from, Observable, Subject} from 'rxjs';
 import {ENV} from '@env';
-import {flatMap, mergeMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {CouchDoc} from '@models/couch-doc';
 
 @Injectable({
@@ -19,8 +18,8 @@ export class UserDbService {
     private _syncSubject: Subject<boolean>;
 
     constructor(public http: HttpClient) {
-        this.db = new PouchDB(ENV.SF_USER_DB);
         this._syncSubject = new Subject<boolean>();
+        this.db = new PouchDB(ENV.SF_USER_DB);
         this._syncSubject.next(true);
     }
 
@@ -33,7 +32,6 @@ export class UserDbService {
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
-            this._syncSubject.next(true);
             console.error(err);
         });
     }

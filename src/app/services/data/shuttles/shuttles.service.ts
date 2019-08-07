@@ -99,6 +99,7 @@ export class ShuttlesService {
 
     private loadInitialData() {
         this.sfDbService.syncSubject.subscribe(() => {
+            console.log('sS has a new value');
             from(this.sfDbService.db.query('shuttles/all', {include_docs: true}))
                 .subscribe(
                     (res: any) => {
