@@ -9,6 +9,7 @@ import {LocalDataService} from '@services/data/local-data/local-data.service';
     providedIn: 'root'
 })
 
+// TODO: Refactor
 export class ListsService {
     private _favorites: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
     private _blacklist: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
