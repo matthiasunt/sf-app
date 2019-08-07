@@ -27,13 +27,17 @@ export class UserDbService {
         this.userId = details.user_id;
         this.details = details;
         this.remote = ENV.production ? details.userDBs.prod_sf : details.userDBs.dev_sf;
-        this.db.sync(this.remote, {
-            retry: true, live: true
-        }).on('paused', (err) => {
-            this._syncSubject.next(true);
-        }).on('error', (err) => {
+        this.db.replicate.from(this.remote)
+            .on('complete', (info) => {
+                this.db.sync(this.remote, {
+                    retry: true, live: true
+                }).on('paused', (err) => {
+                    this._syncSubject.next(true);
+                });
+            }).on('error', (err) => {
             console.error(err);
         });
+
     }
 
     public unableToLogin() {

@@ -4,8 +4,7 @@ import {Shuttle} from '@models/shuttle';
 import {ListsService} from '@services/data/lists/lists.service';
 import {ElementType} from '@models/list-element';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
 
 @Component({
     selector: 'app-blacklist',
@@ -14,21 +13,13 @@ import {map} from 'rxjs/operators';
 })
 export class BlacklistPage implements OnInit{
 
-    public blacklistedShuttles$: Observable<Shuttle[]>;
-
     constructor(private navCtrl: NavController,
+                public localDataService: LocalDataService,
                 public listsService: ListsService,
                 public shuttlesService: ShuttlesService,
-    ) {
-    }
+    ) {}
 
-    ngOnInit(): void {
-        this.blacklistedShuttles$ = combineLatest([this.shuttlesService.allShuttles, this.listsService.blacklist])
-            .pipe(
-                map(([allShuttles, favorites]) =>
-                    favorites.map(f =>
-                        allShuttles.find(s => s._id === f.shuttleId)).toArray())
-            );
+    ngOnInit() {
     }
 
     public blockClicked() {
@@ -43,6 +34,7 @@ export class BlacklistPage implements OnInit{
     removeFromBlacklist(shuttle: Shuttle, event) {
         event.stopPropagation();
         event.preventDefault();
+        this.localDataService.removeBlacklistedShuttle(shuttle);
         this.listsService.removeListElementByShuttleId(shuttle._id, ElementType.Blacklisted);
     }
 

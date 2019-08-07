@@ -11,7 +11,6 @@ import {LocalDataService} from '@services/data/local-data/local-data.service';
 })
 export class SettingsPage implements OnInit {
     selectedLang: string;
-    directMode: boolean;
     shareData: boolean;
 
     constructor(private popoverCtrl: PopoverController,
@@ -24,11 +23,6 @@ export class SettingsPage implements OnInit {
     async ngOnInit() {
         this.shareData = true;
         this.selectedLang = this.translate.currentLang;
-        this.directMode = await this.localData.getDirectMode();
-    }
-
-    modeChanged(event) {
-        this.localData.setDirectMode(this.directMode);
     }
 
     languageChange(event) {

@@ -135,6 +135,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             type: ElementType.Favorite
         };
         this.listsService.addListElement(listElement);
+        this.localDataService.addFavoriteShuttle(this.shuttle);
         this.isFavorite = true;
         this.presentAddedToFavoritesToast();
     }
@@ -153,6 +154,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
     }
 
     public removeFromFravorites() {
+        this.localDataService.removeFavoriteShuttle(this.shuttle);
         this.listsService.removeListElementByShuttleId(this.shuttle._id,
             this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted);
         this.isFavorite = false;
