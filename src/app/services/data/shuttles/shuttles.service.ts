@@ -5,7 +5,6 @@ import {List} from 'immutable';
 import {SfDbService} from '@services/data/sf-db/sf-db.service';
 import {GeoService} from '@services/geo/geo.service';
 import {MyCoordinates} from '@models/my-coordinates';
-import {ListElement} from '@models/list-element';
 import {Shuttle} from '@models/shuttle';
 import {DocType} from '@models/doctype';
 import {map} from 'rxjs/operators';
@@ -76,12 +75,12 @@ export class ShuttlesService {
         return ShuttlesService.sortByRankingScore(ret);
     }
 
-    public mergeShuttles(shuttles: List<Shuttle>, favorites: List<ListElement>, blacklist: List<ListElement>): List<Shuttle> {
+    public mergeShuttles(shuttles: List<Shuttle>, favorites: List<Shuttle>, blacklist: List<Shuttle>): List<Shuttle> {
         let ret: List<Shuttle> = shuttles;
         let favoriteShuttlesInList: List<Shuttle> = List([]);
         favorites.map((favorite) => {
             ret = ret.filter((shuttle) => {
-                const found = favorite.shuttleId === shuttle._id;
+                const found = favorite._id === shuttle._id;
                 if (found) {
                     favoriteShuttlesInList = favoriteShuttlesInList.push(shuttle);
                 }
@@ -91,7 +90,7 @@ export class ShuttlesService {
         ret = favoriteShuttlesInList.merge(ret);
         blacklist.map((blacklisted) => {
             ret = ret.filter((shuttle) => {
-                return blacklisted.shuttleId !== shuttle._id;
+                return blacklisted._id !== shuttle._id;
             });
         });
         return ret;

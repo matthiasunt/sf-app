@@ -73,10 +73,10 @@ export class ShuttlePage implements OnInit, OnDestroy {
         combineLatest([
             this.shuttlesService.getShuttle(shuttleId),
             this.ratingsService.userRatings,
-            this.listsService.favorites,
+            this.localDataService.favoriteShuttles,
             this.districtsService.districts]
         ).pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([shuttle, ratings, favorites, districts]) => {
+            .subscribe(([shuttle, ratings, favoriteShuttles, districts]) => {
                 if (shuttle) {
                     this.zone.run(() => {
                             this.shuttle = shuttle;
@@ -98,7 +98,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
                         shuttle.districtIds.indexOf(d._id) > -1).toArray();
 
                     // Is Shuttle Favorite?
-                    this.isFavorite = favorites.findIndex((e: ListElement) => e.shuttleId === shuttleId) > -1;
+                    this.isFavorite = favoriteShuttles.findIndex((s: Shuttle) => s._id === shuttleId) > -1;
                 }
             });
     }

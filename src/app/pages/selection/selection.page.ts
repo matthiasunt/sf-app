@@ -8,7 +8,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {DistrictsService} from '@services/data/districts/districts.service';
-import {ListsService} from '@services/data/lists/lists.service';
 import {CallsService} from '@services/data/calls/calls.service';
 import {AuthService} from '@services/auth/auth.service';
 
@@ -57,7 +56,6 @@ export class SelectionPage implements OnInit, OnDestroy {
                 private shuttlesService: ShuttlesService,
                 private authService: AuthService,
                 private callsService: CallsService,
-                private listsService: ListsService,
                 public localDataService: LocalDataService,
                 private geoService: GeoService,
     ) {
@@ -104,24 +102,22 @@ export class SelectionPage implements OnInit, OnDestroy {
     private fetchShuttlesByDistrict(districtId: string) {
         this.shuttles$ = combineLatest([
             this.shuttlesService.getShuttlesByDistrict(districtId),
-            this.listsService.favorites,
-            this.listsService.blacklist]
+            this.localDataService.favoriteShuttles,
+            this.localDataService.blacklistedShuttles]
         ).pipe(
-            map(([shuttles, favorites, blacklist]) => {
-                return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
+            map(([shuttles, favoriteShuttles, blacklistedShuttles]) => {
+                return this.shuttlesService.mergeShuttles(shuttles, favoriteShuttles, blacklistedShuttles).toArray();
             }));
     }
 
-
-    // TODO: Refactor/outsource this
     private async fetchShuttlesByPosition() {
 
         this.shuttles$ = combineLatest(
             [this.shuttlesService.allShuttles,
-            this.listsService.favorites,
-            this.listsService.blacklist]
+            this.localDataService.favoriteShuttles,
+                this.localDataService.blacklistedShuttles]
         ).pipe(
-            map(([allShuttles, favorites, blacklist]) => {
+            map(([allShuttles, favoriteShuttles, blacklistedShuttles]) => {
                 let shuttles = this.shuttlesService.filterShuttlesByPosition(
                     allShuttles, this.coordinates, 22000
                 );
@@ -133,7 +129,7 @@ export class SelectionPage implements OnInit, OnDestroy {
                 if (!shuttles || shuttles.count() < 1) {
                     this.outOfRange = true;
                 } else {
-                    return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
+                    return this.shuttlesService.mergeShuttles(shuttles, favoriteShuttles, blacklistedShuttles).toArray();
                 }
             })
         );
