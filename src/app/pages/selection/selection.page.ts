@@ -102,10 +102,10 @@ export class SelectionPage implements OnInit, OnDestroy {
     }
 
     private fetchShuttlesByDistrict(districtId: string) {
-        this.shuttles$ = combineLatest(
+        this.shuttles$ = combineLatest([
             this.shuttlesService.getShuttlesByDistrict(districtId),
             this.listsService.favorites,
-            this.listsService.blacklist
+            this.listsService.blacklist]
         ).pipe(
             map(([shuttles, favorites, blacklist]) => {
                 return this.shuttlesService.mergeShuttles(shuttles, favorites, blacklist).toArray();
@@ -117,9 +117,9 @@ export class SelectionPage implements OnInit, OnDestroy {
     private async fetchShuttlesByPosition() {
 
         this.shuttles$ = combineLatest(
-            this.shuttlesService.allShuttles,
+            [this.shuttlesService.allShuttles,
             this.listsService.favorites,
-            this.listsService.blacklist
+            this.listsService.blacklist]
         ).pipe(
             map(([allShuttles, favorites, blacklist]) => {
                 let shuttles = this.shuttlesService.filterShuttlesByPosition(

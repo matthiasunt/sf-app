@@ -70,11 +70,11 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
-        combineLatest(
+        combineLatest([
             this.shuttlesService.getShuttle(shuttleId),
             this.ratingsService.userRatings,
             this.listsService.favorites,
-            this.districtsService.districts
+            this.districtsService.districts]
         ).pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, ratings, favorites, districts]) => {
                 if (shuttle) {

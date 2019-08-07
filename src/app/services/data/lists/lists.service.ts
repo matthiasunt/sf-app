@@ -3,16 +3,23 @@ import {UserDbService} from '../user-db/user-db.service';
 import {BehaviorSubject, from} from 'rxjs';
 import {List} from 'immutable';
 import {ElementType, ListElement} from '@models/list-element';
+import {LocalDataService} from '@services/data/local-data/local-data.service';
 
 @Injectable({
     providedIn: 'root'
 })
+/**
+ * TODO: Optimization: Story Favorites and Blacklist directly in local storage to provide better UX
+ */
 export class ListsService {
     private _favorites: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
     private _blacklist: BehaviorSubject<List<ListElement>> = new BehaviorSubject(List([]));
 
 
-    constructor(private userDbService: UserDbService) {
+    constructor(
+        private localDataService: LocalDataService,
+        private userDbService: UserDbService
+    ) {
         this.loadInitialData();
     }
 
@@ -26,17 +33,9 @@ export class ListsService {
 
     private loadInitialData() {
         this.userDbService.syncSubject.subscribe(() => {
-            this.loadFavorites();
-            this.loadBlacklist();
+            this.loadListData(ElementType.Favorite);
+            this.loadListData(ElementType.Blacklisted);
         });
-    }
-
-    private loadFavorites() {
-        this.loadListData(ElementType.Favorite);
-    }
-
-    private loadBlacklist() {
-        this.loadListData(ElementType.Blacklisted);
     }
 
     private loadListData(type: ElementType) {

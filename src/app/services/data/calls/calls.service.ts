@@ -1,14 +1,10 @@
 import {Injectable, NgZone} from '@angular/core';
-import {BehaviorSubject, from} from 'rxjs';
-import {List} from 'immutable';
 
 import {UserDbService} from '@services/data/user-db/user-db.service';
 import {AuthService} from '@services/auth/auth.service';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {DeviceService} from '@services/device/device.service';
 
 import {Call, CallOrigin} from '@models/call';
-import {HistoryElement} from '@models/history-element';
 
 import {DocType} from '@models/doctype';
 import {AppState, Plugins} from '@capacitor/core';
@@ -22,9 +18,6 @@ const {App} = Plugins;
 })
 export class CallsService {
 
-    private _calls: BehaviorSubject<List<Call>> = new BehaviorSubject(List([]));
-    private _history: BehaviorSubject<List<HistoryElement>> = new BehaviorSubject(List([]));
-
     /* To handle Call times */
     private afterCall: boolean;
     private lastCallShuttleId: string;
@@ -34,42 +27,10 @@ export class CallsService {
                 private localDataService: LocalDataService,
                 private authService: AuthService,
                 private userDbService: UserDbService,
-                private shuttlesService: ShuttlesService,
                 public zone: NgZone) {
-        this.loadInitialData();
         this.handleCalls();
     }
 
-    get calls() {
-        this.emitCalls();
-        return this._calls;
-    }
-
-    get history() {
-        return this._history;
-    }
-
-    /**
-     *
-     */
-    public hideCalls() {
-        const callsToHide = this._calls.getValue();
-        this._calls.next(List([]));
-        this._history.next(List([]));
-        callsToHide.map(async (call: Call) => {
-            if (call && call._id) {
-                call.isHidden = true;
-                await this.userDbService.updateDoc(call);
-            }
-        });
-
-    }
-
-    /**
-     *
-     * @param shuttleId
-     * @param origin
-     */
     public async setCallHandlerData(shuttleId: string, origin: CallOrigin) {
         this.lastCallShuttleId = shuttleId;
         this.lastCallOrigin = origin;
@@ -89,9 +50,6 @@ export class CallsService {
         }
     }
 
-    /**
-     * Puts new Calls automatically
-     */
     private async handleCalls() {
         let callStartDate: Date;
         let callEndDate: Date;
@@ -132,41 +90,6 @@ export class CallsService {
     }
 
     private addCall(call: Call) {
-        this._calls.next(this._calls.getValue().push(call));
         return this.userDbService.putDoc(call);
-    }
-
-    private loadInitialData() {
-        this.userDbService.syncSubject.subscribe(() => {
-            from(this.userDbService.db.query('calls/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        const calls = res.rows.map(row => {
-                            if (!row.doc.isHidden) {
-                                return row.doc;
-                            }
-                        });
-                        this._calls.next(List(calls));
-                    },
-                    (err) => console.log('Error retrieving Calls')
-                );
-        });
-    }
-
-    private emitCalls() {
-        this.zone.run(() => {
-            from(this.userDbService.db.query('calls/all', {include_docs: true}))
-                .subscribe(
-                    (res: any) => {
-                        const calls = res.rows.map(row => {
-                            if (!row.doc.isHidden) {
-                                return row.doc;
-                            }
-                        });
-                        this._calls.next(List(calls));
-                    },
-                    err => console.log('Error retrieving Calls')
-                );
-        });
     }
 }

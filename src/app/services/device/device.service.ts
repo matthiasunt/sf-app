@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DeviceInfo, Plugins, StatusBarStyle} from '@capacitor/core';
+import {DeviceInfo, Plugins} from '@capacitor/core';
 
-const {StatusBar} = Plugins;
 const {Device} = Plugins;
 
 @Injectable({
@@ -13,18 +12,6 @@ export class DeviceService {
 
     constructor() {
         this.getInfo();
-    }
-
-    public async styleStatusBar(color: string) {
-        // if (await this.getPlatform() === 'android') {
-        //     const backgroundColor = shadeHexColor(color, -0.08);
-        //     const style = getContrastColor(backgroundColor) === 'white'
-        //         ? StatusBarStyle.Dark : StatusBarStyle.Light;
-        //     setTimeout(() => {
-        //         StatusBar.setStyle({style});
-        //         StatusBar.setBackgroundColor({color: backgroundColor});
-        //     }, 250);
-        // }
     }
 
     public async getInfo(): Promise<DeviceInfo> {
@@ -58,7 +45,6 @@ export class DeviceService {
 
     private async fetchInfo() {
         this.info = await Device.getInfo();
-        // console.log(this.info);
         return this.info;
     }
 

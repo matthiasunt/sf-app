@@ -23,7 +23,7 @@ export class BlacklistPage implements OnInit{
     }
 
     ngOnInit(): void {
-        this.blacklistedShuttles$ = combineLatest(this.shuttlesService.allShuttles, this.listsService.blacklist)
+        this.blacklistedShuttles$ = combineLatest([this.shuttlesService.allShuttles, this.listsService.blacklist])
             .pipe(
                 map(([allShuttles, favorites]) =>
                     favorites.map(f =>

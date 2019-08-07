@@ -47,9 +47,9 @@ export class RatePage implements OnInit, OnDestroy {
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
-        combineLatest(
+        combineLatest([
             this.shuttlesService.getShuttle(shuttleId),
-            this.ratingsService.userRatings)
+            this.ratingsService.userRatings])
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, userRatings]) => {
                 this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
