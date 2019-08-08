@@ -45,7 +45,6 @@ export class RatePage implements OnInit, OnDestroy {
     }
 
     private static ratingFormsEqual(a: RatingForm, b: RatingForm): boolean {
-        console.log(a, b);
         return a.service === b.service
             && a.reliabilityAndPunctuality === b.reliabilityAndPunctuality
             && a.drivingStyleAndSecurity === b.drivingStyleAndSecurity
@@ -61,10 +60,12 @@ export class RatePage implements OnInit, OnDestroy {
             this.ratingsService.userRatings])
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([shuttle, userRatings]) => {
-                this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
-                if (this.userRating) {
-                    this.ratingForm = {...this.userRating};
-                    this.alreadyRatedByUser = true;
+                if (shuttle) {
+                    this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
+                    if (this.userRating) {
+                        this.ratingForm = {...this.userRating};
+                        this.alreadyRatedByUser = true;
+                    }
                 }
             });
     }
