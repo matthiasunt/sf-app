@@ -119,4 +119,15 @@ export class AuthService {
         });
     }
 
+    private logout(credentials: any) {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        this.http.post(this.url + '/auth/logout', JSON.stringify(credentials), {headers: this.headers})
+            .subscribe(res => {
+                console.log(res);
+            }, (err) => {
+                console.log(err);
+            });
+    }
+
 }
