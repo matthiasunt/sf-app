@@ -136,6 +136,7 @@ export class SelectionPage implements OnInit, OnDestroy {
 
         // Get Locality Name
         const lang = this.lang === 'it' ? 'it' : 'de';
+
         // TODO: Refactor to rxjs
         this.currentLocality = await this.geoService.getLocalityName(this.coordinates, lang);
         if (!this.currentLocality || this.currentLocality.length < 1) {

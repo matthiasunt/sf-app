@@ -25,7 +25,6 @@ export class ShuttlesService {
         this.loadInitialData();
         this.sfDbService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
             if (change.doc.type === DocType.Shuttle) {
-                // console.log(`Change ${change.doc.name}`);
                 const newShuttle: Shuttle = change.doc;
                 let shuttles = this._allShuttles.value;
                 shuttles = shuttles.set(shuttles.findIndex(s => s._id === newShuttle._id), newShuttle);
@@ -44,19 +43,11 @@ export class ShuttlesService {
         );
     }
 
-    /**
-     * Get Shuttles for the passed District id and sort them by score.
-     * @param districtId
-     */
     public getShuttlesByDistrict(districtId: string): Observable<List<Shuttle>> {
         return this._allShuttles.pipe(
             map(shuttles => shuttles.filter((shuttle: Shuttle) =>
                 shuttle.districtIds.indexOf(districtId) > -1)),
             map(shuttles => ShuttlesService.sortByRankingScore(shuttles)));
-
-    }
-
-    public getShuttlesByPosition(position: MyCoordinates) {
 
     }
 
