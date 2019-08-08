@@ -91,10 +91,5 @@ export class RatingsService {
         });
     }
 
-    // TODO
-    private loadInitialShuttleRatings() {
-
-    }
-
 
 }

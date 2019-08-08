@@ -30,10 +30,14 @@ export class AuthService {
         this.url = ENV.API_URL;
     }
 
+    private static hashString(str): string {
+        return hash.sha256().update(str).digest('hex').substr(0, 16);
+    }
+
     public async doSoftLogin() {
 
         const uuid = await this.fetchUuid();
-        this.userId = this.hashString(uuid);
+        this.userId = AuthService.hashString(uuid);
 
         const user = {
             username: this.userId,
@@ -59,7 +63,7 @@ export class AuthService {
             return this.userId;
         } else {
             const uuid = await this.fetchUuid();
-            this.userId = this.hashString(uuid);
+            this.userId = AuthService.hashString(uuid);
             return this.userId;
         }
     }
@@ -72,10 +76,6 @@ export class AuthService {
             uuid = 'browser-uuid-2';
         }
         return uuid;
-    }
-
-    private hashString(str): string {
-        return hash.sha256().update(str).digest('hex').substr(0, 16);
     }
 
     public register(user: any): Promise<any> {
@@ -117,17 +117,6 @@ export class AuthService {
                     resolve(err);
                 });
         });
-    }
-
-    private logout(credentials: any) {
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        this.http.post(this.url + '/auth/logout', JSON.stringify(credentials), {headers: this.headers})
-            .subscribe(res => {
-                console.log(res);
-            }, (err) => {
-                console.log(err);
-            });
     }
 
 }
