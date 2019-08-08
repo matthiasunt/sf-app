@@ -48,7 +48,7 @@ export class FindPage implements OnInit, OnDestroy {
                 public districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
                 public listsService: ListsService,
-                private localDataService: LocalDataService,
+                public localDataService: LocalDataService,
     ) {
 
 
