@@ -42,10 +42,10 @@ export class RatingsPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((lang) => this.locale = lang === 'de_st' ? 'de' : lang);
 
-        combineLatest(
+        combineLatest([
             this.shuttlesService.allShuttles,
             this.ratingsService.userRatings,
-            this.ratingsService.getShuttleRatings(shuttleId))
+            this.ratingsService.getShuttleRatings(shuttleId)])
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([allShuttles, userRatings, shuttleRatings]) => {
                 this.shuttle = allShuttles.find((shuttle: Shuttle) => shuttle._id === shuttleId);

@@ -4,13 +4,12 @@ import {ActivatedRoute} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {Rating} from '@models/rating';
+import {Rating, RatingForm} from '@models/rating';
 import {RatingsService} from '@services/data/ratings/ratings.service';
 import {AuthService} from '@services/auth/auth.service';
 import {DocType} from '@models/doctype';
-import {map, takeUntil, withLatestFrom} from 'rxjs/operators';
-import {combineLatest, forkJoin, Observable, Subject} from 'rxjs';
-import {List} from 'immutable';
+import {takeUntil} from 'rxjs/operators';
+import {combineLatest, Observable, Subject} from 'rxjs';
 
 @Component({
     selector: 'app-rate',
@@ -19,11 +18,12 @@ import {List} from 'immutable';
 })
 export class RatePage implements OnInit, OnDestroy {
 
+
     private unsubscribe$ = new Subject<void>();
 
     shuttle$: Observable<Shuttle>;
     alreadyRatedByUser: boolean;
-    ratingForm: any = {
+    ratingForm: RatingForm = {
         service: 3,
         reliabilityAndPunctuality: 3,
         drivingStyleAndSecurity: 3,
@@ -44,6 +44,15 @@ export class RatePage implements OnInit, OnDestroy {
         this.alreadyRatedByUser = false;
     }
 
+    private static ratingFormsEqual(a: RatingForm, b: RatingForm): boolean {
+        console.log(a, b);
+        return a.service === b.service
+            && a.reliabilityAndPunctuality === b.reliabilityAndPunctuality
+            && a.drivingStyleAndSecurity === b.drivingStyleAndSecurity
+            && a.price === b.price
+            && a.review === b.review;
+    }
+
     async ngOnInit() {
         const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
         this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
@@ -54,11 +63,12 @@ export class RatePage implements OnInit, OnDestroy {
             .subscribe(([shuttle, userRatings]) => {
                 this.userRating = userRatings.find((rating: Rating) => rating.shuttleId === shuttle._id);
                 if (this.userRating) {
-                    this.ratingForm = this.userRating;
+                    this.ratingForm = {...this.userRating};
                     this.alreadyRatedByUser = true;
                 }
             });
     }
+
 
     ngOnDestroy() {
         this.unsubscribe$.next();
@@ -87,7 +97,9 @@ export class RatePage implements OnInit, OnDestroy {
             type: DocType.Rating,
         };
         if (this.alreadyRatedByUser) {
-            this.ratingsService.updateRating(rating);
+            if (!RatePage.ratingFormsEqual(this.userRating, rating)) {
+                this.ratingsService.updateRating(rating);
+            }
         } else {
             this.ratingsService.putRating(rating);
         }
@@ -98,6 +110,8 @@ export class RatePage implements OnInit, OnDestroy {
         this.deleteRatingAlert();
     }
 
+
+    /* Alerts */
     async deleteRatingAlert() {
         const alert = await this.alertCtrl.create({
             header: '',
