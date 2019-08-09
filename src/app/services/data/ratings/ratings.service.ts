@@ -66,7 +66,7 @@ export class RatingsService {
         });
     }
 
-    private async loadInitialData() {
+    private loadInitialData() {
         this.loadInitialUserRatings();
         this.loadInitialRatings();
     }

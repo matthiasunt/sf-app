@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import PouchDB from 'pouchdb';
-import {from, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, from, Observable} from 'rxjs';
 import {ENV} from '@env';
 import {mergeMap} from 'rxjs/operators';
 import {CouchDoc} from '@models/couch-doc';
@@ -15,10 +15,9 @@ export class UserDbService {
     private remote: string;
     private details: any;
     private userId: string;
-    private _syncSubject: Subject<boolean>;
+    private _syncSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(public http: HttpClient) {
-        this._syncSubject = new Subject<boolean>();
         this.db = new PouchDB(ENV.SF_USER_DB);
         this._syncSubject.next(true);
     }

@@ -4,7 +4,6 @@ import {NgModule} from '@angular/core';
 import {SfToolbarComponent} from './sf-toolbar/sf-toolbar.component';
 import {SfShuttleIconComponent} from './sf-shuttle-icon/sf-shuttle-icon.component';
 import {RouterModule} from '@angular/router';
-import {SfSkeletonListComponent} from './sf-skeleton-list/sf-skeleton-list.component';
 import {PipesModule} from '@pipes/pipes.module';
 
 
@@ -12,7 +11,6 @@ import {PipesModule} from '@pipes/pipes.module';
     declarations: [
         SfShuttleIconComponent,
         SfToolbarComponent,
-        SfSkeletonListComponent,
     ],
     imports: [
         CommonModule,
@@ -23,7 +21,6 @@ import {PipesModule} from '@pipes/pipes.module';
     exports: [
         SfShuttleIconComponent,
         SfToolbarComponent,
-        SfSkeletonListComponent,
     ]
 })
 export class ComponentsModule {

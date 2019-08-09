@@ -4,13 +4,7 @@ import {Plugins, StatusBarStyle} from '@capacitor/core';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
 import {AuthService} from '@services/auth/auth.service';
 import {DeviceService} from '@services/device/device.service';
-import {SfDbService} from '@services/data/sf-db/sf-db.service';
-import {UserDbService} from '@services/data/user-db/user-db.service';
-import {CallsService} from '@services/data/calls/calls.service';
-import {ListsService} from '@services/data/lists/lists.service';
-import {RatingsService} from '@services/data/ratings/ratings.service';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {DistrictsService} from '@services/data/districts/districts.service';
 
 
 const {SplashScreen} = Plugins;
@@ -23,16 +17,10 @@ const {StatusBar} = Plugins;
 export class AppComponent {
     constructor(
         private deviceService: DeviceService,
-        private userDbService: UserDbService,
-        private sfDbService: SfDbService,
-        private districtsService: DistrictsService,
-        private shuttlesService: ShuttlesService,
-        private listsService: ListsService,
-        private callsService: CallsService,
-        private ratingService: RatingsService,
         private translate: TranslateService,
         private authService: AuthService,
         private localDataService: LocalDataService,
+        private shuttlesService: ShuttlesService,
     ) {
         this.initializeApp();
         this.setLang();
