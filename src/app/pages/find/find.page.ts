@@ -34,20 +34,15 @@ export class FindPage implements OnInit, OnDestroy {
 
     public devMessage: string;
 
-    constructor(private zone: NgZone,
-                private navCtrl: NavController,
+    constructor(private navCtrl: NavController,
                 private router: Router,
                 private http: HttpClientModule,
                 private diagnostic: Diagnostic,
-                private authService: AuthService,
                 private deviceService: DeviceService,
-                private callNumber: CallNumber,
-                private toastCtrl: ToastController,
                 private alertCtrl: AlertController,
                 private translate: TranslateService,
+                private authService: AuthService,
                 public districtsService: DistrictsService,
-                private shuttlesService: ShuttlesService,
-                public listsService: ListsService,
                 public localDataService: LocalDataService,
     ) {
 

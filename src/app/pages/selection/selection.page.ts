@@ -54,7 +54,6 @@ export class SelectionPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private districtsService: DistrictsService,
                 private shuttlesService: ShuttlesService,
-                private authService: AuthService,
                 private callsService: CallsService,
                 public localDataService: LocalDataService,
                 private geoService: GeoService,

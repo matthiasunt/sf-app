@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
-import {from, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -11,12 +11,11 @@ export class SfDbService {
     public db: any;
     private remote: string;
 
-    private readonly _syncSubject: Subject<boolean>;
+    private _syncSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor() {
-        this._syncSubject = new Subject<boolean>();
-
         this.db = new PouchDB(`${ENV.SF_PUBLIC_DB}_v2`);
+        console.log('Public Pouch is here!');
         this._syncSubject.next(true);
 
         this.remote = `${ENV.DB_PROTOCOL}://${ENV.DB_USER}:${ENV.DB_PASS}@${ENV.DB_HOST}/${ENV.SF_PUBLIC_DB}`;
