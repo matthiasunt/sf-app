@@ -1,5 +1,5 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, NavController, ToastController} from '@ionic/angular';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AlertController, NavController} from '@ionic/angular';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
@@ -8,15 +8,12 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 
 import {DistrictsService} from '@services/data/districts/districts.service';
 import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {ListsService} from '@services/data/lists/lists.service';
 import {DeviceService} from '@services/device/device.service';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {Districts} from '../../../assets/data/districts';
-import {combineLatest, Observable, Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {AuthService} from '@services/auth/auth.service';
 
 @Component({
@@ -44,10 +41,7 @@ export class FindPage implements OnInit, OnDestroy {
                 private authService: AuthService,
                 public districtsService: DistrictsService,
                 public localDataService: LocalDataService,
-    ) {
-
-
-    }
+    ) {}
 
     async ngOnInit() {
         this.localDataService.lang.subscribe((lang: string) => this.lang = lang);
