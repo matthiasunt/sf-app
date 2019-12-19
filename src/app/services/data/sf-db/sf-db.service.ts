@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import PouchDB from 'pouchdb';
 import {ENV} from '@env';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -22,11 +22,13 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
+            console.log('change');
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
             console.log('error');
             console.error(err);
+            this._syncSubject.next(true);
         });
     }
 

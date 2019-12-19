@@ -15,7 +15,7 @@
 </ion-header>
 
 <!-- TODO: Confirmed badge, Services, report Shuttle -->
-<ion-content *ngIf="shuttle" padding>
+<ion-content *ngIf="shuttle" class="ion-padding">
 
     <ion-fab vertical="top" horizontal="end" slot="fixed">
         <ion-fab-button *ngIf="!isFavorite" (click)="addToFavorites()" color="secondary" type="button">
@@ -82,7 +82,7 @@
         <!--</ion-item>-->
         <ion-item lines="full">
             <ion-icon name="pin" slot="start"></ion-icon>
-            <ion-label text-wrap>
+            <ion-label  class="ion-text-wrap">
                 <ion-text>{{shuttle?.address.locality | localityName: lang}}</ion-text>
             </ion-label>
         </ion-item>

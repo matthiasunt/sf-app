@@ -15,7 +15,7 @@
                 <app-sf-shuttle-icon
                         [color]="historyElement.shuttle | shuttleColor"></app-sf-shuttle-icon>
             </ion-thumbnail>
-            <ion-label text-wrap>
+            <ion-label class="ion-text-wrap">
                 <ion-text>
                     <h2>{{historyElement?.shuttle?.name}}</h2>
                     <p>{{historyElement?.date | beautifulTime: locale}}</p>

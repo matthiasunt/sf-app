@@ -9,7 +9,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
 import {DistrictsService} from '@services/data/districts/districts.service';
 import {CallsService} from '@services/data/calls/calls.service';
-import {AuthService} from '@services/auth/auth.service';
 
 import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
