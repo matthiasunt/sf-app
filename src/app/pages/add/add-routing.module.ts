@@ -4,7 +4,7 @@ import {AddPage} from './add.page';
 
 const routes: Routes = [
     {path: '', component: AddPage},
-    {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+    {path: 'shuttle/:id', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
 ];
 
 @NgModule({

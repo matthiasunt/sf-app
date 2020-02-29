@@ -4,8 +4,8 @@ import {HistoryPage} from './history.page';
 
 const routes: Routes = [
     {path: '', component: HistoryPage},
-    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'},
-    {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+    {path: 'rate/:id', loadChildren: () => import('../rate/rate.module').then(m => m.RatePageModule)},
+    {path: 'shuttle/:id', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
 ];
 
 @NgModule({

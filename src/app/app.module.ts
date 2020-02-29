@@ -19,7 +19,6 @@ import {PipesModule} from '@pipes/pipes.module';
     declarations: [
         AppComponent,
     ],
-    entryComponents: [],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

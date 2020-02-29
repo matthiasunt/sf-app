@@ -4,8 +4,8 @@ import {SettingsPage} from './settings.page';
 
 const routes: Routes = [
     {path: '', component: SettingsPage},
-    {path: 'blacklist', loadChildren: '../blacklist/blacklist.module#BlacklistPageModule'},
-    {path: 'about', loadChildren: '../about/about.module#AboutPageModule'},
+    {path: 'blacklist', loadChildren: () => import('../blacklist/blacklist.module').then(m => m.BlacklistPageModule)},
+    {path: 'about', loadChildren: () => import('../about/about.module').then(m => m.AboutPageModule)},
 ];
 
 @NgModule({
