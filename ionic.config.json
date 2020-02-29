@@ -1,5 +1,6 @@
 {
   "name": "sf-app",
   "integrations": {},
-  "type": "angular"
+  "type": "angular",
+  "id": "e6a610fd"
 }
