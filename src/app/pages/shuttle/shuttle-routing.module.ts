@@ -4,9 +4,9 @@ import {ShuttlePage} from './shuttle.page';
 
 const routes: Routes = [
     {path: '', component: ShuttlePage},
-    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'},
-    {path: 'ratings/:id', loadChildren: '../ratings/ratings.module#RatingsPageModule'},
-    {path: 'ratings/:id/rate/:id', loadChildren: '../rate/rate.module#RatePageModule'},
+    {path: 'rate/:id', loadChildren: () => import('../rate/rate.module').then(m => m.RatePageModule)},
+    {path: 'ratings/:id', loadChildren: () => import('../ratings/ratings.module').then(m => m.RatingsPageModule)},
+    {path: 'ratings/:id/rate/:id', loadChildren: () => import('../rate/rate.module').then(m => m.RatePageModule)},
 ];
 
 @NgModule({

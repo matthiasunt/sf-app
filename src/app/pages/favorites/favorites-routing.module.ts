@@ -4,8 +4,8 @@ import {FavoritesPage} from './favorites.page';
 
 const routes: Routes = [
     {path: '', component: FavoritesPage},
-    {path: 'add', loadChildren: '../add/add.module#AddPageModule'},
-    {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+    {path: 'add', loadChildren: () => import('../add/add.module').then(m => m.AddPageModule)},
+    {path: 'shuttle/:id', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
 ];
 
 @NgModule({

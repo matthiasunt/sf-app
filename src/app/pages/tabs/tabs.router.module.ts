@@ -8,9 +8,9 @@ const routes: Routes = [
     {
         path: 'tabs', component: TabsPage,
         children: [
-            {path: 'find', loadChildren: '../find/find.module#FindPageModule'},
-            {path: 'history', loadChildren: '../history/history.module#HistoryPageModule'},
-            {path: 'favorites', loadChildren: '../favorites/favorites.module#FavoritesPageModule'},
+            {path: 'find', loadChildren: () => import('../find/find.module').then(m => m.FindPageModule)},
+            {path: 'history', loadChildren: () => import('../history/history.module').then(m => m.HistoryPageModule)},
+            {path: 'favorites', loadChildren: () => import('../favorites/favorites.module').then(m => m.FavoritesPageModule)},
         ]
     }
 ];
