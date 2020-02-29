@@ -22,7 +22,7 @@ export class SfDbService {
         this.db.replicate.from(this.remote, {
             retry: true, live: true
         }).on('change', (info) => {
-            console.log('change');
+            // console.log('change');
         }).on('paused', (err) => {
             this._syncSubject.next(true);
         }).on('error', (err) => {
