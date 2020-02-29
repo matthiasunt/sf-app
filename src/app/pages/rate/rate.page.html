@@ -61,7 +61,7 @@
         </ion-item>
     </ion-card>
 </ion-content>
-<ion-footer class="ion-padding">
+<ion-footer padding>
     <ng-container *ngIf="shuttle$ | async as shuttle">
         <ion-button (click)="rateClicked(shuttle)" expand="block"
                     color="tertiary">{{"shuttle.RATE" | translate}}</ion-button>
