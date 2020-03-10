@@ -97,11 +97,6 @@ export class LocalDataService {
                 .findIndex(s => s._id === shuttle._id)));
     }
 
-    private setFavoriteShuttles(shuttles: List<Shuttle>) {
-        this._favoriteShuttles.next(shuttles);
-        return this.saveItem('favoriteShuttles', shuttles.toArray());
-    }
-
     public addBlacklistedShuttle(shuttle: Shuttle) {
         return this.setBlacklistedShuttles(this.blacklistedShuttles.getValue().push(shuttle));
     }
@@ -110,6 +105,11 @@ export class LocalDataService {
         return this.setBlacklistedShuttles(this.blacklistedShuttles.getValue()
             .delete(this.blacklistedShuttles.getValue()
                 .findIndex(s => s._id === shuttle._id)));
+    }
+
+    private setFavoriteShuttles(shuttles: List<Shuttle>) {
+        this._favoriteShuttles.next(shuttles);
+        return this.saveItem('favoriteShuttles', shuttles.toArray());
     }
 
     private setBlacklistedShuttles(shuttles: List<Shuttle>) {

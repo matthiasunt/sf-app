@@ -4,15 +4,15 @@ import {FindPage} from './find.page';
 
 const routes: Routes = [
     {path: '', component: FindPage},
-    {path: 'shuttle/:id', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
+    {path: 'shuttle/:id', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
     {
         path: 'district/:id',
         children: [
-            {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
+            {path: '', loadChildren: () => import('../selection/selection.module').then(m => m.SelectionPageModule)},
             {
                 path: 'shuttle/:id', children: [
-                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
-                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
+                    {path: '', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
+                    {path: 'rate/:id', loadChildren: () => import('../rate/rate.module').then(m => m.RatePageModule)}
                 ]
             }
         ]
@@ -20,11 +20,11 @@ const routes: Routes = [
     {
         path: 'gps',
         children: [
-            {path: '', loadChildren: '../selection/selection.module#SelectionPageModule'},
+            {path: '', loadChildren: () => import('../selection/selection.module').then(m => m.SelectionPageModule)},
             {
                 path: 'shuttle/:id', children: [
-                    {path: '', loadChildren: '../shuttle/shuttle.module#ShuttlePageModule'},
-                    {path: 'rate/:id', loadChildren: '../rate/rate.module#RatePageModule'}
+                    {path: '', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
+                    {path: 'rate/:id', loadChildren: () => import('../rate/rate.module').then(m => m.RatePageModule)}
                 ]
             }
         ],

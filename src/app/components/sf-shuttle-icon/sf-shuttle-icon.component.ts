@@ -7,8 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class SfShuttleIconComponent implements OnInit {
 
-    @Input()
-    color = '#99CC33';
+    @Input() color = '#99CC33';
 
     constructor() {
     }

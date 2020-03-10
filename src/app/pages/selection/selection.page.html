@@ -31,7 +31,7 @@
                     <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
                     </app-sf-shuttle-icon>
                 </ion-thumbnail>
-                <ion-label text-wrap>
+                <ion-label class="ion-text-wrap">
                     <ion-text>
                         <h2>{{ shuttle?.name }}
                             <ion-icon *ngIf="shuttle?.verified" name="checkmark-circle" slot="end"
@@ -52,6 +52,7 @@
                                     [ngStyle]="(district$ | async)?._id | districtColor | colorStyling">
                                 {{ shuttle.address.locality | localityName: lang }}
                             </ion-badge>
+<!--                            <ion-badge>Nur tagsüber</ion-badge>-->
                         </p>
                     </ion-text>
                 </ion-label>
