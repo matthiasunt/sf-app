@@ -30,7 +30,7 @@ import {DeviceService} from '@services/device/device.service';
 export class SelectionPage implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
-    shuttles$: Observable<Shuttle[]>;
+    shuttles$: Observable<Shuttle[]> = new Observable<Shuttle[]>();
     district$: Observable<District>;
     districtId: string;
 
@@ -43,6 +43,8 @@ export class SelectionPage implements OnInit, OnDestroy {
 
     timer: any;
     disableLoading: boolean;
+
+    alertDismissed = false;
 
     constructor(private navCtrl: NavController,
                 private router: Router,
@@ -86,11 +88,11 @@ export class SelectionPage implements OnInit, OnDestroy {
             this.shuttles$
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((shuttles) => {
-                    if (shuttles.length < 1) {
+                    if (!this.disableLoading && shuttles.length < 1) {
                         this.presentShuttleFinderUnavailableAlert();
                     }
                 });
-        }, 8000);
+        }, 10000);
     }
 
     ionViewWillLeave() {
@@ -112,7 +114,7 @@ export class SelectionPage implements OnInit, OnDestroy {
 
         this.shuttles$ = combineLatest(
             [this.shuttlesService.allShuttles,
-            this.localDataService.favoriteShuttles,
+                this.localDataService.favoriteShuttles,
                 this.localDataService.blacklistedShuttles]
         ).pipe(
             map(([allShuttles, favoriteShuttles, blacklistedShuttles]) => {
@@ -180,6 +182,15 @@ export class SelectionPage implements OnInit, OnDestroy {
                 }
             ]
         });
+        // Dismass if data here
+        this.shuttles$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(async (shuttles) => {
+                if (shuttles.length > 0 && !this.alertDismissed) {
+                    await alert.dismiss();
+                    this.alertDismissed = true;
+                }
+            });
         await alert.present();
         this.disableLoading = true;
     }
