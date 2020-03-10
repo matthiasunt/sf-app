@@ -96,7 +96,6 @@ export class ShuttlesService {
                         res.rows.map(row => {
                             shuttles = shuttles.push(row.doc);
                         });
-                        // console.log(shuttles);
                         this._allShuttles.next(shuttles);
                     },
                     err => console.log('Error retrieving Shuttles')
