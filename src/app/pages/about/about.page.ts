@@ -22,7 +22,7 @@ export class AboutPage implements OnInit {
     }
 
     public getMailToLinkWithSubject(): string {
-        return 'mailto:missing@shuttlefinder.it?subject=' + this.translate.instant('about.MISSING_MAIL_SUBJECT');
+        return 'mailto:missing@shuttlefinder.app?subject=' + this.translate.instant('about.MISSING_MAIL_SUBJECT');
     }
 
 }
