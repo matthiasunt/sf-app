@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SfShuttleIconComponent } from './sf-shuttle-icon.component';
 
@@ -6,7 +6,7 @@ describe('SfShuttleIconComponent', () => {
   let component: SfShuttleIconComponent;
   let fixture: ComponentFixture<SfShuttleIconComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SfShuttleIconComponent ]
     })
