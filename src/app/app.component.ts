@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins, StatusBarStyle} from '@capacitor/core';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {AuthService} from '@services/auth/auth.service';
-import {DeviceService} from '@services/device/device.service';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {LocalDataService} from '@services/data/local-data.service';
+import {AuthService} from '@services/auth.service';
+import {DeviceService} from '@services/device.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
 
 
 const {SplashScreen} = Plugins;

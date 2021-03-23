@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {List} from 'immutable';
-import {SfDbService} from '@services/data/sf-db/sf-db.service';
+import {SfDbService} from '@services/data/sf-db.service';
 import {Rating} from '@models/rating';
-import {UserDbService} from '@services/data/user-db/user-db.service';
+import {UserDbService} from '@services/data/user-db.service';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 

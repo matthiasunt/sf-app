@@ -3,14 +3,14 @@ import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Shuttle} from '@models/shuttle';
 import {Router} from '@angular/router';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {ListsService} from '@services/data/lists/lists.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
+import {ListsService} from '@services/data/lists.service';
 import {ElementType, ListElement} from '@models/list-element';
 import {List} from 'immutable';
-import {AuthService} from '@services/auth/auth.service';
+import {AuthService} from '@services/auth.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 @Component({
     selector: 'app-add',

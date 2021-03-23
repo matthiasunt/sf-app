@@ -5,7 +5,7 @@ import getDistance from 'geolib/es/getDistance';
 
 import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
-import {DeviceService} from '@services/device/device.service';
+import {DeviceService} from '@services/device.service';
 import {MyCoordinates} from '@models/my-coordinates';
 
 

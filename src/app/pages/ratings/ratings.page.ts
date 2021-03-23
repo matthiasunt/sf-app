@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
 
-import {RatingsService} from '@services/data/ratings/ratings.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {RatingsService} from '@services/data/ratings.service';
+import {LocalDataService} from '@services/data/local-data.service';
 import {Rating} from '@models/rating';
 import {Shuttle} from '@models/shuttle';
 import {combineLatest, Subject} from 'rxjs';

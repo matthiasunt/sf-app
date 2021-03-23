@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {GeoService} from '@services/geo/geo.service';
+import {LocalDataService} from '@services/data/local-data.service';
+import {GeoService} from '@services/geo.service';
 import {AlertController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {DistrictsService} from '@services/data/districts/districts.service';
-import {CallsService} from '@services/data/calls/calls.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
+import {DistrictsService} from '@services/data/districts.service';
+import {CallsService} from '@services/data/calls.service';
 
 import {CallOrigin, CallOriginName} from '@models/call';
 import {District} from '@models/district';
@@ -18,7 +18,7 @@ import {MyCoordinates} from '@models/my-coordinates';
 import {combineLatest, Observable, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
 
-import {DeviceService} from '@services/device/device.service';
+import {DeviceService} from '@services/device.service';
 
 
 @Component({

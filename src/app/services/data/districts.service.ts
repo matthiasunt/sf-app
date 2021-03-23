@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {SfDbService} from '../sf-db/sf-db.service';
+import {SfDbService} from './sf-db.service';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List} from 'immutable';
 import {District} from '@models/district';

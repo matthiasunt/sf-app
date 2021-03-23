@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {Shuttle} from '@models/shuttle';
-import {ListsService} from '@services/data/lists/lists.service';
+import {ListsService} from '@services/data/lists.service';
 import {ElementType} from '@models/list-element';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 @Component({
     selector: 'app-blacklist',

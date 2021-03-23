@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {UserDbService} from '@services/data/user-db/user-db.service';
+import {UserDbService} from '@services/data/user-db.service';
 import {ElementType, ListElement} from '@models/list-element';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 @Injectable({
     providedIn: 'root'

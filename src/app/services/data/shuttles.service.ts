@@ -2,8 +2,8 @@ import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {List} from 'immutable';
 
-import {SfDbService} from '@services/data/sf-db/sf-db.service';
-import {GeoService} from '@services/geo/geo.service';
+import {SfDbService} from '@services/data/sf-db.service';
+import {GeoService} from '@services/geo.service';
 import {MyCoordinates} from '@models/my-coordinates';
 import {Shuttle} from '@models/shuttle';
 import {DocType} from '@models/doctype';

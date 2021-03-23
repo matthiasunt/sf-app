@@ -1,14 +1,14 @@
 import {Injectable, NgZone} from '@angular/core';
 
-import {UserDbService} from '@services/data/user-db/user-db.service';
-import {AuthService} from '@services/auth/auth.service';
-import {DeviceService} from '@services/device/device.service';
+import {UserDbService} from '@services/data/user-db.service';
+import {AuthService} from '@services/auth.service';
+import {DeviceService} from '@services/device.service';
 
 import {Call, CallOrigin} from '@models/call';
 
 import {DocType} from '@models/doctype';
 import {AppState, Plugins} from '@capacitor/core';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 const {App} = Plugins;
 

@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {Shuttle} from '@models/shuttle';
 import {NavController} from '@ionic/angular';
-import {ListsService} from '@services/data/lists/lists.service';
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
+import {ListsService} from '@services/data/lists.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
 import {ElementType} from '@models/list-element';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 @Component({
     selector: 'app-favorites',

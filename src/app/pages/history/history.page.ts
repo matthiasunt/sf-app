@@ -4,8 +4,8 @@ import {Router} from '@angular/router';
 import {AlertController, NavController} from '@ionic/angular';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 
-import {CallsService} from '@services/data/calls/calls.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {CallsService} from '@services/data/calls.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 import {CallOriginName} from '@models/call';
 import {Shuttle} from '@models/shuttle';

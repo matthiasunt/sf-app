@@ -6,15 +6,15 @@ import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 
-import {DistrictsService} from '@services/data/districts/districts.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
-import {DeviceService} from '@services/device/device.service';
+import {DistrictsService} from '@services/data/districts.service';
+import {LocalDataService} from '@services/data/local-data.service';
+import {DeviceService} from '@services/device.service';
 import {District} from '@models/district';
 import {Shuttle} from '@models/shuttle';
 import {ENV} from '@env';
 import {Districts} from '../../../assets/data/districts';
 import {Subject} from 'rxjs';
-import {AuthService} from '@services/auth/auth.service';
+import {AuthService} from '@services/auth.service';
 
 @Component({
     selector: 'app-find',

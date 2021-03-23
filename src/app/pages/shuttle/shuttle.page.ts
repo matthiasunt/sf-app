@@ -3,23 +3,23 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CallNumber} from '@ionic-native/call-number/ngx';
 import {NavController, PopoverController, ToastController} from '@ionic/angular';
 
-import {ShuttlesService} from '@services/data/shuttles/shuttles.service';
-import {CallsService} from '@services/data/calls/calls.service';
-import {ListsService} from '@services/data/lists/lists.service';
-import {AuthService} from '@services/auth/auth.service';
-import {LocalDataService} from '@services/data/local-data/local-data.service';
+import {ShuttlesService} from '@services/data/shuttles.service';
+import {CallsService} from '@services/data/calls.service';
+import {ListsService} from '@services/data/lists.service';
+import {AuthService} from '@services/auth.service';
+import {LocalDataService} from '@services/data/local-data.service';
 
 import {Shuttle} from '@models/shuttle';
 import {CallOrigin, CallOriginName} from '@models/call';
 import {ElementType, ListElement} from '@models/list-element';
-import {GeoService} from '@services/geo/geo.service';
+import {GeoService} from '@services/geo.service';
 import {Rating} from '@models/rating';
-import {RatingsService} from '@services/data/ratings/ratings.service';
+import {RatingsService} from '@services/data/ratings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {combineLatest, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {District} from '@models/district';
-import {DistrictsService} from '@services/data/districts/districts.service';
+import {DistrictsService} from '@services/data/districts.service';
 
 @Component({
     selector: 'app-shuttle',

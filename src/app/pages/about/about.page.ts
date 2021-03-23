@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {DeviceService} from '../../services/device/device.service';
+import {DeviceService} from '@services/device.service';
 
 @Component({
     selector: 'app-about',
