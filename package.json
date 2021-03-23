@@ -28,7 +28,6 @@
     "@capacitor/ios": "^2.4.5",
     "@ionic-native/call-number": "^5.30.0",
     "@ionic-native/core": "^5.30.0",
-    "@ionic-native/diagnostic": "^5.30.0",
     "@ionic-native/geolocation": "^5.30.0",
     "@ionic-native/native-geocoder": "^5.30.0",
     "@ionic-native/unique-device-id": "^5.30.0",
