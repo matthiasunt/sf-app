@@ -1701,18 +1701,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic-native/unique-device-id@npm:^5.30.0":
-  version: 5.31.1
-  resolution: "@ionic-native/unique-device-id@npm:5.31.1"
-  dependencies:
-    "@types/cordova": latest
-  peerDependencies:
-    "@ionic-native/core": ^5.1.0
-    rxjs: ^5.5.0 || ^6.5.0
-  checksum: cdf0235ab073c289e4705caffb8e034403146ded009135d58f68c52e0f80d19536dfa178e58ed49b204456bf4394ce055c05b1b3febbfb7e5fd029518c3c8394
-  languageName: node
-  linkType: hard
-
 "@ionic/angular-toolkit@npm:^1.5.1":
   version: 1.5.1
   resolution: "@ionic/angular-toolkit@npm:1.5.1"
@@ -7777,6 +7765,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"jetifier@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "jetifier@npm:2.0.0"
+  bin:
+    jetifier: bin/jetify
+    jetifier-standalone: bin/jetifier-standalone
+    jetify: bin/jetify
+  checksum: 57de27ac982555beb803ae545f3aeb074fb9cb75dea0eefa980339bcf2574c1a5e67c6fc79641ab72c75e792b0483960366a3e3880959f803b0a369b5329ccaa
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -11619,7 +11618,6 @@ resolve@1.19.0:
     "@ionic-native/diagnostic": ^5.30.0
     "@ionic-native/geolocation": ^5.30.0
     "@ionic-native/native-geocoder": ^5.30.0
-    "@ionic-native/unique-device-id": ^5.30.0
     "@ionic/angular": ^5.5.2
     "@ionic/angular-toolkit": ^1.5.1
     "@ionic/lab": ^3.2.10
@@ -11643,6 +11641,7 @@ resolve@1.19.0:
     immutable: ^4.0.0-rc.12
     jasmine-core: ~3.6.0
     jasmine-spec-reporter: ~5.0.0
+    jetifier: ^2.0.0
     karma: ^6.1.1
     karma-chrome-launcher: ~3.1.0
     karma-coverage-istanbul-reporter: ^2.1.1
@@ -11655,7 +11654,7 @@ resolve@1.19.0:
     rxjs-tslint: ^0.1.8
     tslib: ^2.0.0
     tslint: ~6.1.3
-    typescript: ^4.1.5
+    typescript: 4.1.5
     zone.js: ^0.10.3
   languageName: unknown
   linkType: soft
@@ -12867,7 +12866,7 @@ typescript@4.1.5:
   languageName: node
   linkType: hard
 
-"typescript@>=2.8.3, typescript@^4.1.5":
+typescript@>=2.8.3:
   version: 4.2.3
   resolution: "typescript@npm:4.2.3"
   bin:
@@ -12897,7 +12896,7 @@ typescript@4.1.5:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@>=2.8.3#builtin<compat/typescript>, typescript@patch:typescript@^4.1.5#builtin<compat/typescript>":
+"typescript@patch:typescript@>=2.8.3#builtin<compat/typescript>":
   version: 4.2.3
   resolution: "typescript@patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"
   bin:

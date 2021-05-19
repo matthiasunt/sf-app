@@ -9,7 +9,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
@@ -36,7 +35,6 @@ import {PipesModule} from '@pipes/pipes.module';
     ],
     providers: [
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        UniqueDeviceID,
         Geolocation,
         NativeGeocoder,
         Diagnostic

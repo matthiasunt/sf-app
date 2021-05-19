@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {UniqueDeviceID} from '@ionic-native/unique-device-id/ngx';
 
 import {LocalDataService} from '@services/data/local-data.service';
 import {UserDbService} from '@services/data/user-db.service';
@@ -20,7 +19,6 @@ export class AuthService {
 
     constructor(
         private http: HttpClient,
-        private uniqueDeviceID: UniqueDeviceID,
         private deviceService: DeviceService,
         private localData: LocalDataService,
         private userDb: UserDbService,
@@ -70,7 +68,7 @@ export class AuthService {
     private async fetchUuid() {
         let uuid: string;
         if (await this.deviceService.isDevice()) {
-            uuid = await this.uniqueDeviceID.get();
+            uuid = (await this.deviceService.getInfo()).uuid;
         } else {
             uuid = 'browser-uuid-2';
         }
