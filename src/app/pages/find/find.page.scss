@@ -57,22 +57,12 @@ ion-chip > ion-avatar {
   }
 }
 
-#tmm-card-div {
-  position: absolute;
-  bottom: 6px;
+ion-footer {
   text-align: center;
-  width: 100%;
-}
-
-@media screen and (max-width: 320px) {
-  #tmm-card-div {
-    bottom: -15px;
-  }
-  #tmm-card {
-  }
 }
 
 #tmm-card {
+  margin: 0 0 20px;
   display: inline-block;
   width: 250px;
   border-radius: 40px;
@@ -85,11 +75,11 @@ ion-chip > ion-avatar {
     h3 {
       display: inline-block;
     }
-  }
-}
 
-#tmm-logo-img {
-  display: inline-block;
-  width: 33px;
-  margin: -13px 11px;
+    #tmm-logo-img {
+      display: inline-block;
+      width: 33px;
+      margin: -13px 11px;
+    }
+  }
 }
