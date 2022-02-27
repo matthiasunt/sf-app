@@ -6,14 +6,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { RatingsPage } from './ratings.page';
-import {TranslateModule} from '@ngx-translate/core';
-import {PipesModule} from '@pipes/pipes.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { PipesModule } from '@pipes/pipes.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: RatingsPage
-  }
+    component: RatingsPage,
+  },
 ];
 
 @NgModule({
@@ -25,6 +25,6 @@ const routes: Routes = [
     TranslateModule,
     PipesModule,
   ],
-  declarations: [RatingsPage]
+  declarations: [RatingsPage],
 })
 export class RatingsPageModule {}

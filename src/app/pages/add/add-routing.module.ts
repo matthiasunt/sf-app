@@ -1,15 +1,18 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AddPage} from './add.page';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AddPage } from './add.page';
 
 const routes: Routes = [
-    {path: '', component: AddPage},
-    {path: 'shuttle/:id', loadChildren: () => import('../shuttle/shuttle.module').then(m => m.ShuttlePageModule)},
+  { path: '', component: AddPage },
+  {
+    path: 'shuttle/:id',
+    loadChildren: () =>
+      import('../shuttle/shuttle.module').then((m) => m.ShuttlePageModule),
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class AddPageRoutingModule {
-}
+export class AddPageRoutingModule {}

@@ -1,29 +1,39 @@
 <ion-header>
-    <app-sf-toolbar></app-sf-toolbar>
+  <app-sf-toolbar></app-sf-toolbar>
 </ion-header>
 
 <ion-content>
-    <p *ngIf="(localDataService.favoriteShuttles | async)?.count() < 1"
-       class="no-data-p">{{ "favorites.EMPTY" | translate }}</p>
-    <ion-list>
-        <ion-item *ngFor="let shuttle of (localDataService.favoriteShuttles | async)"
-                  lines="full" (click)="shuttleClicked(shuttle)">
-            <ion-thumbnail slot="start">
-                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-                </app-sf-shuttle-icon>
-            </ion-thumbnail>
-            <ion-label>{{ shuttle?.name }}</ion-label>
-            <div (click)="removeFavorite(shuttle, $event)" class="add-remove-button-div">
-                <ion-button color="danger" shape="round" slot="end" size="small">
-                    {{("REMOVE" | translate)}}
-                    <ion-icon name="close" slot="end"></ion-icon>
-                </ion-button>
-            </div>
-        </ion-item>
-    </ion-list>
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="addClicked()" color="secondary" type="button">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+  <p
+    *ngIf="(localDataService.favoriteShuttles | async)?.count() < 1"
+    class="no-data-p"
+  >
+    {{ "favorites.EMPTY" | translate }}
+  </p>
+  <ion-list>
+    <ion-item
+      *ngFor="let shuttle of (localDataService.favoriteShuttles | async)"
+      lines="full"
+      (click)="shuttleClicked(shuttle)"
+    >
+      <ion-thumbnail slot="start">
+        <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
+        </app-sf-shuttle-icon>
+      </ion-thumbnail>
+      <ion-label>{{ shuttle?.name }}</ion-label>
+      <div
+        (click)="removeFavorite(shuttle, $event)"
+        class="add-remove-button-div"
+      >
+        <ion-button color="danger" shape="round" slot="end" size="small">
+          {{("REMOVE" | translate)}}
+          <ion-icon name="close" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addClicked()" color="secondary" type="button">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

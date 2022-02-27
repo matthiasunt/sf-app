@@ -1,3 +1,4 @@
+/.angular/cache
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
@@ -14,6 +15,8 @@ log.txt
 .vscode/
 npm-debug.log*
 
+# Needed to not request all permissions on Android and iOS
+!node_modules/cordova.plugins.diagnostic/plugin.xml
 
 .yarn/*
 !.yarn/patches
@@ -49,9 +52,9 @@ UserInterfaceState.xcuserstate
 line-count.txt
 
 .gradle/*
-android/*
-ios/*
 src/environments/*
+!src/environments/environment.example.ts
+
 /resources
 
 # Include exceptions

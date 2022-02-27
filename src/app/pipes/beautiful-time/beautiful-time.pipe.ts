@@ -1,16 +1,13 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'beautifulTime'
+  name: 'beautifulTime',
 })
 export class BeautifulTimePipe implements PipeTransform {
-
-    transform(dateString: string, locale: string): string {
-        return new Date(dateString).toLocaleString(locale,
-            {
-                hour: 'numeric',
-                minute: 'numeric'
-            });
-    }
-
+  transform(dateString: string, locale: string): string {
+    return new Date(dateString).toLocaleString(locale, {
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+  }
 }

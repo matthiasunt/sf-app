@@ -36,7 +36,6 @@ ion-chip > ion-avatar {
 }
 
 @media screen and (min-width: 321px) {
-
   #district-chip-row {
     text-align: center;
 
@@ -53,28 +52,17 @@ ion-chip > ion-avatar {
   margin-bottom: 90px;
 
   ion-card {
-
     width: 80%;
     margin: 10px auto auto auto;
   }
 }
 
-#tmm-card-div {
-  position: fixed;
-  bottom: 6px;
+ion-footer {
   text-align: center;
-  width: 100%;
-}
-
-@media screen and (max-width: 320px) {
-  #tmm-card-div {
-    bottom: -15px;
-  }
-  #tmm-card {
-  }
 }
 
 #tmm-card {
+  margin: 0 0 20px;
   display: inline-block;
   width: 250px;
   border-radius: 40px;
@@ -87,12 +75,11 @@ ion-chip > ion-avatar {
     h3 {
       display: inline-block;
     }
+
+    #tmm-logo-img {
+      display: inline-block;
+      width: 33px;
+      margin: -13px 11px;
+    }
   }
 }
-
-#tmm-logo-img {
-  display: inline-block;
-  width: 33px;
-  margin: -13px 11px;
-}
-

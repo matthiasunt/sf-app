@@ -1,62 +1,75 @@
 <ion-header>
-    <app-sf-toolbar></app-sf-toolbar>
+  <app-sf-toolbar></app-sf-toolbar>
 </ion-header>
 
 <ion-content>
-    <p *ngIf="devMessage">{{devMessage}}</p>
+  <p *ngIf="devMessage">{{devMessage}}</p>
 
-    <ion-row id="gps-row">
+  <ion-row id="gps-row">
+    <ion-col>
+      <ion-label color="primary" class="section-headline">
+        {{ "departure.WHERE_ARE_YOU" | translate }}
+      </ion-label>
+      <ion-button
+        id="gps-button"
+        (click)="gpsClicked()"
+        color="secondary"
+        shape="round"
+      >
+        <ion-icon name="location" slot="start"></ion-icon>
+        {{ "departure.GPS" | translate }}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <div id="district-chip-row">
+    <ion-chip
+      (click)="districtClicked(d)"
+      *ngFor="let d of districts"
+      [ngStyle]="d._id | districtColor | colorStyling"
+    >
+      <ion-label>{{ d.name | districtName: lang }}</ion-label>
+    </ion-chip>
+  </div>
+  <hr />
+  <ng-container
+    *ngIf="(localDataService.favoriteShuttles | async)?.count() > 0"
+  >
+    <div id="favorites-div">
+      <ion-row>
         <ion-col>
-            <ion-label color="primary" class="section-headline">
-                {{ "departure.WHERE_ARE_YOU" | translate }}
-            </ion-label>
-            <ion-button id="gps-button" (click)="gpsClicked()" color="secondary" shape="round">
-                <ion-icon name="location" slot="start"></ion-icon>
-                {{ "departure.GPS" | translate }}
-            </ion-button>
+          <ion-label color="primary" class="section-headline-small">
+            {{"page_titles.FAVORITES" | translate}}
+          </ion-label>
         </ion-col>
-    </ion-row>
-    <div id="district-chip-row">
-        <ion-chip (click)="districtClicked(d)" *ngFor="let d of districts"
-                  [ngStyle]="d._id | districtColor | colorStyling">
-            <ion-label>{{ d.name | districtName: lang }}</ion-label>
-        </ion-chip>
+      </ion-row>
+      <ion-chip
+        *ngFor="let shuttle of (localDataService.favoriteShuttles | async)"
+        (click)="shuttleClicked(shuttle)"
+        [ngStyle]="shuttle | shuttleColor | colorStyling"
+      >
+        <ion-avatar *ngIf="shuttle">
+          <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
+          </app-sf-shuttle-icon>
+        </ion-avatar>
+        <ion-label>{{ shuttle?.name }}</ion-label>
+      </ion-chip>
     </div>
-    <hr>
-    <ng-container *ngIf="(localDataService.favoriteShuttles | async)?.count() > 0">
-        <div id="favorites-div">
-            <ion-row>
-                <ion-col>
-                    <ion-label color="primary" class="section-headline-small">
-                        {{"page_titles.FAVORITES" | translate}}
-                    </ion-label>
-                </ion-col>
-            </ion-row>
-            <ion-chip *ngFor="let shuttle of (localDataService.favoriteShuttles | async)"
-                      (click)="shuttleClicked(shuttle)"
-                      [ngStyle]="shuttle | shuttleColor | colorStyling">
-                <ion-avatar *ngIf="shuttle">
-                    <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-                    </app-sf-shuttle-icon>
-                </ion-avatar>
-                <ion-label>{{ shuttle?.name }}</ion-label>
-            </ion-chip>
-        </div>
-    </ng-container>
-<!--    <div id="tmm-card-div">-->
-<!--        <ion-card id="tmm-card">-->
-<!--            <ion-card-content>-->
-<!--                <h3> {{"departure.WHO_DRIVES" | translate}}</h3>-->
-<!--                <a href="{{ lang === 'it' ?-->
-<!--                'http://bit.ly/zero-compromessi' : 'http://bit.ly/keine-kompromisse' }}">-->
-<!--                    <img id="tmm-logo-img" src="assets/img/tmm-logo.svg"/>-->
-<!--                </a>-->
-<!--                <h3>{{"departure.DOESNT_DRINK" | translate}}</h3>-->
-<!--            </ion-card-content>-->
-<!--        </ion-card>-->
-<!--    </div>-->
+  </ng-container>
+
 </ion-content>
 
-<ion-footer>
-
+<ion-footer class="ion-no-border" [translucent]="true">
+  <ion-card id="tmm-card">
+    <ion-card-content>
+      <h3> {{"departure.WHO_DRIVES" | translate}}</h3>
+      <a href="{{ lang === 'it' ?
+                  'http://bit.ly/zero-compromessi' : 'http://bit.ly/keine-kompromisse' }}">
+        <img id="tmm-logo-img" src="assets/img/tmm-logo.svg" />
+      </a>
+      <h3>{{"departure.DOESNT_DRINK" | translate}}</h3>
+    </ion-card-content>
+  </ion-card>
 </ion-footer>
+<div id="tmm-card-div">
+
+</div>
