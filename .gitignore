@@ -52,6 +52,8 @@ line-count.txt
 android/*
 ios/*
 src/environments/*
+!src/environments/environment.example.ts
+
 /resources
 
 # Include exceptions
