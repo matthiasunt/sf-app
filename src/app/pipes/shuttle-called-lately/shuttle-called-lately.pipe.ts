@@ -1,16 +1,14 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {HistoryElement} from '@models/history-element';
+import { Pipe, PipeTransform } from '@angular/core';
+import { HistoryElement } from '@models/history-element';
 
 @Pipe({
-    name: 'shuttleCalledLately'
+  name: 'shuttleCalledLately',
 })
 export class ShuttleCalledLatelyPipe implements PipeTransform {
-
-    transform(shuttleId: string, history: HistoryElement[]): any {
-        const calledLast = history.filter((h) => {
-            return ((new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5);
-        });
-        return calledLast.findIndex((c) => c.shuttle._id === shuttleId) > -1;
-    }
-
+  transform(shuttleId: string, history: HistoryElement[]): any {
+    const calledLast = history.filter((h) => {
+      return (new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5;
+    });
+    return calledLast.findIndex((c) => c.shuttle._id === shuttleId) > -1;
+  }
 }

@@ -1,100 +1,117 @@
 <ion-header>
-    <ion-toolbar color="{{shuttle | shuttleColor}}" [ngStyle]="shuttle | shuttleColor | colorStyling">
-        <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title>
-            {{"ratings.RATINGS" | translate}} {{shuttle?.name}}
-        </ion-title>
-    </ion-toolbar>
+  <ion-toolbar
+    color="{{shuttle | shuttleColor}}"
+    [ngStyle]="shuttle | shuttleColor | colorStyling"
+  >
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{"ratings.RATINGS" | translate}} {{shuttle?.name}} </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ng-container>
-        <!-- User Rating -->
-        <ion-card *ngIf="userRating" (click)="userRatingClicked()" class="rating-card">
-            <ion-card-header>
-                <ion-card-subtitle color="black">{{"YOU" | translate}}
-                    - {{userRating?.date | beautifulDate: locale}}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-                <p>
-                    <span>Service</span>
-                    <ion-badge color="tertiary">
-                        {{userRating?.service}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.PRICE" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{userRating?.price}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <hr>
-                <p *ngIf="userRating?.review?.length > 0" class="review-p">
-                    <i>"{{userRating?.review}}"</i>
-                </p>
-            </ion-card-content>
-        </ion-card>
+  <ng-container>
+    <!-- User Rating -->
+    <ion-card
+      *ngIf="userRating"
+      (click)="userRatingClicked()"
+      class="rating-card"
+    >
+      <ion-card-header>
+        <ion-card-subtitle color="black"
+          >{{"YOU" | translate}} - {{userRating?.date | beautifulDate:
+          locale}}</ion-card-subtitle
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <p>
+          <span>Service</span>
+          <ion-badge color="tertiary">
+            {{userRating?.service}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}}
+            5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.PRICE" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{userRating?.price}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <hr />
+        <p *ngIf="userRating?.review?.length > 0" class="review-p">
+          <i>"{{userRating?.review}}"</i>
+        </p>
+      </ion-card-content>
+    </ion-card>
 
-        <!-- All Ratings -->
-        <ion-item *ngIf="ratings?.length > 0">
-            <ion-label></ion-label>
-            <ion-select (ionChange)="orderByChanged($event)" interface="popover" value="date_dsc">
-                <ion-select-option value="date_dsc">↓ Date</ion-select-option>
-                <ion-select-option value="date_asc">↑ Date</ion-select-option>
-                <ion-select-option value="rating_dsc">↓ Rating</ion-select-option>
-                <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
-            </ion-select>
-        </ion-item>
-        <ion-card *ngFor="let rating of ratings" class="rating-card">
-            <ion-card-header>
-                <ion-card-subtitle>Anonymous - {{rating?.date | beautifulDate: locale}}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-                <p>
-                    <span>Service</span>
-                    <ion-badge color="tertiary">
-                        {{rating?.service}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{rating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{rating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <p>
-                    <span>{{"rate.PRICE" | translate}}</span>
-                    <ion-badge color="tertiary">
-                        {{rating?.price}} {{"rate.OF" | translate}} 5
-                    </ion-badge>
-                </p>
-                <hr>
-                <p *ngIf="rating?.review?.length > 0" class="review-p">
-                    <i>"{{rating?.review}}"</i>
-                </p>
-            </ion-card-content>
-        </ion-card>
-    </ng-container>
+    <!-- All Ratings -->
+    <ion-item *ngIf="ratings?.length > 0">
+      <ion-label></ion-label>
+      <ion-select
+        (ionChange)="orderByChanged($event)"
+        interface="popover"
+        value="date_dsc"
+      >
+        <ion-select-option value="date_dsc">↓ Date</ion-select-option>
+        <ion-select-option value="date_asc">↑ Date</ion-select-option>
+        <ion-select-option value="rating_dsc">↓ Rating</ion-select-option>
+        <ion-select-option value="rating_asc">↑ Rating</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-card *ngFor="let rating of ratings" class="rating-card">
+      <ion-card-header>
+        <ion-card-subtitle
+          >Anonymous - {{rating?.date | beautifulDate:
+          locale}}</ion-card-subtitle
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <p>
+          <span>Service</span>
+          <ion-badge color="tertiary">
+            {{rating?.service}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{rating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{rating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <p>
+          <span>{{"rate.PRICE" | translate}}</span>
+          <ion-badge color="tertiary">
+            {{rating?.price}} {{"rate.OF" | translate}} 5
+          </ion-badge>
+        </p>
+        <hr />
+        <p *ngIf="rating?.review?.length > 0" class="review-p">
+          <i>"{{rating?.review}}"</i>
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
 
-    <p *ngIf="!this.userRating && ratings?.length < 1" class="no-data-p">{{"ratings.NO_RATINGS" | translate}}</p>
+  <p *ngIf="!this.userRating && ratings?.length < 1" class="no-data-p">
+    {{"ratings.NO_RATINGS" | translate}}
+  </p>
 </ion-content>

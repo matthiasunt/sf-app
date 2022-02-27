@@ -36,7 +36,6 @@ ion-chip > ion-avatar {
 }
 
 @media screen and (min-width: 321px) {
-
   #district-chip-row {
     text-align: center;
 
@@ -53,14 +52,13 @@ ion-chip > ion-avatar {
   margin-bottom: 90px;
 
   ion-card {
-
     width: 80%;
     margin: 10px auto auto auto;
   }
 }
 
 #tmm-card-div {
-  position: fixed;
+  position: absolute;
   bottom: 6px;
   text-align: center;
   width: 100%;
@@ -95,4 +93,3 @@ ion-chip > ion-avatar {
   width: 33px;
   margin: -13px 11px;
 }
-

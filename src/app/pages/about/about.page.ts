@@ -1,28 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {DeviceService} from '@services/device.service';
+import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { DeviceService } from '@services/device.service';
 
 @Component({
-    selector: 'app-about',
-    templateUrl: './about.page.html',
-    styleUrls: ['./about.page.scss'],
+  selector: 'app-about',
+  templateUrl: './about.page.html',
+  styleUrls: ['./about.page.scss'],
 })
 export class AboutPage implements OnInit {
+  public appVersionNumber: string;
 
-    public appVersionNumber: string;
+  constructor(
+    private translate: TranslateService,
+    private deviceService: DeviceService
+  ) {}
 
-    constructor(private translate: TranslateService,
-                private deviceService: DeviceService,
-    ) {
-    }
+  async ngOnInit() {
+    this.appVersionNumber = 'x.x';
+    this.appVersionNumber = await this.deviceService.getAppVersion();
+  }
 
-    async ngOnInit() {
-        this.appVersionNumber = 'x.x';
-        this.appVersionNumber = await this.deviceService.getAppVersion();
-    }
-
-    public getMailToLinkWithSubject(): string {
-        return 'mailto:missing@shuttlefinder.app?subject=' + this.translate.instant('about.MISSING_MAIL_SUBJECT');
-    }
-
+  public getMailToLinkWithSubject(): string {
+    return (
+      'mailto:missing@shuttlefinder.app?subject=' +
+      this.translate.instant('about.MISSING_MAIL_SUBJECT')
+    );
+  }
 }

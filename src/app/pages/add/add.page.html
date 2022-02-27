@@ -1,58 +1,90 @@
 <ion-header>
-    <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
-        <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title>
-            {{ addToFavorites ? ("add.ADD_FAVORITE" | translate) : ("add.LOCK_SHUTTLE" | translate) }}
-        </ion-title>
-    </ion-toolbar>
-    <ion-searchbar [showCancelButton]="true" (ionInput)="getQueryResult($event)"
-                   placeholder="{{ 'add.NAME_OR_PHONE' | translate }}" animated="true" debounce="500">
-    </ion-searchbar>
+  <ion-toolbar color="{{addToFavorites? 'secondary' : 'dark'}}">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ addToFavorites ? ("add.ADD_FAVORITE" | translate) : ("add.LOCK_SHUTTLE"
+      | translate) }}
+    </ion-title>
+  </ion-toolbar>
+  <ion-searchbar
+    [showCancelButton]="true"
+    (ionInput)="getQueryResult($event)"
+    placeholder="{{ 'add.NAME_OR_PHONE' | translate }}"
+    animated="true"
+    debounce="500"
+  >
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
-    <ion-virtual-scroll [items]="queryResult" approxItemHeight="60px">
-        <ion-item *virtualItem="let shuttle" (click)="shuttleClicked(shuttle)" lines="full">
-            <ion-thumbnail slot="start" *ngIf="shuttle">
-                <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-                </app-sf-shuttle-icon>
-            </ion-thumbnail>
-            <ion-label  class="ion-text-wrap">
-                <ion-text>
-                    <h2>{{ shuttle?.name }}</h2>
-                    <p>{{ shuttle?.phone | phoneNumber }}</p>
-                </ion-text>
-            </ion-label>
-            <div *ngIf="!isInList(shuttle)" (click)="addToList(shuttle, $event)" class="add-remove-button-div">
-                <ion-button
-                        color="{{addToFavorites? 'success' : 'dark'}}"
-                        slot="end" shape="round" size="small">
-                    {{addToFavorites ? ("ADD" | translate) : ("BLOCK" | translate)}}
-                    <ion-icon name="{{addToFavorites? 'heart' : 'remove-circle'}}" slot="end"></ion-icon>
-                </ion-button>
-            </div>
-            <div *ngIf="isInList(shuttle)" (click)="removeFromList(shuttle, $event)" class="add-remove-button-div">
-                <ion-button
-                        color="{{addToFavorites? 'danger' : 'success'}}"
-                        slot="end" shape="round" size="small">
-                    {{addToFavorites ? ("REMOVE" | translate) : ("UNBLOCK" | translate)}}
-                    <ion-icon name="{{addToFavorites? 'close' : 'checkmark-circle'}}" slot="end"></ion-icon>
-                </ion-button>
-            </div>
-        </ion-item>
-    </ion-virtual-scroll>
+  <ion-virtual-scroll [items]="queryResult" approxItemHeight="60px">
+    <ion-item
+      *virtualItem="let shuttle"
+      (click)="shuttleClicked(shuttle)"
+      lines="full"
+    >
+      <ion-thumbnail slot="start" *ngIf="shuttle">
+        <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
+        </app-sf-shuttle-icon>
+      </ion-thumbnail>
+      <ion-label class="ion-text-wrap">
+        <ion-text>
+          <h2>{{ shuttle?.name }}</h2>
+          <p>{{ shuttle?.phone | phoneNumber }}</p>
+        </ion-text>
+      </ion-label>
+      <div
+        *ngIf="!isInList(shuttle)"
+        (click)="addToList(shuttle, $event)"
+        class="add-remove-button-div"
+      >
+        <ion-button
+          color="{{addToFavorites? 'success' : 'dark'}}"
+          slot="end"
+          shape="round"
+          size="small"
+        >
+          {{addToFavorites ? ("ADD" | translate) : ("BLOCK" | translate)}}
+          <ion-icon
+            name="{{addToFavorites? 'heart' : 'remove-circle'}}"
+            slot="end"
+          ></ion-icon>
+        </ion-button>
+      </div>
+      <div
+        *ngIf="isInList(shuttle)"
+        (click)="removeFromList(shuttle, $event)"
+        class="add-remove-button-div"
+      >
+        <ion-button
+          color="{{addToFavorites? 'danger' : 'success'}}"
+          slot="end"
+          shape="round"
+          size="small"
+        >
+          {{addToFavorites ? ("REMOVE" | translate) : ("UNBLOCK" | translate)}}
+          <ion-icon
+            name="{{addToFavorites? 'close' : 'checkmark-circle'}}"
+            slot="end"
+          ></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-virtual-scroll>
 
-    <p *ngIf="queryResult?.length < 1" class="no-data-p">{{ ("add.NO_RESULT" | translate) }}</p>
+  <p *ngIf="queryResult?.length < 1" class="no-data-p">
+    {{ ("add.NO_RESULT" | translate) }}
+  </p>
 
-    <!--<div *ngIf="allShuttles?.length < 1">-->
-    <!--<ion-spinner *ngIf="!noConnection && !unavailable" color="grey" name="crescent"></ion-spinner>-->
-    <!--<div *ngIf="noConnection">-->
-    <!--<p class="no-data-p ">{{ "NO_CONNECTION" | translate }}</p>-->
-    <!--</div>-->
-    <!--<div *ngIf="unavailable">-->
-    <!--&lt;!&ndash; <p class="no-data-p ">{{ "NOT_AVAILABLE" | translate }}</p> &ndash;&gt;-->
-    <!--</div>-->
-    <!--</div>-->
+  <!--<div *ngIf="allShuttles?.length < 1">-->
+  <!--<ion-spinner *ngIf="!noConnection && !unavailable" color="grey" name="crescent"></ion-spinner>-->
+  <!--<div *ngIf="noConnection">-->
+  <!--<p class="no-data-p ">{{ "NO_CONNECTION" | translate }}</p>-->
+  <!--</div>-->
+  <!--<div *ngIf="unavailable">-->
+  <!--&lt;!&ndash; <p class="no-data-p ">{{ "NOT_AVAILABLE" | translate }}</p> &ndash;&gt;-->
+  <!--</div>-->
+  <!--</div>-->
 </ion-content>

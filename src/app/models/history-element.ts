@@ -1,6 +1,6 @@
-import {Shuttle} from './shuttle';
+import { Shuttle } from './shuttle';
 
 export interface HistoryElement {
-    shuttle: Shuttle;
-    date: Date;
+  shuttle: Shuttle;
+  date: Date;
 }

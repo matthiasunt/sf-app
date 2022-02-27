@@ -1,49 +1,48 @@
 <ion-header>
-    <ion-toolbar color="secondary">
-        <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title>
-            {{"page_titles.ABOUT" | translate}}
-        </ion-title>
-    </ion-toolbar>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{"page_titles.ABOUT" | translate}} </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-    <img id="about-header-img" src="assets/img/sf-logo.svg">
+  <img id="about-header-img" src="assets/img/sf-logo.svg" />
 
-    <ion-card id="main-card">
-        <ion-card-header>
-            <ion-card-subtitle>
-                {{ "about.VERSION" | translate }} {{ appVersionNumber }}
-            </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-            {{ "about.TEXT" | translate }}
-        </ion-card-content>
-    </ion-card>
+  <ion-card id="main-card">
+    <ion-card-header>
+      <ion-card-subtitle>
+        {{ "about.VERSION" | translate }} {{ appVersionNumber }}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content> {{ "about.TEXT" | translate }} </ion-card-content>
+  </ion-card>
 
-    <ion-card class="questions-card">
-        <ion-card-content>
-            {{ "about.QUESTIONS" | translate }}:
-            <a href="mailto:hello@shuttlefinder.app">hello@shuttlefinder.app</a>
-        </ion-card-content>
-    </ion-card>
-    <ion-card class="questions-card">
-        <ion-card-content>
-            {{ "about.MISSING" | translate }} <a href="{{getMailToLinkWithSubject()}}">
-            missing@shuttlefinder.app</a>
-        </ion-card-content>
-    </ion-card>
+  <ion-card class="questions-card">
+    <ion-card-content>
+      {{ "about.QUESTIONS" | translate }}:
+      <a href="mailto:hello@shuttlefinder.app">hello@shuttlefinder.app</a>
+    </ion-card-content>
+  </ion-card>
+  <ion-card class="questions-card">
+    <ion-card-content>
+      {{ "about.MISSING" | translate }}
+      <a href="{{getMailToLinkWithSubject()}}"> missing@shuttlefinder.app</a>
+    </ion-card-content>
+  </ion-card>
 
-    <p id="imprint-privacy-p">
-        <a href="https://shuttlefinder.app/privacy.html">{{ "about.PRIVACY" | translate }}</a>
-    </p>
-
+  <p id="imprint-privacy-p">
+    <a href="https://shuttlefinder.app/privacy.html"
+      >{{ "about.PRIVACY" | translate }}</a
+    >
+  </p>
 </ion-content>
 <ion-footer>
-    <div id="forump-logo-div">
-        <p id="support-p">{{ "about.SUPPORTED_BY" | translate }}</p>
-        <a href="http://bit.ly/forum-praevention"><img id="forump-logo-img" src="assets/img/forump-logo.jpg"></a>
-    </div>
+  <div id="forump-logo-div">
+    <p id="support-p">{{ "about.SUPPORTED_BY" | translate }}</p>
+    <a href="http://bit.ly/forum-praevention"
+      ><img id="forump-logo-img" src="assets/img/forump-logo.jpg"
+    /></a>
+  </div>
 </ion-footer>
