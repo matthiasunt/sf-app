@@ -50,8 +50,6 @@ UserInterfaceState.xcuserstate
 line-count.txt
 
 .gradle/*
-android/*
-ios/*
 src/environments/*
 !src/environments/environment.example.ts
 
