@@ -11,7 +11,7 @@ import { LocalDataService } from '@services/data/local-data.service';
 import { DeviceService } from '@services/device.service';
 import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
-import { ENV } from '@env';
+import { environment } from '@env';
 import { Districts } from '../../../assets/data/districts';
 import { Subject } from 'rxjs';
 import { AuthService } from '@services/auth.service';
@@ -46,9 +46,9 @@ export class FindPage implements OnInit, OnDestroy {
   async ngOnInit() {
     this.localDataService.lang.subscribe((lang: string) => (this.lang = lang));
 
-    console.log(ENV.message);
+    console.log(environment.message);
 
-    if (!ENV.production) {
+    if (!environment.production) {
       this.devMessage = `Hey, ${await this.authService.getUserId()}`;
     }
   }

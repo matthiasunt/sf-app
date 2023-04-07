@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { LocalDataService } from '@services/data/local-data.service';
 import { UserDbService } from '@services/data/user-db.service';
-import { ENV } from '@env';
+import { environment } from '@env';
 import { DeviceService } from '@services/device.service';
 
 import * as hash from 'hash.js';
@@ -24,7 +24,7 @@ export class AuthService {
   ) {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchUuid();
-    this.url = ENV.API_URL;
+    this.url = environment.API_URL;
   }
 
   private static hashString(str): string {
@@ -44,7 +44,7 @@ export class AuthService {
     };
     try {
       const loginRes = await this.login(user);
-      if (loginRes.status === 401) {
+      if (loginRes.status != 200) {
         const res = await this.register(user);
         console.log(res);
       }
@@ -103,6 +103,7 @@ export class AuthService {
   public login(credentials: any): Promise<any> {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    console.log(JSON.stringify(credentials));
     return new Promise((resolve) => {
       this.http
         .post(this.url + '/auth/login', JSON.stringify(credentials), {

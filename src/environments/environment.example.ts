@@ -1,4 +1,4 @@
-export const ENV = {
+export const environment = {
   production: false,
   message: '',
   DB_PROTOCOL: '',

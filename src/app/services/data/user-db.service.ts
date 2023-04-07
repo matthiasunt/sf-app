@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import PouchDB from 'pouchdb';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { ENV } from '@env';
+import { environment } from '@env';
 import { mergeMap } from 'rxjs/operators';
 import { CouchDoc } from '@models/couch-doc';
 
@@ -19,14 +19,14 @@ export class UserDbService {
   );
 
   constructor(public http: HttpClient) {
-    this.db = new PouchDB(ENV.SF_USER_DB);
+    this.db = new PouchDB(environment.SF_USER_DB);
     this._syncSubject.next(true);
   }
 
   public init(details) {
     this.userId = details.user_id;
     this.details = details;
-    this.remote = ENV.production
+    this.remote = environment.production
       ? details.userDBs.prod_sf
       : details.userDBs.dev_sf;
     this.db.replicate
