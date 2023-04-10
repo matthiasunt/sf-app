@@ -59,7 +59,7 @@ export class FindPage implements OnInit, OnDestroy {
   }
 
   private async districtClicked(district) {
-    this.navCtrl.navigateForward('/tabs/find/district/' + district._id);
+    this.navCtrl.navigateForward('/tabs/find/district/' + district.id);
   }
 
   public async gpsClicked() {
@@ -84,7 +84,7 @@ export class FindPage implements OnInit, OnDestroy {
 
   public shuttleClicked(shuttle: Shuttle) {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
+    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle.id);
   }
 
   /* Alerts */

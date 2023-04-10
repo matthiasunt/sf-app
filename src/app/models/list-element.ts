@@ -1,6 +1,5 @@
-import { CouchDoc } from '@models/couch-doc';
-
-export interface ListElement extends CouchDoc {
+export interface ListElement {
+  id: string;
   type: ElementType;
   userId: string;
   shuttleId: string;
@@ -8,6 +7,6 @@ export interface ListElement extends CouchDoc {
 }
 
 export enum ElementType {
-  Favorite = 'favorite',
+  Favorites = 'favorites',
   Blacklisted = 'blacklisted',
 }

@@ -14,6 +14,5 @@ export class SfToolbarComponent implements OnInit {
   toSettings() {
     const currentUrl = this.router.url;
     this.router.navigate(['/settings']);
-    // this.router.navigate([currentUrl + '/settings']);
   }
 }

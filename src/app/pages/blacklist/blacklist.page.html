@@ -9,7 +9,7 @@
 
 <ion-content>
   <p
-    *ngIf="(localDataService.blacklistedShuttles | async)?.count() < 1"
+    *ngIf="(localDataService.blacklistedShuttles | async)?.length < 1"
     class="no-data-p"
   >
     {{ "blacklist.EMPTY" | translate }}

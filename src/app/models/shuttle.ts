@@ -1,10 +1,10 @@
 import { Address } from './address';
 import { MyCoordinates } from './my-coordinates';
 import { AvgRating } from '@models/avg-rating';
-import { CouchDoc } from '@models/couch-doc';
 
-export interface Shuttle extends CouchDoc {
-  type: string;
+export interface Shuttle {
+  id: string;
+  hidden: Boolean;
   name: string;
   phone: string;
   rankingScore: number;

@@ -1,13 +1,10 @@
-import { CouchDoc } from '@models/couch-doc';
-
-export interface Call extends CouchDoc {
-  type: string;
+export interface Call {
+  id: String;
   startDate: Date;
   endDate: Date;
   userId: string;
   shuttleId: string;
   origin: CallOrigin;
-  isHidden: boolean;
 }
 
 export interface CallOrigin {
@@ -19,6 +16,6 @@ export enum CallOriginName {
   History = 'history',
   District = 'district',
   Gps = 'gps',
-  Favorite = 'favorite',
+  Favorites = 'favorite',
   Other = 'other',
 }

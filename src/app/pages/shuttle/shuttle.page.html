@@ -81,8 +81,8 @@
     <ion-card-content>
       <ion-chip
         *ngFor="let d of shuttleDistricts"
-        [style.background-color]="d._id | districtColor"
-        [style.color]="d._id | districtColor | contrastColor"
+        [style.background-color]="d.id | districtColor"
+        [style.color]="d.id | districtColor | contrastColor"
       >
         <ion-label>{{d.name | districtName: lang}}</ion-label>
       </ion-chip>

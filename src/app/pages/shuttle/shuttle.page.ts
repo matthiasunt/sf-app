@@ -76,7 +76,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
     combineLatest([
       this.shuttlesService.getShuttle(shuttleId),
-      this.ratingsService.userRatings,
+      this.ratingsService.getRatings(shuttleId),
       this.localDataService.favoriteShuttles,
       this.districtsService.districts,
     ])
@@ -87,7 +87,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             this.shuttle = shuttle;
             // User Rating
             this.userRating = ratings.find(
-              (rating) => rating.shuttleId === shuttle._id
+              (rating) => rating.shuttleId === shuttle.id
             );
             // Reviews
             if (shuttle.avgRating && shuttle.avgRating.reviews) {
@@ -100,14 +100,13 @@ export class ShuttlePage implements OnInit, OnDestroy {
           });
 
           // Districts
-          this.shuttleDistricts = districts
-            .filter((d) => shuttle.districtIds.indexOf(d._id) > -1)
-            .toArray();
+          this.shuttleDistricts = districts.filter(
+            (d) => shuttle.districtIds.indexOf(d.id) > -1
+          );
 
-          // Is Shuttle Favorite?
+          // Is Shuttle Favorites?
           this.isFavorite =
-            favoriteShuttles.findIndex((s: Shuttle) => s._id === shuttleId) >
-            -1;
+            favoriteShuttles.findIndex((s: Shuttle) => s.id === shuttleId) > -1;
         }
       });
   }
@@ -119,7 +118,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
   public async callClicked() {
     const callOrigin = await this.getCallOrigin();
-    this.callsService.setCallHandlerData(this.shuttle._id, callOrigin);
+    this.callsService.setCallHandlerData(this.shuttle.id, callOrigin);
     this.callNumber.callNumber(this.shuttle.phone, true);
     this.localDataService.addToHistory({
       shuttle: this.shuttle,
@@ -129,22 +128,22 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
   public rateClicked() {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle._id);
+    this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle.id);
   }
 
   public toRatingsPage() {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/ratings/' + this.shuttle._id);
+    this.navCtrl.navigateForward(currentUrl + '/ratings/' + this.shuttle.id);
   }
 
   public async addToFavorites() {
     const userId = await this.authService.getUserId();
     const listElement: ListElement = {
-      _id: `${userId}--${ElementType.Favorite}--${this.shuttle._id}`,
+      id: `${userId}--${ElementType.Favorites}--${this.shuttle.id}`,
       userId: userId,
-      shuttleId: this.shuttle._id,
+      shuttleId: this.shuttle.id,
       date: new Date().toISOString(),
-      type: ElementType.Favorite,
+      type: ElementType.Favorites,
     };
     this.listsService.addListElement(listElement);
     this.localDataService.addFavoriteShuttle(this.shuttle);
@@ -172,8 +171,8 @@ export class ShuttlePage implements OnInit, OnDestroy {
   public removeFromFravorites() {
     this.localDataService.removeFavoriteShuttle(this.shuttle);
     this.listsService.removeListElementByShuttleId(
-      this.shuttle._id,
-      this.addToFavorites ? ElementType.Favorite : ElementType.Blacklisted
+      this.shuttle.id,
+      this.addToFavorites ? ElementType.Favorites : ElementType.Blacklisted
     );
     this.isFavorite = false;
     this.presentRemovedFromFavoritesToast();
@@ -214,8 +213,8 @@ export class ShuttlePage implements OnInit, OnDestroy {
       url.includes('find') &&
       url.indexOf('find') === url.indexOf('shuttle') - 1
     ) {
-      console.log('Favorite');
-      callOrigin = { name: CallOriginName.Favorite, value: '' };
+      console.log('Favorites');
+      callOrigin = { name: CallOriginName.Favorites, value: '' };
     } else {
       callOrigin = { name: CallOriginName.Other, value: this.router.url };
     }

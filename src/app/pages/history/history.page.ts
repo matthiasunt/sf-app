@@ -41,7 +41,7 @@ export class HistoryPage implements OnInit, OnDestroy {
     this.localDataService.history
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((history) => {
-        this.history = history.toArray();
+        this.history = history;
       });
 
     this.localDataService.lang
@@ -55,19 +55,19 @@ export class HistoryPage implements OnInit, OnDestroy {
   }
 
   private shuttleClicked(shuttle: Shuttle) {
-    this.navCtrl.navigateForward('tabs/history/shuttle/' + shuttle._id);
+    this.navCtrl.navigateForward('tabs/history/shuttle/' + shuttle.id);
   }
 
   private rateClicked(shuttle: Shuttle, event) {
     event.stopPropagation();
     event.preventDefault();
-    this.navCtrl.navigateForward('tabs/history/rate/' + shuttle._id);
+    this.navCtrl.navigateForward('tabs/history/rate/' + shuttle.id);
   }
 
   private callClicked(shuttle: Shuttle, event) {
     event.stopPropagation();
     event.preventDefault();
-    this.callsService.setCallHandlerData(shuttle._id, {
+    this.callsService.setCallHandlerData(shuttle.id, {
       name: CallOriginName.History,
       value: '',
     });

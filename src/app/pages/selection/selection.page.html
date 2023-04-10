@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar
-    color="{{(district$ | async)?._id | districtColor}}"
-    [ngStyle]="(district$ | async)?._id | districtColor | colorStyling"
+    color="{{(district$ | async)?.id | districtColor}}"
+    [ngStyle]="(district$ | async)?.id | districtColor | colorStyling"
   >
     <ion-buttons slot="start">
       <ion-back-button defaultHref="tabs/find"></ion-back-button>
@@ -33,8 +33,8 @@
   <div *ngIf="(shuttles$ | async)?.length > 0; else noData">
     <ion-virtual-scroll [items]="(shuttles$ | async)" approxItemHeight="60px">
       <ion-item
-        color="{{(shuttle._id |
-                    shuttleCalledLately: localDataService.history.getValue().toArray())?
+        color="{{(shuttle.id |
+                    shuttleCalledLately: localDataService.history.getValue())?
                     'medium' : ''}}"
         lines="full"
         *virtualItem="let shuttle"
@@ -70,7 +70,7 @@
               </ion-badge>
               <ion-badge
                 *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-                [ngStyle]="(district$ | async)?._id | districtColor | colorStyling"
+                [ngStyle]="(district$ | async)?.id | districtColor | colorStyling"
               >
                 {{ shuttle.address.locality | localityName: lang }}
               </ion-badge>

@@ -1,36 +1,39 @@
-import { Injectable } from '@angular/core';
-import { UserDbService } from '@services/data/user-db.service';
+import { Injectable, inject } from '@angular/core';
+import { environment } from '@env';
 import { ElementType, ListElement } from '@models/list-element';
-import { LocalDataService } from '@services/data/local-data.service';
+import { AuthService } from '@services/auth.service';
+import { initializeApp } from 'firebase/app';
+import { deleteDoc, doc, getFirestore, setDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ListsService {
-  constructor(
-    private localDataService: LocalDataService,
-    private userDbService: UserDbService
-  ) {}
+  private db = getFirestore(initializeApp(environment.firebase));
+  private authService = inject(AuthService);
 
   public async addListElement(listElement: ListElement) {
-    const res$ = this.userDbService.putDoc(listElement);
-    res$.subscribe((res) => console.log(res));
+    try {
+      await setDoc(
+        doc(
+          this.db,
+          `users/${listElement.userId}/${listElement.type}/${listElement.id}`
+        ),
+        listElement
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public async removeListElementByShuttleId(
     shuttleId: string,
     type: ElementType
   ) {
-    const userId = this.userDbService.getUserId();
-    if (userId && userId.length > 0) {
-      this.userDbService
-        .getDoc(`${this.userDbService.getUserId()}--${type}--${shuttleId}`)
-        .subscribe((getRes) => {
-          const delRes$ = this.userDbService.removeDoc(getRes);
-          delRes$.subscribe((delRes) => console.log(delRes));
-        });
-    } else {
-      console.log('UserId not defined');
-    }
+    const userId = await this.authService.getUserId();
+    const id = `${userId}--${type}--${shuttleId}`;
+    const query = doc(this.db, `users/${userId}/${type}/${id}`);
+    const res = await deleteDoc(query);
+    return res;
   }
 }

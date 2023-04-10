@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShuttlesService } from '@services/data/shuttles.service';
@@ -7,9 +7,10 @@ import { RatingsService } from '@services/data/ratings.service';
 import { LocalDataService } from '@services/data/local-data.service';
 import { Rating } from '@models/rating';
 import { Shuttle } from '@models/shuttle';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, from, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NavController } from '@ionic/angular';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-ratings',
@@ -18,6 +19,7 @@ import { NavController } from '@ionic/angular';
 })
 export class RatingsPage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
+  private authService = inject(AuthService);
 
   shuttle: Shuttle;
   ratings: Rating[];
@@ -36,34 +38,24 @@ export class RatingsPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-
     this.localDataService.lang
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((lang) => (this.locale = lang === 'de_st' ? 'de' : lang));
 
     combineLatest([
+      from(this.authService.getUserId()),
       this.shuttlesService.allShuttles,
-      this.ratingsService.userRatings,
-      this.ratingsService.getShuttleRatings(shuttleId),
+      from(this.ratingsService.getRatings(shuttleId)),
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([allShuttles, userRatings, shuttleRatings]) => {
+      .subscribe(([userId, allShuttles, shuttleRatings]) => {
         this.shuttle = allShuttles.find(
-          (shuttle: Shuttle) => shuttle._id === shuttleId
+          (shuttle: Shuttle) => shuttle.id === shuttleId
         );
-        this.userRating = userRatings.find(
-          (rating) => rating.shuttleId === this.shuttle._id
-        );
-        if (this.userRating) {
-          this.ratings = shuttleRatings
-            .filter((rating) => rating._id !== this.userRating._id)
-            .toArray();
-        } else {
-          this.ratings = shuttleRatings.toArray();
-        }
-        this.ratings.sort((a, b) =>
-          a.date < b.date ? 1 : a.date > b.date ? -1 : 0
-        );
+        this.userRating = shuttleRatings.find((r) => r.userId === userId);
+        this.ratings = shuttleRatings
+          .filter((rating) => rating.id !== this.userRating.id)
+          .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
       });
   }
 
@@ -74,7 +66,7 @@ export class RatingsPage implements OnInit, OnDestroy {
 
   userRatingClicked() {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle._id);
+    this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle.id);
   }
 
   public orderByChanged(event) {

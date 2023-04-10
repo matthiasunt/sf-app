@@ -1,45 +1,27 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { List } from 'immutable';
 
-import { SfDbService } from '@services/data/sf-db.service';
 import { GeoService } from '@services/geo.service';
 import { MyCoordinates } from '@models/my-coordinates';
 import { Shuttle } from '@models/shuttle';
-import { DocType } from '@models/doctype';
 import { map } from 'rxjs/operators';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
+import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShuttlesService {
-  private _allShuttles: BehaviorSubject<List<Shuttle>> = new BehaviorSubject(
-    List([])
-  );
+  private db = getFirestore(initializeApp(environment.firebase));
+  private _allShuttles: BehaviorSubject<Shuttle[]> = new BehaviorSubject([]);
 
-  private static sortByRankingScore(shuttles: List<Shuttle>): List<Shuttle> {
+  private static sortByRankingScore(shuttles: Shuttle[]): Shuttle[] {
     return shuttles.sort((a, b) => b.rankingScore - a.rankingScore);
   }
 
-  constructor(
-    private sfDbService: SfDbService,
-    private geoService: GeoService,
-    public zone: NgZone
-  ) {
+  constructor(private geoService: GeoService, public zone: NgZone) {
     this.loadInitialData();
-    this.sfDbService.db
-      .changes({ live: true, since: 'now', include_docs: true })
-      .on('change', (change) => {
-        if (change.doc.type === DocType.Shuttle) {
-          const newShuttle: Shuttle = change.doc;
-          let shuttles = this._allShuttles.value;
-          shuttles = shuttles.set(
-            shuttles.findIndex((s) => s._id === newShuttle._id),
-            newShuttle
-          );
-          this._allShuttles.next(shuttles);
-        }
-      });
   }
 
   get allShuttles() {
@@ -48,11 +30,11 @@ export class ShuttlesService {
 
   public getShuttle(shuttleId: string): Observable<Shuttle> {
     return this._allShuttles.pipe(
-      map((shuttles) => shuttles.find((s) => s._id === shuttleId))
+      map((shuttles) => shuttles.find((s) => s.id === shuttleId))
     );
   }
 
-  public getShuttlesByDistrict(districtId: string): Observable<List<Shuttle>> {
+  public getShuttlesByDistrict(districtId: string): Observable<Shuttle[]> {
     return this._allShuttles.pipe(
       map((shuttles) =>
         shuttles.filter(
@@ -64,11 +46,11 @@ export class ShuttlesService {
   }
 
   public filterShuttlesByPosition(
-    shuttles: List<Shuttle>,
+    shuttles: Shuttle[],
     coordinates: MyCoordinates,
     radius: number
-  ): List<Shuttle> {
-    let ret: List<Shuttle> = List([]);
+  ): Shuttle[] {
+    let ret: Shuttle[] = [];
     if (coordinates) {
       shuttles.map((shuttle: Shuttle) => {
         if (shuttle && shuttle.coordinates) {
@@ -77,7 +59,7 @@ export class ShuttlesService {
             shuttle.coordinates
           );
           if (distance && distance < radius) {
-            ret = ret.push(shuttle);
+            ret.push(shuttle);
           }
         }
       });
@@ -86,44 +68,39 @@ export class ShuttlesService {
   }
 
   public mergeShuttles(
-    shuttles: List<Shuttle>,
-    favorites: List<Shuttle>,
-    blacklist: List<Shuttle>
-  ): List<Shuttle> {
-    let ret: List<Shuttle> = shuttles;
-    let favoriteShuttlesInList: List<Shuttle> = List([]);
+    shuttles: Shuttle[],
+    favorites: Shuttle[],
+    blacklist: Shuttle[]
+  ): Shuttle[] {
+    let ret: Shuttle[] = shuttles;
+    let favoriteShuttlesInList: Shuttle[] = [];
     favorites.map((favorite) => {
       ret = ret.filter((shuttle) => {
-        const found = favorite._id === shuttle._id;
+        const found = favorite.id === shuttle.id;
         if (found) {
-          favoriteShuttlesInList = favoriteShuttlesInList.push(shuttle);
+          favoriteShuttlesInList.push(shuttle);
         }
         return !found;
       });
     });
-    ret = favoriteShuttlesInList.merge(ret);
+    ret = favoriteShuttlesInList.concat(ret);
     blacklist.map((blacklisted) => {
       ret = ret.filter((shuttle) => {
-        return blacklisted._id !== shuttle._id;
+        return blacklisted.id !== shuttle.id;
       });
     });
     return ret;
   }
 
-  private loadInitialData() {
-    this.sfDbService.syncSubject.subscribe(() => {
-      from(
-        this.sfDbService.db.query('shuttles/all', { include_docs: true })
-      ).subscribe(
-        (res: any) => {
-          let shuttles: List<Shuttle> = List([]);
-          res.rows.map((row) => {
-            shuttles = shuttles.push(row.doc);
-          });
-          this._allShuttles.next(shuttles);
-        },
-        (err) => console.log('Error retrieving Shuttles')
-      );
-    });
+  private async loadInitialData() {
+    let q = query(collection(this.db, 'shuttles'));
+    const querySnapshot = await getDocs(q);
+    console.info(
+      `Fetched data from cache: ${querySnapshot.metadata.fromCache}`
+    );
+
+    const shuttles: Shuttle[] = [];
+    querySnapshot.forEach((doc) => shuttles.push(doc.data() as Shuttle));
+    this._allShuttles.next(shuttles);
   }
 }

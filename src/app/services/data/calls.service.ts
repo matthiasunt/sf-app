@@ -1,18 +1,19 @@
 import { Injectable, NgZone } from '@angular/core';
-import {App, AppState} from '@capacitor/app';
-import { UserDbService } from '@services/data/user-db.service';
+import { App, AppState } from '@capacitor/app';
 import { AuthService } from '@services/auth.service';
 import { DeviceService } from '@services/device.service';
 
 import { Call, CallOrigin } from '@models/call';
-
-import { DocType } from '@models/doctype';
-import { LocalDataService } from '@services/data/local-data.service';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CallsService {
+  private db = getFirestore(initializeApp(environment.firebase));
+
   /* To handle Call times */
   private afterCall: boolean;
   private lastCallShuttleId: string;
@@ -20,9 +21,7 @@ export class CallsService {
 
   constructor(
     private deviceService: DeviceService,
-    private localDataService: LocalDataService,
     private authService: AuthService,
-    private userDbService: UserDbService,
     public zone: NgZone
   ) {
     this.handleCalls();
@@ -35,16 +34,14 @@ export class CallsService {
     if (!(await this.deviceService.isDevice())) {
       const userId = await this.authService.getUserId();
       this.addCall({
-        _id: `${userId}--${DocType.Call}--${new Date().toISOString()}--${
+        id: `${userId}--call--${new Date().toISOString()}--${
           this.lastCallShuttleId
         }`,
-        type: DocType.Call,
         startDate: new Date(),
         endDate: new Date(),
         userId: userId,
         shuttleId: this.lastCallShuttleId,
         origin: this.lastCallOrigin,
-        isHidden: false,
       });
     }
   }
@@ -61,16 +58,14 @@ export class CallsService {
             callEndDate = new Date();
             if (userId && this.lastCallShuttleId && this.lastCallOrigin) {
               const call: Call = {
-                _id: `${userId}--${
-                  DocType.Call
-                }--${callStartDate.toISOString()}--${this.lastCallShuttleId}`,
-                type: DocType.Call,
+                id: `${userId}--call--${callStartDate.toISOString()}--${
+                  this.lastCallShuttleId
+                }`,
                 startDate: callStartDate,
                 endDate: callEndDate,
                 userId: userId,
                 shuttleId: this.lastCallShuttleId,
                 origin: this.lastCallOrigin,
-                isHidden: false,
               };
               await this.addCall(call);
             } else {
@@ -93,7 +88,11 @@ export class CallsService {
     }
   }
 
-  private addCall(call: Call) {
-    return this.userDbService.putDoc(call);
+  private async addCall(call: Call) {
+    const res = await setDoc(
+      doc(this.db, 'shuttles', call.shuttleId, 'calls'),
+      call
+    );
+    console.info(res);
   }
 }

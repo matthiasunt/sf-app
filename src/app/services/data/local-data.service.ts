@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { HistoryElement } from '@models/history-element';
 import { BehaviorSubject } from 'rxjs';
-import { List } from 'immutable';
+
 import { Shuttle } from '@models/shuttle';
 
 @Injectable({
@@ -16,17 +16,15 @@ import { Shuttle } from '@models/shuttle';
  *
  */
 export class LocalDataService {
-  private softLoginCredentials: any;
   private _lang: BehaviorSubject<string> = new BehaviorSubject(
     this.translate.getBrowserLang()
   );
-  private _history: BehaviorSubject<List<HistoryElement>> = new BehaviorSubject(
-    List([])
+  private _history: BehaviorSubject<HistoryElement[]> = new BehaviorSubject([]);
+  private _favoriteShuttles: BehaviorSubject<Shuttle[]> = new BehaviorSubject(
+    []
   );
-  private _favoriteShuttles: BehaviorSubject<List<Shuttle>> =
-    new BehaviorSubject(List([]));
-  private _blacklistedShuttles: BehaviorSubject<List<Shuttle>> =
-    new BehaviorSubject(List([]));
+  private _blacklistedShuttles: BehaviorSubject<Shuttle[]> =
+    new BehaviorSubject([]);
 
   private numberOfCalls: number;
 
@@ -64,95 +62,73 @@ export class LocalDataService {
       this._lang.next(val);
     }
 
-    // Favorite- and Blacklisted Shuttles
+    // Favorites and Blacklisted Shuttles
     val = await this.getItem('favoriteShuttles');
     if (val && val.length > 0) {
-      this._favoriteShuttles.next(List(val));
+      this._favoriteShuttles.next(val);
     }
     val = await this.getItem('blacklistedShuttles');
     if (val && val.length > 0) {
-      this._blacklistedShuttles.next(List(val));
+      this._blacklistedShuttles.next(val);
     }
 
     // Shuttle Call History
     val = await this.getItem('history');
     if (val) {
-      this._history.next(List(val));
+      this._history.next(val);
     }
   }
 
   public async addToHistory(historyElement: HistoryElement) {
-    this._history.next(this._history.value.insert(0, historyElement));
-    return await this.saveItem('history', this.history.getValue().toArray());
+    const updated = this._history.getValue();
+    updated.splice(0, 0, historyElement);
+    this._history.next(updated);
+    return await this.saveItem('history', this.history.getValue());
   }
 
   public async clearHistory() {
-    this._history.next(List([]));
+    this._history.next([]);
     return await this.saveItem('history', []);
   }
 
   public addFavoriteShuttle(shuttle: Shuttle) {
-    return this.setFavoriteShuttles(
-      this.favoriteShuttles.getValue().push(shuttle)
-    );
+    const updated = this.favoriteShuttles.getValue();
+    updated.push(shuttle);
+    return this.setFavoriteShuttles(updated);
   }
 
   public removeFavoriteShuttle(shuttle: Shuttle) {
-    return this.setFavoriteShuttles(
-      this.favoriteShuttles
-        .getValue()
-        .delete(
-          this.favoriteShuttles
-            .getValue()
-            .findIndex((s) => s._id === shuttle._id)
-        )
+    const updated = this._favoriteShuttles.getValue();
+    updated.splice(
+      updated.findIndex((s) => s.id === shuttle.id),
+      1
     );
+    return this.setFavoriteShuttles(updated);
   }
 
   public addBlacklistedShuttle(shuttle: Shuttle) {
-    return this.setBlacklistedShuttles(
-      this.blacklistedShuttles.getValue().push(shuttle)
-    );
+    const updated = this.blacklistedShuttles.getValue();
+    updated.push(shuttle);
+    return this.setBlacklistedShuttles(updated);
   }
 
   public removeBlacklistedShuttle(shuttle: Shuttle) {
-    return this.setBlacklistedShuttles(
-      this.blacklistedShuttles
-        .getValue()
-        .delete(
-          this.blacklistedShuttles
-            .getValue()
-            .findIndex((s) => s._id === shuttle._id)
-        )
+    const updated = this._blacklistedShuttles.getValue();
+    updated.splice(
+      updated.findIndex((s) => s.id === shuttle.id),
+      1
     );
+    return this.setBlacklistedShuttles(updated);
   }
 
-  private setFavoriteShuttles(shuttles: List<Shuttle>) {
+  private setFavoriteShuttles(shuttles: Shuttle[]) {
     this._favoriteShuttles.next(shuttles);
-    return this.saveItem('favoriteShuttles', shuttles.toArray());
+    return this.saveItem('favoriteShuttles', shuttles);
   }
 
-  private setBlacklistedShuttles(shuttles: List<Shuttle>) {
+  private setBlacklistedShuttles(shuttles: Shuttle[]) {
     this._blacklistedShuttles.next(shuttles);
-    return this.saveItem('blacklistedShuttles', shuttles.toArray());
-  }
-
-  public getSoftLoginCredentials(): Promise<any> {
-    if (this.softLoginCredentials) {
-      return Promise.resolve(this.softLoginCredentials);
-    } else {
-      return new Promise(async (resolve) => {
-        this.softLoginCredentials = await this.storage.get(
-          'softLoginCredentials'
-        );
-        resolve(this.softLoginCredentials);
-      });
-    }
-  }
-
-  public async saveSoftLoginCredentials(softLoginCredentials: any) {
-    this.softLoginCredentials = softLoginCredentials;
-    await this.saveItem('softLoginCredentials', softLoginCredentials);
+    return this.saveItem('blacklistedShuttles', shuttles);
   }
 
   public async setLang(lang: string) {

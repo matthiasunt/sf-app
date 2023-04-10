@@ -25,15 +25,13 @@
     <ion-chip
       (click)="districtClicked(d)"
       *ngFor="let d of districts"
-      [ngStyle]="d._id | districtColor | colorStyling"
+      [ngStyle]="d.id | districtColor | colorStyling"
     >
       <ion-label>{{ d.name | districtName: lang }}</ion-label>
     </ion-chip>
   </div>
   <hr />
-  <ng-container
-    *ngIf="(localDataService.favoriteShuttles | async)?.count() > 0"
-  >
+  <ng-container *ngIf="(localDataService.favoriteShuttles | async)?.length > 0">
     <div id="favorites-div">
       <ion-row>
         <ion-col>
@@ -55,21 +53,20 @@
       </ion-chip>
     </div>
   </ng-container>
-
 </ion-content>
 
 <ion-footer class="ion-no-border" [translucent]="true">
   <ion-card id="tmm-card">
     <ion-card-content>
-      <h3> {{"departure.WHO_DRIVES" | translate}}</h3>
-      <a href="{{ lang === 'it' ?
-                  'http://bit.ly/zero-compromessi' : 'http://bit.ly/keine-kompromisse' }}">
+      <h3>{{"departure.WHO_DRIVES" | translate}}</h3>
+      <a
+        href="{{ lang === 'it' ?
+                  'http://bit.ly/zero-compromessi' : 'http://bit.ly/keine-kompromisse' }}"
+      >
         <img id="tmm-logo-img" src="assets/img/tmm-logo.svg" />
       </a>
       <h3>{{"departure.DOESNT_DRINK" | translate}}</h3>
     </ion-card-content>
   </ion-card>
 </ion-footer>
-<div id="tmm-card-div">
-
-</div>
+<div id="tmm-card-div"></div>

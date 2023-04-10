@@ -1,101 +1,60 @@
 import { Injectable } from '@angular/core';
-import { List } from 'immutable';
-import { SfDbService } from '@services/data/sf-db.service';
 import { Rating } from '@models/rating';
-import { UserDbService } from '@services/data/user-db.service';
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  query,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  getDocs,
+  collection,
+} from 'firebase/firestore';
+import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RatingsService {
-  private _userRatings: BehaviorSubject<List<Rating>> = new BehaviorSubject(
-    List([])
-  );
-  private _ratings: BehaviorSubject<List<Rating>> = new BehaviorSubject(
-    List([])
-  );
+  private db = getFirestore(initializeApp(environment.firebase));
 
-  constructor(
-    private sfDbService: SfDbService,
-    private userDbService: UserDbService
-  ) {
-    this.loadInitialData();
+  private _ratingsByShuttle: BehaviorSubject<{
+    [shuttleId: string]: Rating[];
+  }> = new BehaviorSubject({});
+
+  get ratingsByShuttle(): Observable<{ [shuttleId: string]: Rating[] }> {
+    return this._ratingsByShuttle;
   }
 
-  get userRatings(): Observable<List<Rating>> {
-    return this._userRatings;
-  }
-
-  get ratings(): Observable<List<Rating>> {
-    return this._ratings;
-  }
-
-  public getShuttleRatings(shuttleId: string): Observable<List<Rating>> {
-    return this._ratings.pipe(
-      map((ratings) => ratings.filter((r) => r.shuttleId === shuttleId))
+  public async setRating(rating: Rating) {
+    const res = await setDoc(
+      doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id),
+      rating
     );
+    const current = this._ratingsByShuttle.getValue();
+    console.info(res);
   }
 
-  public putRating(rating: Rating) {
-    const res$ = this.userDbService.putDoc(rating);
-    res$.subscribe((res) => {
-      console.log(res);
-      this._userRatings.next(this._userRatings.getValue().push(rating));
-    });
+  public async deleteRating(rating: Rating) {
+    const res = await deleteDoc(
+      doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id)
+    );
+    return res;
   }
 
-  public updateRating(rating: Rating) {
-    const res$ = this.userDbService.updateDoc(rating);
-    const currentRatings = this._userRatings.getValue();
-    res$.subscribe((res) => {
-      const updatedRatings = currentRatings.set(
-        currentRatings.findIndex((r) => r._id === rating._id),
-        rating
-      );
-      this._userRatings.next(updatedRatings);
-    });
-  }
+  public async getRatings(shuttleId: string): Promise<Rating[]> {
+    const current = this._ratingsByShuttle.getValue();
 
-  public deleteRating(rating: Rating) {
-    rating._deleted = true;
-    const res$ = this.userDbService.updateDoc(rating);
-    const currentRatings = this._userRatings.getValue();
-    res$.subscribe((res) => {
-      const updatedRatings = currentRatings.delete(
-        currentRatings.findIndex((r) => r._id === rating._id)
-      );
-      this._userRatings.next(updatedRatings);
-    });
-  }
-
-  private loadInitialData() {
-    this.loadInitialUserRatings();
-    this.loadInitialRatings();
-  }
-
-  private loadInitialUserRatings() {
-    this.userDbService.syncSubject.subscribe(() => {
-      from(
-        this.userDbService.db.query('ratings/all', {
-          include_docs: true,
-        })
-      ).subscribe((res: any) => {
-        this._userRatings.next(List(res.rows.map((row) => row.doc)));
-      });
-    });
-  }
-
-  private loadInitialRatings() {
-    this.sfDbService.syncSubject.subscribe(() => {
-      from(
-        this.sfDbService.db.query('ratings/all', {
-          include_docs: true,
-        })
-      ).subscribe((res: any) => {
-        this._ratings.next(List(res.rows.map((row) => row.doc)));
-      });
-    });
+    if (shuttleId in current) {
+      return current[shuttleId];
+    }
+    let q = query(collection(this.db, 'shuttles', shuttleId, 'ratings'));
+    const querySnapshot = await getDocs(q);
+    const ratings: Rating[] = [];
+    querySnapshot.forEach((doc) => ratings.push(doc.data() as Rating));
+    current[shuttleId] = ratings;
+    return ratings;
   }
 }

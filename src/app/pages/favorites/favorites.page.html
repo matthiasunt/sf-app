@@ -4,7 +4,7 @@
 
 <ion-content>
   <p
-    *ngIf="(localDataService.favoriteShuttles | async)?.count() < 1"
+    *ngIf="(localDataService.favoriteShuttles | async)?.length < 1"
     class="no-data-p"
   >
     {{ "favorites.EMPTY" | translate }}

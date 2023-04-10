@@ -26,7 +26,7 @@ export class FavoritesPage implements OnInit {
   ngOnInit() {}
 
   public shuttleClicked(shuttle: Shuttle) {
-    this.navCtrl.navigateForward('tabs/favorites/shuttle/' + shuttle._id);
+    this.navCtrl.navigateForward('tabs/favorites/shuttle/' + shuttle.id);
   }
 
   public addClicked() {
@@ -38,8 +38,8 @@ export class FavoritesPage implements OnInit {
     event.preventDefault();
     this.localDataService.removeFavoriteShuttle(shuttle);
     this.listsService.removeListElementByShuttleId(
-      shuttle._id,
-      ElementType.Favorite
+      shuttle.id,
+      ElementType.Favorites
     );
   }
 }

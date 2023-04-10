@@ -9,6 +9,6 @@ export class ShuttleCalledLatelyPipe implements PipeTransform {
     const calledLast = history.filter((h) => {
       return (new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5;
     });
-    return calledLast.findIndex((c) => c.shuttle._id === shuttleId) > -1;
+    return calledLast.findIndex((c) => c.shuttle.id === shuttleId) > -1;
   }
 }

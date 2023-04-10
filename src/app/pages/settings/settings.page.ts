@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { SfDbService } from '@services/data/sf-db.service';
 import { LocalDataService } from '@services/data/local-data.service';
 
 @Component({
@@ -14,9 +12,7 @@ export class SettingsPage implements OnInit {
   shareData: boolean;
 
   constructor(
-    private popoverCtrl: PopoverController,
     private translate: TranslateService,
-    private sfDb: SfDbService,
     private localData: LocalDataService
   ) {}
 

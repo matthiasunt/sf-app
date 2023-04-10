@@ -7,9 +7,8 @@ import { ShuttlesService } from '@services/data/shuttles.service';
 import { Rating, RatingForm } from '@models/rating';
 import { RatingsService } from '@services/data/ratings.service';
 import { AuthService } from '@services/auth.service';
-import { DocType } from '@models/doctype';
 import { takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { combineLatest, from, Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-rate',
@@ -57,15 +56,14 @@ export class RatePage implements OnInit, OnDestroy {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
     this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
     combineLatest([
+      from(this.authService.getUserId()),
       this.shuttlesService.getShuttle(shuttleId),
-      this.ratingsService.userRatings,
+      this.ratingsService.getRatings(shuttleId),
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([shuttle, userRatings]) => {
+      .subscribe(([userId, shuttle, ratings]) => {
         if (shuttle) {
-          this.userRating = userRatings.find(
-            (rating: Rating) => rating.shuttleId === shuttle._id
-          );
+          this.userRating = ratings.find((r) => r.userId == userId);
           if (this.userRating) {
             this.ratingForm = { ...this.userRating };
             this.alreadyRatedByUser = true;
@@ -89,9 +87,9 @@ export class RatePage implements OnInit, OnDestroy {
 
     const userId = await this.authService.getUserId();
     const rating: Rating = {
-      _id: `${shuttle._id}--${DocType.Rating}--${userId}`,
+      id: `${shuttle.id}--rating--${userId}`,
       userId: userId,
-      shuttleId: shuttle._id,
+      shuttleId: shuttle.id,
       date: new Date().toISOString(),
       totalAvg: totalAvg,
       service: this.ratingForm.service,
@@ -99,14 +97,13 @@ export class RatePage implements OnInit, OnDestroy {
       drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
       price: this.ratingForm.price,
       review: this.ratingForm.review.trim(),
-      type: DocType.Rating,
     };
     if (this.alreadyRatedByUser) {
       if (!RatePage.ratingFormsEqual(this.userRating, rating)) {
-        this.ratingsService.updateRating(rating);
+        this.ratingsService.setRating(rating);
       }
     } else {
-      this.ratingsService.putRating(rating);
+      this.ratingsService.setRating(rating);
     }
     this.navCtrl.pop();
   }

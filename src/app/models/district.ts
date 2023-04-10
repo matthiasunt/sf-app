@@ -1,8 +1,7 @@
 import { MyCoordinates } from '@models/my-coordinates';
-import { CouchDoc } from '@models/couch-doc';
 
-export interface District extends CouchDoc {
-  type: string;
+export interface District {
+  id: string;
   name: DistrictName;
   region: MultiLangName;
   country: MultiLangName;

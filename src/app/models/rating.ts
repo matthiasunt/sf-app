@@ -1,7 +1,5 @@
-import { CouchDoc } from '@models/couch-doc';
-
-export interface Rating extends CouchDoc {
-  type: string;
+export interface Rating {
+  id: string;
   userId: string;
   shuttleId: string;
   date: string;

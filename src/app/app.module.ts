@@ -14,7 +14,21 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { PipesModule } from '@pipes/pipes.module';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { initializeApp } from 'firebase/app';
+import { environment } from '@env';
+import {
+  initializeFirestore,
+  persistentMultipleTabManager,
+  CACHE_SIZE_UNLIMITED,
+  persistentLocalCache,
+} from 'firebase/firestore';
 
+initializeFirestore(initializeApp(environment.firebase), {
+  localCache: persistentLocalCache({
+    cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+    tabManager: persistentMultipleTabManager(),
+  }),
+});
 
 @NgModule({
   declarations: [AppComponent],

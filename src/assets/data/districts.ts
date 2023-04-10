@@ -18,7 +18,7 @@ export const Districts = [
       latitude: 46.501696,
       longitude: 11.350951,
     },
-    _id: 'italien-suedtirol-bozenumgebung',
+    id: 'italien-suedtirol-bozenumgebung',
   },
   {
     type: 'district',
@@ -39,7 +39,7 @@ export const Districts = [
       latitude: 46.669695,
       longitude: 11.144957,
     },
-    _id: 'italien-suedtirol-burggrafenamt',
+    id: 'italien-suedtirol-burggrafenamt',
   },
   {
     type: 'district',
@@ -60,7 +60,7 @@ export const Districts = [
       latitude: 46.711143,
       longitude: 11.658568,
     },
-    _id: 'italien-suedtirol-eisacktal',
+    id: 'italien-suedtirol-eisacktal',
   },
   {
     type: 'district',
@@ -81,7 +81,7 @@ export const Districts = [
       latitude: 46.799584,
       longitude: 11.951079,
     },
-    _id: 'italien-suedtirol-pustertal',
+    id: 'italien-suedtirol-pustertal',
   },
   {
     type: 'district',
@@ -102,7 +102,7 @@ export const Districts = [
       latitude: 46.567705,
       longitude: 11.653147,
     },
-    _id: 'italien-suedtirol-schlerngebietgroeden',
+    id: 'italien-suedtirol-schlerngebietgroeden',
   },
   {
     type: 'district',
@@ -123,7 +123,7 @@ export const Districts = [
       latitude: 46.345476,
       longitude: 11.296343,
     },
-    _id: 'italien-suedtirol-ueberetschunterland',
+    id: 'italien-suedtirol-ueberetschunterland',
   },
   {
     type: 'district',
@@ -144,7 +144,7 @@ export const Districts = [
       latitude: 46.640144,
       longitude: 10.732828,
     },
-    _id: 'italien-suedtirol-vinschgau',
+    id: 'italien-suedtirol-vinschgau',
   },
   {
     type: 'district',
@@ -165,6 +165,6 @@ export const Districts = [
       latitude: 46.89412,
       longitude: 11.463419,
     },
-    _id: 'italien-suedtirol-wipptal',
+    id: 'italien-suedtirol-wipptal',
   },
 ];

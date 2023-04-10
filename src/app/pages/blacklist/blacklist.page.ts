@@ -26,7 +26,7 @@ export class BlacklistPage implements OnInit {
   }
 
   public shuttleClicked(shuttle: Shuttle) {
-    this.navCtrl.navigateForward('settings/blacklist/shuttle/' + shuttle._id);
+    this.navCtrl.navigateForward('settings/blacklist/shuttle/' + shuttle.id);
   }
 
   removeFromBlacklist(shuttle: Shuttle, event) {
@@ -34,7 +34,7 @@ export class BlacklistPage implements OnInit {
     event.preventDefault();
     this.localDataService.removeBlacklistedShuttle(shuttle);
     this.listsService.removeListElementByShuttleId(
-      shuttle._id,
+      shuttle.id,
       ElementType.Blacklisted
     );
   }

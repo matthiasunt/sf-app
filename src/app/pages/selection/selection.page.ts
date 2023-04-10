@@ -65,6 +65,7 @@ export class SelectionPage implements OnInit, OnDestroy {
       .subscribe((lang: string) => (this.lang = lang));
 
     this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
+
     this.district$ = this.districtsService.getDistrict(this.districtId);
 
     if (this.districtId) {
@@ -103,9 +104,11 @@ export class SelectionPage implements OnInit, OnDestroy {
       this.localDataService.blacklistedShuttles,
     ]).pipe(
       map(([shuttles, favoriteShuttles, blacklistedShuttles]) => {
-        return this.shuttlesService
-          .mergeShuttles(shuttles, favoriteShuttles, blacklistedShuttles)
-          .toArray();
+        return this.shuttlesService.mergeShuttles(
+          shuttles,
+          favoriteShuttles,
+          blacklistedShuttles
+        );
       })
     );
   }
@@ -122,19 +125,21 @@ export class SelectionPage implements OnInit, OnDestroy {
           this.coordinates,
           22000
         );
-        if (shuttles.count() < 3) {
+        if (shuttles.length < 3) {
           shuttles = this.shuttlesService.filterShuttlesByPosition(
             allShuttles,
             this.coordinates,
             27000
           );
         }
-        if (!shuttles || shuttles.count() < 1) {
+        if (!shuttles || shuttles.length < 1) {
           this.outOfRange = true;
         } else {
-          return this.shuttlesService
-            .mergeShuttles(shuttles, favoriteShuttles, blacklistedShuttles)
-            .toArray();
+          return this.shuttlesService.mergeShuttles(
+            shuttles,
+            favoriteShuttles,
+            blacklistedShuttles
+          );
         }
       })
     );
@@ -154,7 +159,7 @@ export class SelectionPage implements OnInit, OnDestroy {
 
   public shuttleClicked(shuttle: Shuttle) {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle._id);
+    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle.id);
   }
 
   public callClicked(shuttle: Shuttle, event) {
@@ -172,7 +177,7 @@ export class SelectionPage implements OnInit, OnDestroy {
         value: this.coordinates,
       };
     }
-    this.callsService.setCallHandlerData(shuttle._id, callOrigin);
+    this.callsService.setCallHandlerData(shuttle.id, callOrigin);
     this.callNumber.callNumber(shuttle.phone, true);
     this.localDataService.addToHistory({ shuttle, date: new Date() });
   }
