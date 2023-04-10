@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 
-import {Device, DeviceId, DeviceInfo} from '@capacitor/device';
+import { Device, DeviceId, DeviceInfo } from '@capacitor/device';
 
 @Injectable({
   providedIn: 'root',

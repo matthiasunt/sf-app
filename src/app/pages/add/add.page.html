@@ -11,7 +11,7 @@
   <ion-searchbar
     [showCancelButton]="true"
     (ionInput)="getQueryResult($event)"
-    placeholder="{{ 'add.NAME_OR_PHONE' | translate }}"
+    placeholder="{{ 'add.NAME_OR_PHONE' | translate }}"
     animated="true"
     debounce="500"
   >
@@ -19,9 +19,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-virtual-scroll [items]="queryResult" approxItemHeight="60px">
+  <cdk-virtual-scroll-viewport
+    itemSize="60"
+    class="viewport"
+    minBufferPx="900"
+    maxBufferPx="1350"
+  >
     <ion-item
-      *virtualItem="let shuttle"
+      *cdkVirtualFor="let shuttle of queryResult"
       (click)="shuttleClicked(shuttle)"
       lines="full"
     >
@@ -72,7 +77,7 @@
         </ion-button>
       </div>
     </ion-item>
-  </ion-virtual-scroll>
+  </cdk-virtual-scroll-viewport>
 
   <p *ngIf="queryResult?.length < 1" class="no-data-p">
     {{ ("add.NO_RESULT" | translate) }}

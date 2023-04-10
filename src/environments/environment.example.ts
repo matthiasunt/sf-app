@@ -1,11 +1,13 @@
 export const environment = {
-  production: false,
+  production: true,
   message: '',
-  DB_PROTOCOL: '',
-  DB_HOST: '',
-  DB_USER: '',
-  DB_PASS: '',
-  SF_PUBLIC_DB: '',
-  SF_USER_DB: '',
-  API_URL: '',
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+    measurementId: '',
+  },
 };

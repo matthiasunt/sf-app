@@ -1,11 +1,11 @@
 {
-	"appId": "coffeerush.apps.shuttlefinder",
-	"appName": "Shuttle Finder",
-	"bundledWebRuntime": false,
-	"webDir": "www",
-	"plugins": {
-		"SplashScreen": {
-			"scaleType": "CENTER_CROP"
-		}
-	}
+  "appId": "coffeerush.apps.shuttlefinder",
+  "appName": "Shuttle Finder",
+  "bundledWebRuntime": false,
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "scaleType": "CENTER_CROP"
+    }
+  }
 }

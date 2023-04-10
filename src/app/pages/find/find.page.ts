@@ -58,7 +58,7 @@ export class FindPage implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  private async districtClicked(district) {
+  private districtClicked(district) {
     this.navCtrl.navigateForward('/tabs/find/district/' + district.id);
   }
 

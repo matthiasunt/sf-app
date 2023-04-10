@@ -7,16 +7,17 @@
     {{ "history.EMPTY" | translate }}
   </p>
 
-  <ion-virtual-scroll
-    [items]="history"
-    [headerFn]="myHeaderFn"
-    approxItemHeight="73px"
+  <cdk-virtual-scroll-viewport
+    itemSize="73"
+    class="viewport"
+    minBufferPx="900"
+    maxBufferPx="1350"
   >
     <ion-item-divider *virtualHeader="let dateHeader">
       {{dateHeader | beautifulDate: locale}}
     </ion-item-divider>
     <ion-item
-      *virtualItem="let historyElement"
+      *cdkVirtualFor="let historyElement of history"
       lines="full"
       (click)="shuttleClicked(historyElement.shuttle)"
     >
@@ -28,7 +29,7 @@
       <ion-label class="ion-text-wrap">
         <ion-text>
           <h2>{{historyElement?.shuttle?.name}}</h2>
-          <p>{{historyElement?.date | beautifulTime: locale}}</p>
+          <p>{{historyElement?.date.toISOString() | beautifulTime: locale}}</p>
         </ion-text>
       </ion-label>
       <div
@@ -53,7 +54,8 @@
         ></ion-icon>
       </div>
     </ion-item>
-  </ion-virtual-scroll>
+  </cdk-virtual-scroll-viewport>
+  Ï
 
   <ion-fab
     *ngIf="history.length > 0"

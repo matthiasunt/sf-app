@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from '@components/components.module';
 import { AddPageRoutingModule } from './add-routing.module';
 import { PipesModule } from '@pipes/pipes.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
     TranslateModule,
     ComponentsModule,
     PipesModule,
+    ScrollingModule,
   ],
   declarations: [AddPage],
 })
