@@ -3,36 +3,29 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /users/{userId} {
-         allow read, write: if userMatches(userId);
+         allow read, write: if request.auth.uid == userId;
       match /favorites/{favoriteId} {
-        allow read, write: if userMatches(userId);
+        allow read, write: if request.auth.uid == userId;
       }
       match /blacklisted/{blacklistedId} {
-        allow read, write: if userMatches(userId);
+        allow read, write: if request.auth.uid == userId;
       }
     }
 
     match /shuttles/{shuttleId} {
       allow read: if true;
       match /ratings/{ratingId} {
-        allow read:if  true;
-        allow write: if userMatches(resource.data.userId);
+        allow read: if true;
+        allow create, update: if request.auth.uid == request.resource.data.userId;
+        allow delete: if request.auth.uid == resource.data.userId;
       }
       match /calls/{callId} {
-        allow read, write: if userMatches(resource.data.userId);
+        allow read, write: if request.auth.uid == request.resource.data.userId;
       }
     }
 
     match  /districts/{districtId} {
       allow read: if true;
     }
-  }
-
-  /* Helpers */
-  function isSignedIn() {
-    return request.auth != null;
-  }
-  function userMatches(userId) {
-    return isSignedIn() && request.auth.uid == userId;
   }
 }
