@@ -9,11 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { PipesModule } from '@pipes/pipes.module';
-import { AppVersion } from '@ionic-native/app-version/ngx';
 import { initializeApp } from 'firebase/app';
 import { environment } from '@env';
 import {
@@ -49,10 +46,7 @@ initializeFirestore(initializeApp(environment.firebase), {
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Geolocation,
     NativeGeocoder,
-    Diagnostic,
-    AppVersion,
   ],
   exports: [],
   bootstrap: [AppComponent],

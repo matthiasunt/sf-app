@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import getDistance from 'geolib/es/getDistance';
 
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Geolocation } from '@capacitor/geolocation';
 import { DeviceService } from '@services/device.service';
 import { MyCoordinates } from '@models/my-coordinates';
 
@@ -13,12 +13,10 @@ import { MyCoordinates } from '@models/my-coordinates';
 })
 export class GeoService {
   private position: { coordinates: MyCoordinates; time: Date };
-  private geocodedCityName: any;
 
   constructor(
     private http: HttpClient,
     private deviceService: DeviceService,
-    private geolocation: Geolocation,
     private nativeGeocoder: NativeGeocoder
   ) {}
 
@@ -29,7 +27,7 @@ export class GeoService {
       (new Date().getTime() - this.position.time.getTime()) / 1000 > 60 * 2
     ) {
       if (await this.deviceService.isDevice()) {
-        const res = await this.geolocation.getCurrentPosition({
+        const res = await Geolocation.getCurrentPosition({
           enableHighAccuracy: true,
         });
         const coordinates = {
@@ -38,8 +36,6 @@ export class GeoService {
         };
         this.position = { coordinates, time: new Date() };
         return coordinates;
-      } else {
-        return this.getRandomPosition();
       }
     } else {
       return this.position.coordinates;
@@ -70,13 +66,13 @@ export class GeoService {
       Takes two positions and returns the distance in meters
     */
   public getDistance(pos1: any, pos2: any): number {
-    if (this.checkPosition(pos1) && this.checkPosition(pos2)) {
+    if (GeoService.checkPosition(pos1) && GeoService.checkPosition(pos2)) {
       return getDistance(pos1, pos2);
     }
   }
 
   // tool
-  private checkPosition(pos) {
+  private static checkPosition(pos) {
     if (
       pos &&
       pos.latitude &&
@@ -92,23 +88,7 @@ export class GeoService {
     }
   }
 
-  private getRandomPosition(): MyCoordinates {
-    const rLat = this.getRandom(4596669237, 4702921307) * Math.pow(10, -8);
-    const rLng = this.getRandom(1007811939, 1279174244) * Math.pow(10, -8);
-    const coordinates = {
-      latitude: rLat,
-      longitude: rLng,
-    };
-    this.position = { coordinates, time: new Date() };
-    return coordinates;
-  }
-
-  private getRandom(min: number, max: number): number {
-    const ret = Math.floor(Math.random() * (max - min) + min);
-    return ret;
-  }
-
-  public getBeatifulCityName(name: string): string {
+  public static getBeatifulCityName(name: string): string {
     let ret = name;
     const toRemove = [
       'Valgardena',
