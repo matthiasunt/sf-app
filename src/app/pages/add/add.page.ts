@@ -87,7 +87,7 @@ export class AddPage implements OnInit, OnDestroy {
     const listToCheck: Shuttle[] = this.addToFavorites
       ? this.blacklistedShuttles
       : this.favoriteShuttles;
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     const type = this.addToFavorites
       ? ElementType.Favorites
       : ElementType.Blacklisted;

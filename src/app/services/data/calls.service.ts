@@ -31,7 +31,7 @@ export class CallsService {
     this.lastCallOrigin = origin;
     /* Only for testing */
     if (!(await this.deviceService.isDevice())) {
-      const userId = await this.authService.getUserId();
+      const userId = this.authService.getUserId();
       this.addCall({
         id: `${userId}--call--${new Date().toISOString()}--${
           this.lastCallShuttleId
@@ -48,7 +48,7 @@ export class CallsService {
   private async handleCalls() {
     let callStartDate: Date;
     let callEndDate: Date;
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     if (await this.deviceService.isDevice()) {
       App.addListener('appStateChange', async (state: AppState) => {
         if (state.isActive) {

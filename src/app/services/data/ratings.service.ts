@@ -27,18 +27,30 @@ export class RatingsService {
   }
 
   public async setRating(rating: Rating) {
-    const res = await setDoc(
-      doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id),
-      rating
-    );
-    const current = this._ratingsByShuttle.getValue();
-    console.info(res);
+    console.log(rating);
+    try {
+      const res = await setDoc(
+        doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id),
+        rating
+      );
+      const updated = this._ratingsByShuttle.getValue();
+      updated[rating.shuttleId].push(rating);
+      this._ratingsByShuttle.next(updated);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public async deleteRating(rating: Rating) {
     const res = await deleteDoc(
       doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id)
     );
+    const updated = this._ratingsByShuttle.getValue();
+    updated[rating.shuttleId] = updated[rating.shuttleId].filter(
+      (r) => r.id != rating.id
+    );
+    console.log(updated);
+    this._ratingsByShuttle.next(updated);
     return res;
   }
 

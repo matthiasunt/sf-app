@@ -29,7 +29,7 @@ export class ListsService {
     shuttleId: string,
     type: ElementType
   ) {
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     const id = `${userId}--${type}--${shuttleId}`;
     const query = doc(this.db, `users/${userId}/${type}/${id}`);
     return await deleteDoc(query);

@@ -56,14 +56,15 @@ export class RatePage implements OnInit, OnDestroy {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
     this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
     combineLatest([
-      from(this.authService.getUserId()),
       this.shuttlesService.getShuttle(shuttleId),
       this.ratingsService.getRatings(shuttleId),
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([userId, shuttle, ratings]) => {
+      .subscribe(([shuttle, ratings]) => {
         if (shuttle) {
-          this.userRating = ratings.find((r) => r.userId == userId);
+          this.userRating = ratings.find(
+            (r) => r.userId == this.authService.getUserId()
+          );
           if (this.userRating) {
             this.ratingForm = { ...this.userRating };
             this.alreadyRatedByUser = true;
@@ -85,7 +86,7 @@ export class RatePage implements OnInit, OnDestroy {
         this.ratingForm.price) /
       4;
 
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     const rating: Rating = {
       id: `${shuttle.id}--rating--${userId}`,
       userId: userId,
@@ -98,14 +99,8 @@ export class RatePage implements OnInit, OnDestroy {
       price: this.ratingForm.price,
       review: this.ratingForm.review.trim(),
     };
-    if (this.alreadyRatedByUser) {
-      if (!RatePage.ratingFormsEqual(this.userRating, rating)) {
-        this.ratingsService.setRating(rating);
-      }
-    } else {
-      this.ratingsService.setRating(rating);
-    }
-    this.navCtrl.pop();
+    await this.ratingsService.setRating(rating);
+    await this.navCtrl.pop();
   }
 
   public deleteClicked() {

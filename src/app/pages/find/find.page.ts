@@ -41,7 +41,6 @@ export class FindPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.localDataService.lang.subscribe((lang: string) => (this.lang = lang));
-
     console.log(environment.message);
   }
 
@@ -55,20 +54,25 @@ export class FindPage implements OnInit, OnDestroy {
   }
 
   public async gpsClicked() {
-    const permission = await Geolocation.checkPermissions();
-    if (
-      permission.location != 'granted' &&
-      permission.coarseLocation != 'granted'
-    ) {
-      await Geolocation.requestPermissions();
+    try {
+      const permission = await Geolocation.checkPermissions();
+      if (
+        permission.location != 'granted' &&
+        permission.coarseLocation != 'granted'
+      ) {
+        await Geolocation.requestPermissions();
+      }
+    } catch (err) {
+      await this.presentEnableGpsAlert();
+      console.error(err);
     }
+
     try {
       await Geolocation.getCurrentPosition();
+      await this.navCtrl.navigateForward(`/tabs/find/gps`);
     } catch {
       await this.presentEnableGpsAlert();
-      return;
     }
-    await this.navCtrl.navigateForward(`/tabs/find/gps`);
   }
 
   public shuttleClicked(shuttle: Shuttle) {

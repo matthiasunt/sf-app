@@ -65,7 +65,6 @@ export class SelectionPage implements OnInit, OnDestroy {
       .subscribe((lang: string) => (this.lang = lang));
 
     this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
-
     this.district$ = this.districtsService.getDistrict(this.districtId);
 
     if (this.districtId) {

@@ -87,7 +87,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
             this.shuttle = shuttle;
             // User Rating
             this.userRating = ratings.find(
-              (rating) => rating.shuttleId === shuttle.id
+              (rating) => rating.userId === this.authService.getUserId()
             );
             // Reviews
             if (shuttle.avgRating && shuttle.avgRating.reviews) {
@@ -112,6 +112,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.userRating = undefined;
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -137,7 +138,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
   }
 
   public async addToFavorites() {
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     const listElement: ListElement = {
       id: `${userId}--${ElementType.Favorites}--${this.shuttle.id}`,
       userId: userId,
