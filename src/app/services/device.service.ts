@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AppVersion } from '@ionic-native/app-version/ngx';
 
 import { Device, DeviceId, DeviceInfo } from '@capacitor/device';
 
@@ -9,7 +8,7 @@ import { Device, DeviceId, DeviceInfo } from '@capacitor/device';
 export class DeviceService {
   private info: DeviceInfo;
 
-  constructor(private appVersion: AppVersion) {
+  constructor() {
     this.getInfo();
   }
 
@@ -31,10 +30,6 @@ export class DeviceService {
   public async getUuid(): Promise<string> {
     const deviceId: DeviceId = await Device.getId();
     return deviceId.uuid;
-  }
-
-  public getAppVersion(): Promise<string> {
-    return this.appVersion.getVersionNumber();
   }
 
   public async isDevice(): Promise<boolean> {

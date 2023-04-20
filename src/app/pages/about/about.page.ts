@@ -16,8 +16,8 @@ export class AboutPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.appVersionNumber = 'x.x';
-    this.appVersionNumber = await this.deviceService.getAppVersion();
+    // this.appVersionNumber = 'x.x';
+    // this.appVersionNumber = await this.deviceService.getAppVersion();
   }
 
   public getMailToLinkWithSubject(): string {
