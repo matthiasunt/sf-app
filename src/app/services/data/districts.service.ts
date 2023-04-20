@@ -1,17 +1,16 @@
-import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { District } from '@models/district';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { environment } from '@env';
+import { getApp } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DistrictsService {
-  private db = getFirestore(initializeApp(environment.firebase));
+  private db = getFirestore(getApp());
 
   private _districts: BehaviorSubject<District[]> = new BehaviorSubject([]);
 

@@ -56,20 +56,19 @@ export class FindPage implements OnInit, OnDestroy {
 
   public async gpsClicked() {
     const permission = await Geolocation.checkPermissions();
-
     if (
       permission.location != 'granted' &&
       permission.coarseLocation != 'granted'
     ) {
       await Geolocation.requestPermissions();
     }
-    const locationEnabled = await Geolocation.getCurrentPosition();
-
-    if (!locationEnabled) {
+    try {
+      await Geolocation.getCurrentPosition();
+    } catch {
       await this.presentEnableGpsAlert();
-    } else {
-      await this.navCtrl.navigateForward(`/tabs/find/gps`);
+      return;
     }
+    await this.navCtrl.navigateForward(`/tabs/find/gps`);
   }
 
   public shuttleClicked(shuttle: Shuttle) {

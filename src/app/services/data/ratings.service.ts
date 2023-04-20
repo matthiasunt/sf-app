@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Rating } from '@models/rating';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { initializeApp } from 'firebase/app';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { getApp } from 'firebase/app';
 import {
   getFirestore,
   query,
   doc,
-  getDoc,
   setDoc,
   deleteDoc,
   getDocs,
   collection,
 } from 'firebase/firestore';
-import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RatingsService {
-  private db = getFirestore(initializeApp(environment.firebase));
+  private db = getFirestore(getApp());
 
   private _ratingsByShuttle: BehaviorSubject<{
     [shuttleId: string]: Rating[];

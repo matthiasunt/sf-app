@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { initializeAuth, signInAnonymously } from 'firebase/auth';
+import { getApp } from 'firebase/app';
+import { setPersistence, indexedDBLocalPersistence } from '@firebase/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private auth = getAuth();
+  private auth = initializeAuth(getApp());
+
+  constructor() {
+    setPersistence(this.auth, indexedDBLocalPersistence);
+  }
 
   public async doSoftLogin() {
     try {
       let result = await signInAnonymously(this.auth);
-      console.info(result);
       return result;
     } catch (err) {
       console.error(err);

@@ -26,7 +26,7 @@ export class AppComponent {
 
   private async initializeApp() {
     if (await this.deviceService.isDevice()) {
-      SplashScreen.hide();
+      await SplashScreen.hide();
       if ((await this.deviceService.getPlatform()) === 'android') {
         StatusBar.setStyle({ style: Style.Dark });
         StatusBar.setBackgroundColor({ color: 'black' });

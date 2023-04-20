@@ -5,14 +5,13 @@ import { DeviceService } from '@services/device.service';
 
 import { Call, CallOrigin } from '@models/call';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { environment } from '@env';
+import { getApp } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CallsService {
-  private db = getFirestore(initializeApp(environment.firebase));
+  private db = getFirestore(getApp());
 
   /* To handle Call times */
   private afterCall: boolean;

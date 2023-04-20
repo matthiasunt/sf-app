@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Device, DeviceId, DeviceInfo } from '@capacitor/device';
+import { Device, DeviceInfo } from '@capacitor/device';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +25,6 @@ export class DeviceService {
       await this.getInfo();
     }
     return this.info.platform;
-  }
-
-  public async getUuid(): Promise<string> {
-    const deviceId: DeviceId = await Device.getId();
-    return deviceId.uuid;
   }
 
   public async isDevice(): Promise<boolean> {

@@ -11,21 +11,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { PipesModule } from '@pipes/pipes.module';
-import { initializeApp } from 'firebase/app';
 import { environment } from '@env';
-import {
-  initializeFirestore,
-  persistentMultipleTabManager,
-  CACHE_SIZE_UNLIMITED,
-  persistentLocalCache,
-} from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { initializeFirestore, persistentLocalCache } from 'firebase/firestore';
 
-initializeFirestore(initializeApp(environment.firebase), {
-  localCache: persistentLocalCache({
-    cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-    tabManager: persistentMultipleTabManager(),
-  }),
-});
+const app = initializeApp(environment.firebase);
+initializeFirestore(app, { localCache: persistentLocalCache() });
 
 @NgModule({
   declarations: [AppComponent],

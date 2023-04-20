@@ -5,15 +5,14 @@ import { GeoService } from '@services/geo.service';
 import { MyCoordinates } from '@models/my-coordinates';
 import { Shuttle } from '@models/shuttle';
 import { map } from 'rxjs/operators';
-import { initializeApp } from 'firebase/app';
+import { getApp } from 'firebase/app';
 import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
-import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShuttlesService {
-  private db = getFirestore(initializeApp(environment.firebase));
+  private db = getFirestore(getApp());
   private _allShuttles: BehaviorSubject<Shuttle[]> = new BehaviorSubject([]);
 
   private static sortByRankingScore(shuttles: Shuttle[]): Shuttle[] {
