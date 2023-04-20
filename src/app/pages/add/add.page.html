@@ -19,14 +19,9 @@
 </ion-header>
 
 <ion-content>
-  <cdk-virtual-scroll-viewport
-    itemSize="60"
-    class="viewport"
-    minBufferPx="900"
-    maxBufferPx="1350"
-  >
+  <ion-list>
     <ion-item
-      *cdkVirtualFor="let shuttle of queryResult"
+      *ngFor="let shuttle of queryResult"
       (click)="shuttleClicked(shuttle)"
       lines="full"
     >
@@ -77,7 +72,7 @@
         </ion-button>
       </div>
     </ion-item>
-  </cdk-virtual-scroll-viewport>
+  </ion-list>
 
   <p *ngIf="queryResult?.length < 1" class="no-data-p">
     {{ ("add.NO_RESULT" | translate) }}

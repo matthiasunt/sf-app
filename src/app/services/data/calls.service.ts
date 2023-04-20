@@ -90,7 +90,7 @@ export class CallsService {
 
   private async addCall(call: Call) {
     const res = await setDoc(
-      doc(this.db, 'shuttles', call.shuttleId, 'calls'),
+      doc(this.db, `shuttles/${call.shuttleId}/calls/${call.id}`),
       call
     );
     console.info(res);

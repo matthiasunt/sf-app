@@ -23,7 +23,7 @@ export class RatingsPage implements OnInit, OnDestroy {
 
   shuttle: Shuttle;
   ratings: Rating[];
-  userRating: Rating;
+  userRating: Rating | undefined;
   locale: string;
 
   constructor(
@@ -54,7 +54,7 @@ export class RatingsPage implements OnInit, OnDestroy {
         );
         this.userRating = shuttleRatings.find((r) => r.userId === userId);
         this.ratings = shuttleRatings
-          .filter((rating) => rating.id !== this.userRating.id)
+          .filter((rating) => rating.id !== this.userRating?.id ?? '')
           .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
       });
   }

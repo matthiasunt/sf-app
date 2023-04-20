@@ -13,15 +13,18 @@ service cloud.firestore {
     }
 
     match /shuttles/{shuttleId} {
-      allow read: true;
+      allow read: if true;
       match /ratings/{ratingId} {
-        allow read: true;
-        allow write: userMatches(resource.data.userId)
+        allow read:if  true;
+        allow write: if userMatches(resource.data.userId);
+      }
+      match /calls/{callId} {
+        allow read, write: if userMatches(resource.data.userId);
       }
     }
 
-    match  /district/{districtId} {
-      allow read: true;
+    match  /districts/{districtId} {
+      allow read: if true;
     }
   }
 
