@@ -7,8 +7,8 @@ import { ShuttlesService } from '@services/data/shuttles.service';
 import { Rating, RatingForm } from '@models/rating';
 import { RatingsService } from '@services/data/ratings.service';
 import { AuthService } from '@services/auth.service';
-import { takeUntil } from 'rxjs/operators';
-import { combineLatest, from, Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { combineLatest, from, lastValueFrom, Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-rate',
@@ -42,29 +42,18 @@ export class RatePage implements OnInit, OnDestroy {
     this.alreadyRatedByUser = false;
   }
 
-  private static ratingFormsEqual(a: RatingForm, b: RatingForm): boolean {
-    return (
-      a.service === b.service &&
-      a.reliabilityAndPunctuality === b.reliabilityAndPunctuality &&
-      a.drivingStyleAndSecurity === b.drivingStyleAndSecurity &&
-      a.price === b.price &&
-      a.review === b.review
-    );
-  }
-
   async ngOnInit() {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
     this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
     combineLatest([
+      this.authService.userId,
       this.shuttlesService.getShuttle(shuttleId),
       this.ratingsService.getRatings(shuttleId),
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([shuttle, ratings]) => {
-        if (shuttle) {
-          this.userRating = ratings.find(
-            (r) => r.userId == this.authService.getUserId()
-          );
+      .subscribe(([userId, shuttle, ratings]) => {
+        if (userId && shuttle) {
+          this.userRating = ratings.find((r) => r.userId == userId);
           if (this.userRating) {
             this.ratingForm = { ...this.userRating };
             this.alreadyRatedByUser = true;
@@ -79,6 +68,7 @@ export class RatePage implements OnInit, OnDestroy {
   }
 
   async rateClicked(shuttle: Shuttle) {
+    console.log('rate clicked');
     const totalAvg =
       (this.ratingForm.service +
         this.ratingForm.reliabilityAndPunctuality +
@@ -86,21 +76,25 @@ export class RatePage implements OnInit, OnDestroy {
         this.ratingForm.price) /
       4;
 
-    const userId = this.authService.getUserId();
-    const rating: Rating = {
-      id: `${shuttle.id}--rating--${userId}`,
-      userId: userId,
-      shuttleId: shuttle.id,
-      date: new Date().toISOString(),
-      totalAvg: totalAvg,
-      service: this.ratingForm.service,
-      reliabilityAndPunctuality: this.ratingForm.reliabilityAndPunctuality,
-      drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
-      price: this.ratingForm.price,
-      review: this.ratingForm.review.trim(),
-    };
-    await this.ratingsService.setRating(rating);
-    await this.navCtrl.pop();
+    const userId: string | undefined = await this.authService.userId
+      .pipe(take(1))
+      .toPromise();
+    if (userId) {
+      const rating: Rating = {
+        id: `${shuttle.id}--rating--${userId}`,
+        userId: userId,
+        shuttleId: shuttle.id,
+        date: new Date().toISOString(),
+        totalAvg: totalAvg,
+        service: this.ratingForm.service,
+        reliabilityAndPunctuality: this.ratingForm.reliabilityAndPunctuality,
+        drivingStyleAndSecurity: this.ratingForm.drivingStyleAndSecurity,
+        price: this.ratingForm.price,
+        review: this.ratingForm.review.trim(),
+      };
+      await this.ratingsService.setRating(rating);
+      await this.navCtrl.pop();
+    }
   }
 
   public deleteClicked() {

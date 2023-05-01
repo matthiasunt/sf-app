@@ -3,6 +3,7 @@ import { ElementType, ListElement } from '@models/list-element';
 import { AuthService } from '@services/auth.service';
 import { getApp } from 'firebase/app';
 import { deleteDoc, doc, getFirestore, setDoc } from 'firebase/firestore';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -29,9 +30,13 @@ export class ListsService {
     shuttleId: string,
     type: ElementType
   ) {
-    const userId = this.authService.getUserId();
-    const id = `${userId}--${type}--${shuttleId}`;
-    const query = doc(this.db, `users/${userId}/${type}/${id}`);
-    return await deleteDoc(query);
+    const userId: string | undefined = await this.authService.userId
+      .pipe(take(1))
+      .toPromise();
+    if (userId) {
+      const id = `${userId}--${type}--${shuttleId}`;
+      const query = doc(this.db, `users/${userId}/${type}/${id}`);
+      return await deleteDoc(query);
+    }
   }
 }

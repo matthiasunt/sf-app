@@ -6,6 +6,7 @@ import { DeviceService } from '@services/device.service';
 import { Call, CallOrigin } from '@models/call';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +32,10 @@ export class CallsService {
     this.lastCallOrigin = origin;
     /* Only for testing */
     if (!(await this.deviceService.isDevice())) {
-      const userId = this.authService.getUserId();
-      this.addCall({
+      const userId: string | undefined = await this.authService.userId
+        .pipe(take(1))
+        .toPromise();
+      await this.addCall({
         id: `${userId}--call--${new Date().toISOString()}--${
           this.lastCallShuttleId
         }`,
@@ -48,8 +51,10 @@ export class CallsService {
   private async handleCalls() {
     let callStartDate: Date;
     let callEndDate: Date;
-    const userId = this.authService.getUserId();
-    if (await this.deviceService.isDevice()) {
+    const userId: string | undefined = await this.authService.userId
+      .pipe(take(1))
+      .toPromise();
+    if (userId && (await this.deviceService.isDevice())) {
       App.addListener('appStateChange', async (state: AppState) => {
         if (state.isActive) {
           console.log('Resume');

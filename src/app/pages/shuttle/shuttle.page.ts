@@ -21,7 +21,7 @@ import { Rating } from '@models/rating';
 import { RatingsService } from '@services/data/ratings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { District } from '@models/district';
 import { DistrictsService } from '@services/data/districts.service';
 
@@ -75,19 +75,20 @@ export class ShuttlePage implements OnInit, OnDestroy {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
     combineLatest([
+      this.authService.userId,
       this.shuttlesService.getShuttle(shuttleId),
       this.ratingsService.getRatings(shuttleId),
       this.localDataService.favoriteShuttles,
       this.districtsService.districts,
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([shuttle, ratings, favoriteShuttles, districts]) => {
+      .subscribe(([userId, shuttle, ratings, favoriteShuttles, districts]) => {
         if (shuttle) {
           this.zone.run(() => {
             this.shuttle = shuttle;
             // User Rating
             this.userRating = ratings.find(
-              (rating) => rating.userId === this.authService.getUserId()
+              (rating) => rating.userId === userId
             );
             // Reviews
             if (shuttle.avgRating && shuttle.avgRating.reviews) {
@@ -119,9 +120,9 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
   public async callClicked() {
     const callOrigin = await this.getCallOrigin();
-    this.callsService.setCallHandlerData(this.shuttle.id, callOrigin);
-    this.callNumber.callNumber(this.shuttle.phone, true);
-    this.localDataService.addToHistory({
+    await this.callsService.setCallHandlerData(this.shuttle.id, callOrigin);
+    await this.callNumber.callNumber(this.shuttle.phone, true);
+    await this.localDataService.addToHistory({
       shuttle: this.shuttle,
       date: new Date(),
     });
@@ -138,18 +139,22 @@ export class ShuttlePage implements OnInit, OnDestroy {
   }
 
   public async addToFavorites() {
-    const userId = this.authService.getUserId();
-    const listElement: ListElement = {
-      id: `${userId}--${ElementType.Favorites}--${this.shuttle.id}`,
-      userId: userId,
-      shuttleId: this.shuttle.id,
-      date: new Date().toISOString(),
-      type: ElementType.Favorites,
-    };
-    this.listsService.addListElement(listElement);
-    this.localDataService.addFavoriteShuttle(this.shuttle);
-    this.isFavorite = true;
-    this.presentAddedToFavoritesToast();
+    const userId: string | undefined = await this.authService.userId
+      .pipe(take(1))
+      .toPromise();
+    if (userId) {
+      const listElement: ListElement = {
+        id: `${userId}--${ElementType.Favorites}--${this.shuttle.id}`,
+        userId: userId,
+        shuttleId: this.shuttle.id,
+        date: new Date().toISOString(),
+        type: ElementType.Favorites,
+      };
+      this.listsService.addListElement(listElement);
+      this.localDataService.addFavoriteShuttle(this.shuttle);
+      this.isFavorite = true;
+      this.presentAddedToFavoritesToast();
+    }
   }
 
   /* Toasts & Alerts */

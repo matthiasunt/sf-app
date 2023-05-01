@@ -14,9 +14,9 @@ import { ShuttlesService } from '@services/data/shuttles.service';
 })
 export class AppComponent {
   constructor(
+    private authService: AuthService,
     private deviceService: DeviceService,
     private translate: TranslateService,
-    private authService: AuthService,
     private localDataService: LocalDataService,
     private shuttlesService: ShuttlesService
   ) {

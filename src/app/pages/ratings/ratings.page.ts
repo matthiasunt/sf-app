@@ -43,20 +43,21 @@ export class RatingsPage implements OnInit, OnDestroy {
       .subscribe((lang) => (this.locale = lang === 'de_st' ? 'de' : lang));
 
     combineLatest([
+      this.authService.userId,
       this.shuttlesService.allShuttles,
       from(this.ratingsService.getRatings(shuttleId)),
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([allShuttles, shuttleRatings]) => {
-        this.shuttle = allShuttles.find(
-          (shuttle: Shuttle) => shuttle.id === shuttleId
-        );
-        this.userRating = shuttleRatings.find(
-          (r) => r.userId === this.authService.getUserId()
-        );
-        this.ratings = shuttleRatings
-          .filter((rating) => rating.id !== this.userRating?.id ?? '')
-          .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+      .subscribe(([userId, allShuttles, shuttleRatings]) => {
+        if (userId) {
+          this.shuttle = allShuttles.find(
+            (shuttle: Shuttle) => shuttle.id === shuttleId
+          );
+          this.userRating = shuttleRatings.find((r) => r.userId === userId);
+          this.ratings = shuttleRatings
+            .filter((rating) => rating.id !== this.userRating?.id ?? '')
+            .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+        }
       });
   }
 

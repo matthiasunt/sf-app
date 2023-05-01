@@ -8,8 +8,8 @@ import { ListsService } from '@services/data/lists.service';
 import { ElementType, ListElement } from '@models/list-element';
 
 import { AuthService } from '@services/auth.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject, of, lastValueFrom } from 'rxjs';
 import { LocalDataService } from '@services/data/local-data.service';
 
 @Component({
@@ -87,26 +87,30 @@ export class AddPage implements OnInit, OnDestroy {
     const listToCheck: Shuttle[] = this.addToFavorites
       ? this.blacklistedShuttles
       : this.favoriteShuttles;
-    const userId = this.authService.getUserId();
-    const type = this.addToFavorites
-      ? ElementType.Favorites
-      : ElementType.Blacklisted;
-    const listElement: ListElement = {
-      id: `${userId}--${type}--${shuttle.id}`,
-      userId: userId,
-      shuttleId: shuttle.id,
-      date: new Date().toISOString(),
-      type: type,
-    };
-    if (listToCheck.findIndex((e) => e.id === shuttle.id) < 0) {
-      if (this.addToFavorites) {
-        this.localDataService.addFavoriteShuttle(shuttle);
+    const userId: string | undefined = await this.authService.userId
+      .pipe(take(1))
+      .toPromise();
+    if (userId) {
+      const type = this.addToFavorites
+        ? ElementType.Favorites
+        : ElementType.Blacklisted;
+      const listElement: ListElement = {
+        id: `${userId}--${type}--${shuttle.id}`,
+        userId: userId,
+        shuttleId: shuttle.id,
+        date: new Date().toISOString(),
+        type: type,
+      };
+      if (listToCheck.findIndex((e) => e.id === shuttle.id) < 0) {
+        if (this.addToFavorites) {
+          this.localDataService.addFavoriteShuttle(shuttle);
+        } else {
+          this.localDataService.addBlacklistedShuttle(shuttle);
+        }
+        this.listsService.addListElement(listElement);
       } else {
-        this.localDataService.addBlacklistedShuttle(shuttle);
+        this.presentAlreadyAddedInOtherListAlert();
       }
-      this.listsService.addListElement(listElement);
-    } else {
-      this.presentAlreadyAddedInOtherListAlert();
     }
   }
 

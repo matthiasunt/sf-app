@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import { getApp } from 'firebase/app';
-import { setPersistence, indexedDBLocalPersistence } from '@firebase/auth';
+import {
+  setPersistence,
+  indexedDBLocalPersistence,
+  onAuthStateChanged,
+} from '@firebase/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,14 +14,24 @@ import { setPersistence, indexedDBLocalPersistence } from '@firebase/auth';
 export class AuthService {
   private auth = getAuth(getApp());
 
-  constructor() {
-    setPersistence(this.auth, indexedDBLocalPersistence);
-    signInAnonymously(this.auth).then((res) => {
-      console.info(res.user.uid);
-    });
+  private _userId: BehaviorSubject<string | undefined> = new BehaviorSubject(
+    undefined
+  );
+
+  get userId() {
+    return this._userId;
   }
 
-  public getUserId(): string | undefined {
-    return this.auth.currentUser?.uid;
+  constructor() {
+    setPersistence(this.auth, indexedDBLocalPersistence);
+    signInAnonymously(this.auth);
+
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this._userId.next(user.uid);
+      } else {
+        this._userId.next(undefined);
+      }
+    });
   }
 }
