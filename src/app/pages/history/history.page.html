@@ -6,48 +6,58 @@
   <p *ngIf="history.length < 1" class="no-data-p">
     {{ "history.EMPTY" | translate }}
   </p>
+
   <ion-list>
-    <ion-item-divider *virtualHeader="let dateHeader">
-      {{dateHeader | beautifulDate: locale}}
-    </ion-item-divider>
-    <ion-item
-      *ngFor="let historyElement of history"
-      lines="full"
-      (click)="shuttleClicked(historyElement.shuttle)"
+    <cdk-virtual-scroll-viewport
+      itemSize="73"
+      class="viewport"
+      minBufferPx="900"
+      maxBufferPx="1350"
     >
-      <ion-thumbnail slot="start">
-        <app-sf-shuttle-icon
-          [color]="historyElement.shuttle | shuttleColor"
-        ></app-sf-shuttle-icon>
-      </ion-thumbnail>
-      <ion-label class="ion-text-wrap">
-        <ion-text>
-          <h2>{{historyElement?.shuttle?.name}}</h2>
-          <p>{{historyElement?.date.toISOString() | beautifulTime: locale}}</p>
-        </ion-text>
-      </ion-label>
-      <div
-        (click)="rateClicked(historyElement.shuttle, $event)"
-        class="add-remove-button-div"
+      <ion-item-divider *virtualHeader="let dateHeader">
+        {{dateHeader | beautifulDate: locale}}
+      </ion-item-divider>
+      <ion-item
+        *cdkVirtualFor="let historyElement of history"
+        lines="full"
+        (click)="shuttleClicked(historyElement.shuttle)"
       >
-        <ion-button color="tertiary" slot="end">
-          {{"shuttle.RATE" | translate}}
-          <ion-icon name="star" slot="end"></ion-icon>
-        </ion-button>
-      </div>
-      <div
-        class="call-icon-div"
-        (click)="callClicked(historyElement.shuttle, $event)"
-      >
-        <ion-icon
-          id="call-icon"
-          slot="end"
-          name="call"
-          size="large"
-          color="secondary"
-        ></ion-icon>
-      </div>
-    </ion-item>
+        <ion-thumbnail slot="start">
+          <app-sf-shuttle-icon
+            [color]="historyElement.shuttle | shuttleColor"
+          ></app-sf-shuttle-icon>
+        </ion-thumbnail>
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h2>{{historyElement?.shuttle?.name}}</h2>
+            <p>
+              {{historyElement?.date.toISOString() | beautifulTime: locale}}
+            </p>
+          </ion-text>
+        </ion-label>
+        <div
+          (click)="rateClicked(historyElement.shuttle, $event)"
+          class="add-remove-button-div"
+        >
+          <ion-button color="tertiary" slot="end">
+            {{"shuttle.RATE" | translate}}
+            <ion-icon name="star" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+        <div
+          class="call-icon-div"
+          (click)="callClicked(historyElement.shuttle, $event)"
+        >
+          <ion-icon
+            id="call-icon"
+            slot="end"
+            name="call"
+            size="large"
+            color="secondary"
+          ></ion-icon>
+        </div>
+      </ion-item>
+    </cdk-virtual-scroll-viewport>
   </ion-list>
   <ion-fab
     *ngIf="history.length > 0"
