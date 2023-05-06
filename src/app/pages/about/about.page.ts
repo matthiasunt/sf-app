@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DeviceService } from '@services/device.service';
+import { App } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-about',
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutPage implements OnInit {
   public appVersionNumber: string;
 
-  constructor(
-    private translate: TranslateService,
-    private deviceService: DeviceService
-  ) {}
+  constructor(private translate: TranslateService) {}
 
   async ngOnInit() {
-    // this.appVersionNumber = 'x.x';
-    // this.appVersionNumber = await this.deviceService.getAppVersion();
+    if (Capacitor.isNativePlatform()) {
+      this.appVersionNumber = (await App.getInfo()).version;
+    }
   }
 
   public getMailToLinkWithSubject(): string {

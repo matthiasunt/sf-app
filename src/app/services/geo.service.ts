@@ -5,8 +5,10 @@ import getDistance from 'geolib/es/getDistance';
 
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { Geolocation } from '@capacitor/geolocation';
-import { DeviceService } from '@services/device.service';
 import { MyCoordinates } from '@models/my-coordinates';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
@@ -16,49 +18,56 @@ export class GeoService {
 
   constructor(
     private http: HttpClient,
-    private deviceService: DeviceService,
     private nativeGeocoder: NativeGeocoder
   ) {}
 
-  public async getCurrentPosition(): Promise<MyCoordinates> {
-    /* If position not obtained yet or older than 1 minute */
+  getCurrentPosition(): Observable<MyCoordinates> {
     if (
       !this.position ||
       (new Date().getTime() - this.position.time.getTime()) / 1000 > 60 * 2
     ) {
-      if (await this.deviceService.isDevice()) {
-        const res = await Geolocation.getCurrentPosition({
-          enableHighAccuracy: true,
-        });
-        const coordinates = {
-          latitude: res.coords.latitude,
-          longitude: res.coords.longitude,
-        };
-        this.position = { coordinates, time: new Date() };
-        return coordinates;
+      if (Capacitor.isNativePlatform()) {
+        return from(
+          Geolocation.getCurrentPosition({
+            enableHighAccuracy: true,
+          })
+        ).pipe(
+          map((res) => ({
+            latitude: res.coords.latitude,
+            longitude: res.coords.longitude,
+          })),
+          tap((coordinates) => {
+            this.position = { coordinates, time: new Date() };
+          })
+        );
+      } else {
+        return of(null);
       }
     } else {
-      return this.position.coordinates;
+      return of(this.position.coordinates);
     }
   }
 
-  public async getLocalityName(
+  getLocalityName(
     coordinates: MyCoordinates,
     lang: string
-  ): Promise<string> {
-    if (await this.deviceService.isDevice()) {
-      try {
-        const res: any[] = await this.nativeGeocoder.reverseGeocode(
+  ): Observable<string> {
+    if (Capacitor.isNativePlatform()) {
+      return from(
+        this.nativeGeocoder.reverseGeocode(
           coordinates.latitude,
           coordinates.longitude,
           { useLocale: true, defaultLocale: lang, maxResults: 5 }
-        );
-        return res[0].locality;
-      } catch (err) {
-        console.error(err);
-      }
+        )
+      ).pipe(
+        map((res: any[]) => res[0].locality),
+        catchError((err) => {
+          console.error(err);
+          return of('');
+        })
+      );
     } else {
-      return '';
+      return of('');
     }
   }
 

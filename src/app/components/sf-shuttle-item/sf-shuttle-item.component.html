@@ -1,0 +1,86 @@
+<ion-item
+  color="{{ justCalled ? 'medium' : '' }}"
+  lines="full"
+  (click)="itemTapped()"
+>
+  <ion-thumbnail slot="start">
+    <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
+    </app-sf-shuttle-icon>
+  </ion-thumbnail>
+  <ion-label class="ion-text-wrap">
+    <ion-text>
+      <h2>
+        {{ shuttle.name }}
+        <ion-icon
+          *ngIf="shuttle.verified"
+          name="checkmark-circle"
+          slot="end"
+          color="secondary"
+        ></ion-icon>
+      </h2>
+      <p *ngIf="showPhone">{{ shuttle?.phone | phoneNumber }}</p>
+      <p *ngIf="shouldShowRatingBadge() || shouldShowLocality()">
+        <ion-badge *ngIf="shouldShowRatingBadge()" color="tertiary">
+          ★ {{ shuttle.avgRating.totalAvg }}
+        </ion-badge>
+        <ion-badge
+          *ngIf="shouldShowLocality()"
+          [ngStyle]="
+            district
+              ? (district.id | districtColor | colorStyling)
+              : ('medium' | colorStyling)
+          "
+        >
+          {{ shuttle.address.locality | localityName : lang }}
+        </ion-badge>
+      </p>
+      <p *ngIf="lastCalledDate">
+        {{ lastCalledDate.toISOString() | beautifulTime : locale }}
+      </p>
+    </ion-text>
+  </ion-label>
+  <div *ngIf="showRateButton" (click)="rateTapped($event)" class="rate-button">
+    <ion-button color="tertiary" slot="end">
+      {{ 'shuttle.RATE' | translate }}
+      <ion-icon name="star" slot="end"></ion-icon>
+    </ion-button>
+  </div>
+  <div *ngIf="showCallButton" class="call-icon" (click)="calLTapped($event)">
+    <ion-icon name="call" size="large" slot="end" color="secondary"></ion-icon>
+  </div>
+
+  <ng-container *ngIf="listAction !== undefined">
+    <ion-icon
+      *ngIf="listAction == ListAction.AddToFavorites"
+      (click)="listActionTapped($event)"
+      name="heart"
+      color="success"
+      size="large"
+      slot="end"
+    ></ion-icon>
+    <ion-icon
+      *ngIf="listAction == ListAction.RemoveFromFavorites"
+      (click)="listActionTapped($event)"
+      name="close-circle"
+      color="danger"
+      size="large"
+      slot="end"
+    ></ion-icon>
+    <ion-icon
+      *ngIf="listAction == ListAction.AddToBlacklisted"
+      (click)="listActionTapped($event)"
+      name="remove-circle"
+      color="dark"
+      size="large"
+      slot="end"
+    ></ion-icon>
+    <ion-icon
+      *ngIf="listAction == ListAction.RemoveFromBlacklisted"
+      (click)="listActionTapped($event)"
+      name="checkmark-circle"
+      color="success"
+      size="large"
+      slot="end"
+    ></ion-icon>
+  </ng-container>
+</ion-item>

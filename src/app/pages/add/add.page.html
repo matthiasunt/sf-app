@@ -20,50 +20,16 @@
 
 <ion-content>
   <ion-list *ngIf="(result$ | async) as result; else noResult">
-    <ion-item
-      *ngFor="let shuttle of result"
-      (click)="shuttleClicked(shuttle)"
-      lines="full"
-    >
-      <ion-thumbnail slot="start" *ngIf="shuttle">
-        <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-        </app-sf-shuttle-icon>
-      </ion-thumbnail>
-      <ion-label class="ion-text-wrap">
-        <ion-text>
-          <h2>{{ shuttle?.name }}</h2>
-          <p>{{ shuttle?.phone | phoneNumber }}</p>
-        </ion-text>
-      </ion-label>
-      <ng-container
-        *ngIf="{ isInList: (isInList$(shuttle) | async) } as context"
+    <ng-container *ngFor="let shuttle of result; trackBy: trackById">
+      <sf-shuttle-item
+        [shuttle]="shuttle"
+        [locale]="localDataService.locale$ | async"
+        [showPhone]="true"
+        [listAction]="actionType(shuttle.id) | async"
+        (onListActionTapped)="listActionTapped($event)"
       >
-        <div
-          (click)="context.isInList ? removeFromList(shuttle, $event) : addToList(shuttle, $event)"
-          class="add-remove-button-div"
-        >
-          <ng-container
-            *ngTemplateOutlet="buttonTemplate; context: context"
-          ></ng-container>
-        </div>
-      </ng-container>
-
-      <ng-template #buttonTemplate let-isInList="isInList">
-        <ion-button
-          [color]="addToFavorites ? (isInList ? 'danger' : 'success') : (isInList ? 'success' : 'dark')"
-          slot="end"
-          shape="round"
-          size="small"
-        >
-          {{(addToFavorites ? (isInList ? 'REMOVE' : 'ADD') : (isInList ?
-          'UNBLOCK' : 'BLOCK')) | translate}}
-          <ion-icon
-            [name]="addToFavorites ? (isInList ? 'close' : 'heart') : (isInList ? 'checkmark-circle' : 'remove-circle')"
-            slot="end"
-          ></ion-icon>
-        </ion-button>
-      </ng-template>
-    </ion-item>
+      </sf-shuttle-item>
+    </ng-container>
   </ion-list>
 
   <ng-template #noResult>

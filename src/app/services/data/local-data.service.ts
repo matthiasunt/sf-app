@@ -8,6 +8,7 @@ import { HistoryElement } from '@models/history-element';
 import { BehaviorSubject } from 'rxjs';
 
 import { Shuttle } from '@models/shuttle';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,14 +19,15 @@ export class LocalDataService {
   private _lang: BehaviorSubject<string> = new BehaviorSubject(
     this.translate.getBrowserLang()
   );
+
+  locale$ = this.lang.pipe(map((lang) => (lang === 'de_st' ? 'de' : lang)));
+
   private _history: BehaviorSubject<HistoryElement[]> = new BehaviorSubject([]);
   private _favoriteShuttles: BehaviorSubject<Shuttle[]> = new BehaviorSubject(
     []
   );
   private _blacklistedShuttles: BehaviorSubject<Shuttle[]> =
     new BehaviorSubject([]);
-
-  private numberOfCalls: number;
 
   constructor(
     private http: HttpClient,
@@ -49,7 +51,7 @@ export class LocalDataService {
   }
 
   get blacklistedShuttles() {
-    return this._favoriteShuttles;
+    return this._blacklistedShuttles;
   }
 
   private async fetchData() {

@@ -21,13 +21,18 @@ import {
   ScreenTrackingService,
   UserTrackingService,
 } from '@angular/fire/analytics';
-import { provideAuth, initializeAuth } from '@angular/fire/auth';
+import {
+  provideAuth,
+  initializeAuth,
+  browserLocalPersistence,
+} from '@angular/fire/auth';
 import {
   initializeFirestore,
   provideFirestore,
   persistentLocalCache,
   persistentSingleTabManager,
   CACHE_SIZE_UNLIMITED,
+  enableIndexedDbPersistence,
 } from '@angular/fire/firestore';
 
 @NgModule({
@@ -44,7 +49,9 @@ import {
       })
     ),
     provideAnalytics(() => getAnalytics()),
-    provideAuth(() => initializeAuth(getApp())),
+    provideAuth(() =>
+      initializeAuth(getApp(), { persistence: browserLocalPersistence })
+    ),
     BrowserModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),

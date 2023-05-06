@@ -4,7 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'beautifulDate',
 })
 export class BeautifulDatePipe implements PipeTransform {
-  transform(dateString: string, locale: string): any {
+  transform(dateString: string, locale: string): string {
+    if (!dateString || !locale) {
+      return '';
+    }
     const ret = new Date(dateString).toLocaleString(locale, {
       weekday: 'long',
       year: 'numeric',

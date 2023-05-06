@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Shuttle } from '@models/shuttle';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,12 +13,15 @@ import { Rating, RatingForm } from '@models/rating';
 import { RatingsService } from '@services/data/ratings.service';
 import { AuthService } from '@services/auth.service';
 import { take, takeUntil } from 'rxjs/operators';
-import { combineLatest, from, lastValueFrom, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
+import { AnalyticsEvent } from '../../logging/analytics-event';
 
 @Component({
   selector: 'app-rate',
   templateUrl: './rate.page.html',
   styleUrls: ['./rate.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RatePage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -68,7 +76,8 @@ export class RatePage implements OnInit, OnDestroy {
   }
 
   async rateClicked(shuttle: Shuttle) {
-    console.log('rate clicked');
+    logEvent(getAnalytics(), AnalyticsEvent.RatingSubmitButtonTapped);
+
     const totalAvg =
       (this.ratingForm.service +
         this.ratingForm.reliabilityAndPunctuality +

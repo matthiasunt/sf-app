@@ -1,11 +1,13 @@
 import { inject, Injectable, NgZone } from '@angular/core';
 import { App, AppState } from '@capacitor/app';
 import { AuthService } from '@services/auth.service';
-import { DeviceService } from '@services/device.service';
 
 import { Call, CallOrigin } from '@models/call';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
+import { Capacitor } from '@capacitor/core';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
+import { AnalyticsEvent } from '../../logging/analytics-event';
 
 @Injectable({
   providedIn: 'root',
@@ -19,29 +21,13 @@ export class CallsService {
   private lastCallShuttleId: string;
   private lastCallOrigin: CallOrigin;
 
-  constructor(private deviceService: DeviceService, public zone: NgZone) {
+  constructor(public zone: NgZone) {
     this.handleCalls();
   }
 
   public async setCallHandlerData(shuttleId: string, origin: CallOrigin) {
     this.lastCallShuttleId = shuttleId;
     this.lastCallOrigin = origin;
-    /* Only for testing */
-    if (!(await this.deviceService.isDevice())) {
-      const userId: string | undefined = await this.authService.userId$
-        .pipe(take(1))
-        .toPromise();
-      await this.addCall({
-        id: `${userId}--call--${new Date().toISOString()}--${
-          this.lastCallShuttleId
-        }`,
-        startDate: new Date(),
-        endDate: new Date(),
-        userId: userId,
-        shuttleId: this.lastCallShuttleId,
-        origin: this.lastCallOrigin,
-      });
-    }
   }
 
   private async handleCalls() {
@@ -50,7 +36,7 @@ export class CallsService {
     const userId: string | undefined = await this.authService.userId$
       .pipe(take(1))
       .toPromise();
-    if (userId && (await this.deviceService.isDevice())) {
+    if (userId && Capacitor.isNativePlatform()) {
       App.addListener('appStateChange', async (state: AppState) => {
         if (state.isActive) {
           console.log('Resume');
@@ -68,6 +54,7 @@ export class CallsService {
                 origin: this.lastCallOrigin,
               };
               await this.addCall(call);
+              logEvent(getAnalytics(), AnalyticsEvent.CallEnded, call);
             } else {
               console.error('Call data invalid');
             }
@@ -91,10 +78,7 @@ export class CallsService {
   private async addCall(call: Call) {
     try {
       await addDoc(
-        collection(
-          this.firestore,
-          `shuttles/${call.shuttleId}/calls/${call.id}`
-        ),
+        collection(this.firestore, `shuttles/${call.shuttleId}/calls`),
         call
       );
     } catch (err) {

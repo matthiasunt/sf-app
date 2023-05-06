@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Shuttle } from '@models/shuttle';
@@ -12,26 +12,29 @@ import {
   catchError,
   debounceTime,
   distinctUntilChanged,
-  filter,
   first,
   map,
   startWith,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { combineLatest, Observable, of } from 'rxjs';
 import { LocalDataService } from '@services/data/local-data.service';
 import { FormControl } from '@angular/forms';
+import { trackShuttleById } from '../../utils/track-by-id.utils';
+import { ListAction } from '@components/sf-shuttle-item/sf-shuttle-item.component';
 
 @Component({
   selector: 'app-add',
   templateUrl: './add.page.html',
   styleUrls: ['./add.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPage implements OnInit {
-  addToFavorites: boolean;
+  trackById = trackShuttleById;
+  ListAction = ListAction;
 
+  addToFavorites: boolean;
   searchControl = new FormControl();
   allShuttles$: Observable<Shuttle[]> = this.shuttlesService.shuttles$;
   result$: Observable<Shuttle[]> = this.searchControl.valueChanges.pipe(
@@ -52,7 +55,7 @@ export class AddPage implements OnInit {
     private authService: AuthService,
     private shuttlesService: ShuttlesService,
     public listsService: ListsService,
-    private localDataService: LocalDataService
+    public localDataService: LocalDataService
   ) {}
 
   async ngOnInit() {
@@ -65,64 +68,84 @@ export class AddPage implements OnInit {
     this.router.navigate([currentUrl + '/shuttle/' + shuttle.id]);
   }
 
+  async listActionTapped(event: { shuttle: Shuttle; action: ListAction }) {
+    switch (event.action) {
+      case ListAction.AddToFavorites:
+        this.addToList(event.shuttle, event.action);
+        return;
+      case ListAction.RemoveFromFavorites:
+        await this.removeFromList(event.shuttle, event.action);
+        return;
+      case ListAction.AddToBlacklisted:
+        this.addToList(event.shuttle, event.action);
+        return;
+      case ListAction.RemoveFromBlacklisted:
+        await this.removeFromList(event.shuttle, event.action);
+        return;
+    }
+  }
+
+  public actionType(shuttleId: string): Observable<ListAction> {
+    return this.isInList(shuttleId).pipe(
+      map((isInList) =>
+        this.addToFavorites
+          ? isInList
+            ? ListAction.RemoveFromFavorites
+            : ListAction.AddToFavorites
+          : isInList
+          ? ListAction.RemoveFromBlacklisted
+          : ListAction.AddToBlacklisted
+      )
+    );
+  }
+
   /* Adding and removing from lists logic */
-  public isInList$(shuttle: Shuttle): Observable<boolean> {
-    if (!shuttle) {
+  private isInList(shuttleId: string): Observable<boolean> {
+    if (!shuttleId) {
       return of(false);
     }
-
     return combineLatest([this.favorites$, this.blacklisted$]).pipe(
       map(([favorites, blacklisted]) => {
         const list: Shuttle[] = this.addToFavorites ? favorites : blacklisted;
-        return list.findIndex((s) => s && s.id && s.id === shuttle.id) > -1;
+        return list.findIndex((s) => s && s.id && s.id === shuttleId) > -1;
       })
     );
   }
 
-  public async removeFromList(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-    if (this.addToFavorites) {
+  private async removeFromList(shuttle: Shuttle, listAction: ListAction) {
+    if (listAction == ListAction.RemoveFromFavorites) {
       await this.localDataService.removeFavoriteShuttle(shuttle);
     } else {
       await this.localDataService.removeBlacklistedShuttle(shuttle);
     }
     await this.listsService.removeListElement(
       shuttle.id,
-      this.addToFavorites ? ElementType.Favorites : ElementType.Blacklisted
+      listAction == ListAction.RemoveFromFavorites
+        ? ElementType.Favorites
+        : ElementType.Blacklisted
     );
   }
 
   // TODO: extract add and remove from list
-  public addToList(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    const type = this.addToFavorites
-      ? ElementType.Favorites
-      : ElementType.Blacklisted;
+  private addToList(shuttle: Shuttle, listAction: ListAction) {
+    const type =
+      listAction == ListAction.AddToFavorites
+        ? ElementType.Favorites
+        : ElementType.Blacklisted;
     this.authService.userId$
       .pipe(
         first(),
         withLatestFrom(
           this.addToFavorites ? this.blacklisted$ : this.favorites$
         ),
-        filter(([userId, listToCheck]) => {
-          if (!userId) {
-            return false;
-          }
+        switchMap(([userId, listToCheck]) => {
           const alreadyInList =
             listToCheck.findIndex((e) => e.id === shuttle.id) >= 0;
-          return !alreadyInList;
-        }),
-        tap(() => {
-          if (this.addToFavorites) {
-            this.localDataService.addFavoriteShuttle(shuttle);
-          } else {
-            this.localDataService.addBlacklistedShuttle(shuttle);
+          if (alreadyInList) {
+            this.presentAlreadyAddedInOtherListAlert();
+            return of(undefined);
           }
-        }),
-        switchMap(([userId, listToCheck]) => {
+
           const listElement: ListElement = {
             id: `${userId}--${type}--${shuttle.id}`,
             userId: userId,
@@ -130,16 +153,19 @@ export class AddPage implements OnInit {
             date: new Date().toISOString(),
             type: type,
           };
+
+          if (this.addToFavorites) {
+            this.localDataService.addFavoriteShuttle(shuttle);
+          } else {
+            this.localDataService.addBlacklistedShuttle(shuttle);
+          }
           return of(this.listsService.addListElement(listElement)).pipe(
             catchError((error) => {
               console.error(error);
-              return of(null);
+              return of(undefined);
             })
           );
-        }),
-        filter(() => false),
-        // We use filter to avoid calling presentAlreadyAddedInOtherListAlert() when the element is successfully added.
-        tap(() => this.presentAlreadyAddedInOtherListAlert())
+        })
       )
       .subscribe();
   }

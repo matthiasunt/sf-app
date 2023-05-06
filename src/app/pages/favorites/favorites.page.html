@@ -10,26 +10,18 @@
     {{ "favorites.EMPTY" | translate }}
   </p>
   <ion-list>
-    <ion-item
-      *ngFor="let shuttle of (localDataService.favoriteShuttles | async)"
-      lines="full"
-      (click)="shuttleClicked(shuttle)"
+    <ng-container
+      *ngFor="let shuttle of localDataService.favoriteShuttles | async; trackBy: trackById"
     >
-      <ion-thumbnail slot="start">
-        <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-        </app-sf-shuttle-icon>
-      </ion-thumbnail>
-      <ion-label>{{ shuttle?.name }}</ion-label>
-      <div
-        (click)="removeFavorite(shuttle, $event)"
-        class="add-remove-button-div"
+      <sf-shuttle-item
+        [shuttle]="shuttle"
+        [locale]="localDataService.locale$ | async"
+        [listAction]="ListAction.RemoveFromFavorites"
+        (onItemTapped)="itemTapped($event)"
+        (onListActionTapped)="removeFavoriteTapped($event)"
       >
-        <ion-button color="danger" shape="round" slot="end" size="small">
-          {{("REMOVE" | translate)}}
-          <ion-icon name="close" slot="end"></ion-icon>
-        </ion-button>
-      </div>
-    </ion-item>
+      </sf-shuttle-item>
+    </ng-container>
   </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addClicked()" color="secondary" type="button">

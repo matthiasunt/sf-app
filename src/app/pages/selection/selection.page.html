@@ -13,8 +13,8 @@
           ({{(shuttles$ | async)?.length}})
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="currentLocality"
-        >{{currentLocality}}
+      <ng-container *ngIf="localityName$ | async as locality"
+        >{{locality}}
         <ng-container *ngIf="(shuttles$ | async)?.length > 0">
           ({{(shuttles$ | async)?.length}})
         </ng-container>
@@ -26,74 +26,26 @@
 <ion-content>
   <div *ngIf="(shuttles$ | async)?.length > 0; else noData">
     <ion-list>
-      <cdk-virtual-scroll-viewport
-        itemSize="64"
-        class="viewport"
-        minBufferPx="832"
-        maxBufferPx="900"
+      <ng-container
+        *ngFor="let shuttle of (shuttles$ | async); trackBy: trackById"
       >
-        <ion-item
-          *cdkVirtualFor="let shuttle of (shuttles$ | async)"
-          color="{{(shuttle.id |
-                    shuttleCalledLately: localDataService.history.getValue())?
-                    'medium' : ''}}"
-          lines="full"
-          (click)="shuttleClicked(shuttle)"
+        <sf-shuttle-item
+          [shuttle]="shuttle"
+          [locale]="localDataService.locale$ | async"
+          [showLocality]="true"
+          [showRating]="true"
+          [district]="district$ | async"
+          [justCalled]="calledLately(localDataService.history | async, shuttle.id)"
+          [showCallButton]="true"
+          (onItemTapped)="itemTapped($event)"
+          (onCallTapped)="callTapped($event)"
         >
-          <ion-thumbnail slot="start">
-            <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
-            </app-sf-shuttle-icon>
-          </ion-thumbnail>
-          <ion-label class="ion-text-wrap">
-            <ion-text>
-              <h2>
-                {{ shuttle?.name }}
-                <ion-icon
-                  *ngIf="shuttle?.verified"
-                  name="checkmark-circle"
-                  slot="end"
-                  color="secondary"
-                ></ion-icon>
-              </h2>
-              <p>
-                <ion-badge
-                  *ngIf="shuttle?.avgRating?.totalAvg && shuttle?.avgRating?.totalAvg > 0"
-                  color="tertiary"
-                >
-                  ★ {{shuttle?.avgRating?.totalAvg}}
-                </ion-badge>
-                <ion-badge
-                  *ngIf="coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-                  color="secondary"
-                >
-                  {{ shuttle.address.locality | localityName:
-                  (localDataService.lang | async)}}
-                </ion-badge>
-                <ion-badge
-                  *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-                  [ngStyle]="(district$ | async)?.id | districtColor | colorStyling"
-                >
-                  {{ shuttle.address.locality | localityName:
-                  (localDataService.lang | async) }}
-                </ion-badge>
-                <!--                            <ion-badge>Nur tagsüber</ion-badge>-->
-              </p>
-            </ion-text>
-          </ion-label>
-          <div class="call-icon-div" (click)="callClicked(shuttle, $event)">
-            <ion-icon
-              name="call"
-              size="large"
-              slot="end"
-              color="secondary"
-            ></ion-icon>
-          </div>
-        </ion-item>
-      </cdk-virtual-scroll-viewport>
+        </sf-shuttle-item>
+      </ng-container>
     </ion-list>
   </div>
   <ng-template #noData>
-    <div *ngIf="coordinates">
+    <div *ngIf="coordinates$ | async">
       <p padding class="no-data-p">{{ "NO_SHUTTLE_FOUND" | translate }}</p>
     </div>
   </ng-template>

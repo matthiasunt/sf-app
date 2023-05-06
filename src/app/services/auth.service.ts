@@ -1,11 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  Auth,
-  signInAnonymously,
-  browserLocalPersistence,
-  authState,
-} from '@angular/fire/auth';
-import { map } from 'rxjs/operators';
+import { Auth, signInAnonymously, authState } from '@angular/fire/auth';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +11,6 @@ export class AuthService {
   public userId$ = this.authState$.pipe(map((state) => state?.uid));
 
   constructor() {
-    this.auth.setPersistence(browserLocalPersistence);
-    signInAnonymously(this.auth);
+    signInAnonymously(this.auth).then((res) => console.info(res.user.uid));
   }
 }

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ContrastColorPipe } from '@pipes/contrast-color/contrast-color.pipe';
+import { ContrastColorPipe } from '@pipes/contrast-color.pipe';
 
 @Pipe({
   name: 'colorStyling',

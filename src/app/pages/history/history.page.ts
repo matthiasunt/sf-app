@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
@@ -9,20 +9,23 @@ import { LocalDataService } from '@services/data/local-data.service';
 
 import { CallOriginName } from '@models/call';
 import { Shuttle } from '@models/shuttle';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { HistoryElement } from '@models/history-element';
+import { trackShuttleById } from '../../utils/track-by-id.utils';
 
 @Component({
   selector: 'app-history',
   templateUrl: 'history.page.html',
   styleUrls: ['history.page.scss'],
   providers: [CallNumber],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HistoryPage implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
-  locale: string;
-  history: HistoryElement[];
+export class HistoryPage {
+  history$: Observable<HistoryElement[]> = this.localDataService.history;
+
+  trackById(index: number, item: HistoryElement): number {
+    return trackShuttleById(index, item.shuttle);
+  }
 
   constructor(
     private navCtrl: NavController,
@@ -33,57 +36,40 @@ export class HistoryPage implements OnInit, OnDestroy {
     private callNumber: CallNumber,
     public localDataService: LocalDataService,
     private callsService: CallsService
-  ) {
-    this.history = [];
+  ) {}
+
+  async itemTapped(event: { shuttleId: string }) {
+    await this.navCtrl.navigateForward(
+      `tabs/history/shuttle/${event.shuttleId}`
+    );
   }
 
-  async ngOnInit() {
-    this.localDataService.history
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((history) => {
-        this.history = history;
-      });
-
-    this.localDataService.lang
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((lang) => (this.locale = lang === 'de_st' ? 'de' : lang));
+  async rateTapped(event: { shuttleId: string }) {
+    await this.navCtrl.navigateForward(`tabs/history/rate/${event.shuttleId}`);
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  private shuttleClicked(shuttle: Shuttle) {
-    this.navCtrl.navigateForward('tabs/history/shuttle/' + shuttle.id);
-  }
-
-  private rateClicked(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.navCtrl.navigateForward('tabs/history/rate/' + shuttle.id);
-  }
-
-  private callClicked(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.callsService.setCallHandlerData(shuttle.id, {
+  async callTapped(event: { shuttle: Shuttle }) {
+    await this.callsService.setCallHandlerData(event.shuttle.id, {
       name: CallOriginName.History,
       value: '',
     });
-    this.callNumber.callNumber(shuttle.phone, true);
-    this.localDataService.addToHistory({ shuttle, date: new Date() });
+    await this.callNumber.callNumber(event.shuttle.phone, true);
+    await this.localDataService.addToHistory({
+      shuttle: event.shuttle,
+      date: new Date(),
+    });
   }
 
-  public myHeaderFn(record, recordIndex, records) {
-    if (
-      recordIndex === 0 ||
-      new Date(record.date).toDateString() !==
-        new Date(records[recordIndex - 1].date).toDateString()
-    ) {
-      return record.date;
-    }
-    return null;
+  public shouldShowHeader(
+    history: HistoryElement[],
+    item: HistoryElement,
+    index: number
+  ): Date | undefined {
+    return index === 0 ||
+      new Date(item.date).toDateString() !==
+        new Date(history[index - 1].date).toDateString()
+      ? item.date
+      : undefined;
   }
 
   async clearHistoryAlert() {

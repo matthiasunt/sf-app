@@ -1,59 +1,52 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { Geolocation } from '@capacitor/geolocation';
-import { DistrictsService } from '@services/data/districts.service';
 import { LocalDataService } from '@services/data/local-data.service';
-import { DeviceService } from '@services/device.service';
 import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
 import { environment } from '@env';
 import { Districts } from '../../../assets/data/districts';
 import { Subject } from 'rxjs';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
+import { AnalyticsEvent } from '../../logging/analytics-event';
 
 @Component({
   selector: 'app-find',
   templateUrl: 'find.page.html',
   styleUrls: ['find.page.scss'],
   providers: [CallNumber],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FindPage implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
-
-  public lang: string;
+export class FindPage {
   public districts: District[] = Districts;
-
-  public devMessage: string;
 
   constructor(
     private navCtrl: NavController,
     private router: Router,
     private http: HttpClientModule,
-    private deviceService: DeviceService,
     private alertCtrl: AlertController,
     private translate: TranslateService,
-    public districtsService: DistrictsService,
     public localDataService: LocalDataService
-  ) {}
-
-  async ngOnInit() {
-    this.localDataService.lang.subscribe((lang: string) => (this.lang = lang));
+  ) {
     console.log(environment.message);
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   async districtClicked(district) {
-    await this.navCtrl.navigateForward('/tabs/find/district/' + district.id);
+    logEvent(getAnalytics(), AnalyticsEvent.FindViaDistrictTapped);
+    await this.navCtrl.navigateForward(`/tabs/find/district/${district.id}`);
   }
 
   public async gpsClicked() {
+    logEvent(getAnalytics(), AnalyticsEvent.FindViaGpsButtonTapped);
     try {
       // Requests the permission if it hasn't already been granted
       let permission = await Geolocation.requestPermissions();
@@ -74,7 +67,7 @@ export class FindPage implements OnInit, OnDestroy {
 
   public shuttleClicked(shuttle: Shuttle) {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle.id);
+    this.navCtrl.navigateForward(`${currentUrl}/shuttle/${shuttle.id}`);
   }
 
   /* Alerts */

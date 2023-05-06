@@ -1,4 +1,10 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgZone,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import {
@@ -30,6 +36,7 @@ import { DistrictsService } from '@services/data/districts.service';
   templateUrl: './shuttle.page.html',
   styleUrls: ['./shuttle.page.scss'],
   providers: [CallNumber],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShuttlePage {
   private unsubscribe$ = new Subject<void>();

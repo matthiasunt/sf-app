@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LocalDataService } from '@services/data/local-data.service';
 import { GeoService } from '@services/geo.service';
 import { AlertController, NavController } from '@ionic/angular';
@@ -15,28 +15,58 @@ import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
 import { MyCoordinates } from '@models/my-coordinates';
 
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
-import { DeviceService } from '@services/device.service';
+import { combineLatest, Observable, of } from 'rxjs';
+import { trackShuttleById } from '../../utils/track-by-id.utils';
+import { map, switchMap } from 'rxjs/operators';
+import { Capacitor } from '@capacitor/core';
+import { HistoryElement } from '@models/history-element';
+import { Analytics, getAnalytics, logEvent } from '@angular/fire/analytics';
+import { AnalyticsEvent } from '../../logging/analytics-event';
 
 @Component({
   selector: 'app-selection',
   templateUrl: './selection.page.html',
   styleUrls: ['./selection.page.scss'],
   providers: [CallNumber],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectionPage implements OnInit {
-  shuttles$: Observable<Shuttle[]>;
-  district$: Observable<District>;
-  districtId: string;
+export class SelectionPage {
+  trackById = trackShuttleById;
 
-  coordinates: MyCoordinates;
-  currentLocality: string;
+  private analytics: Analytics = inject(Analytics);
 
-  noValidLocalityName: boolean;
+  district$: Observable<District | undefined> =
+    this.activatedRoute.paramMap.pipe(
+      map((params) => params.get('id')),
+      switchMap((id) =>
+        id ? this.districtsService.getDistrict(id) : of(undefined)
+      )
+    );
 
-  alertDismissed = false;
+  coordinates$: Observable<MyCoordinates> =
+    this.geoService.getCurrentPosition();
+
+  localityName$: Observable<string> = combineLatest([
+    this.coordinates$,
+    this.localDataService.locale$,
+  ]).pipe(
+    switchMap(([coordinates, locality]) =>
+      this.geoService.getLocalityName(coordinates, locality)
+    )
+  );
+
+  shuttles$: Observable<Shuttle[]> = combineLatest([
+    this.district$,
+    this.coordinates$,
+  ]).pipe(
+    switchMap(([district, coordinates]) => {
+      return district
+        ? this.shuttlesService.getShuttles(district.id)
+        : coordinates
+        ? this.shuttlesService.getShuttlesFromCoords(coordinates)
+        : of([]);
+    })
+  );
 
   constructor(
     private navCtrl: NavController,
@@ -44,7 +74,6 @@ export class SelectionPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private alertCtrl: AlertController,
     private callNumber: CallNumber,
-    private deviceService: DeviceService,
     private translate: TranslateService,
     private districtsService: DistrictsService,
     private shuttlesService: ShuttlesService,
@@ -53,56 +82,45 @@ export class SelectionPage implements OnInit {
     private geoService: GeoService
   ) {}
 
-  async ngOnInit() {
-    this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.district$ = this.districtsService.getDistrict(this.districtId);
-
-    if (this.districtId) {
-      this.shuttles$ = this.shuttlesService.getShuttles(this.districtId);
-    } else {
-      this.coordinates = await this.geoService.getCurrentPosition();
-      this.fetchShuttlesByPosition(this.localDataService.lang.value);
-    }
+  calledLately(history: HistoryElement[], shuttleId: string): boolean {
+    const calledLast = history.filter((h) => {
+      return (new Date().getTime() - new Date(h.date).getTime()) / 36e5 < 0.5;
+    });
+    return calledLast.findIndex((c) => c.shuttle.id === shuttleId) > -1;
   }
 
-  private async fetchShuttlesByPosition(lang: string) {
-    this.shuttles$ = this.shuttlesService.getShuttlesFromCoords(
-      this.coordinates
+  async itemTapped(event: { shuttleId: string }) {
+    await this.navCtrl.navigateForward(
+      `${this.router.url}/shuttle/${event.shuttleId}`
     );
-
-    // Get Locality Name
-    const langForLocality = lang === 'it' ? 'it' : 'de';
-    this.currentLocality = await this.geoService.getLocalityName(
-      this.coordinates,
-      langForLocality
-    );
-    if (!this.currentLocality || this.currentLocality.length < 1) {
-      this.noValidLocalityName = true;
-    }
   }
 
-  public shuttleClicked(shuttle: Shuttle) {
-    const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/shuttle/' + shuttle.id);
-  }
-
-  public callClicked(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-    let callOrigin: CallOrigin;
-    if (this.districtId) {
-      callOrigin = {
-        name: CallOriginName.District,
-        value: this.districtId,
-      };
-    } else if (this.coordinates) {
-      callOrigin = {
-        name: CallOriginName.Gps,
-        value: this.coordinates,
-      };
-    }
-    this.callsService.setCallHandlerData(shuttle.id, callOrigin);
-    this.callNumber.callNumber(shuttle.phone, true);
-    this.localDataService.addToHistory({ shuttle, date: new Date() });
+  public callTapped(event: { shuttle: Shuttle }) {
+    combineLatest([this.district$, this.coordinates$])
+      .pipe(
+        map(([district, coordinates]) => {
+          let callOrigin: CallOrigin;
+          if (district) {
+            callOrigin = {
+              name: CallOriginName.District,
+              value: district.id,
+            };
+          } else if (coordinates) {
+            callOrigin = {
+              name: CallOriginName.Gps,
+              value: coordinates,
+            };
+          }
+          this.callsService.setCallHandlerData(event.shuttle.id, callOrigin);
+          if (Capacitor.isNativePlatform) {
+            this.callNumber.callNumber(event.shuttle.phone, true);
+          }
+          this.localDataService.addToHistory({
+            shuttle: event.shuttle,
+            date: new Date(),
+          });
+        })
+      )
+      .subscribe();
   }
 }

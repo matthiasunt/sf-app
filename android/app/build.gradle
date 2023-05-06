@@ -6,8 +6,8 @@ android {
         applicationId "coffeerush.apps.shuttlefinder"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1001401
-        versionName '3.4.0'
+        versionCode 1001402
+        versionName '4.0.0'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

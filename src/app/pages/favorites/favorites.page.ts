@@ -1,38 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Shuttle } from '@models/shuttle';
 import { NavController } from '@ionic/angular';
 import { ListsService } from '@services/data/lists.service';
-import { ShuttlesService } from '@services/data/shuttles.service';
 import { ElementType } from '@models/list-element';
 import { LocalDataService } from '@services/data/local-data.service';
+import { trackShuttleById } from '../../utils/track-by-id.utils';
+import { ListAction } from '@components/sf-shuttle-item/sf-shuttle-item.component';
 
 @Component({
   selector: 'app-favorites',
   templateUrl: 'favorites.page.html',
   styleUrls: ['favorites.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FavoritesPage implements OnInit {
+export class FavoritesPage {
+  trackById = trackShuttleById;
+  ListAction = ListAction;
+
   constructor(
     private navCtrl: NavController,
-    public shuttlesService: ShuttlesService,
     public listsService: ListsService,
     public localDataService: LocalDataService
   ) {}
 
-  ngOnInit() {}
-
-  public shuttleClicked(shuttle: Shuttle) {
-    this.navCtrl.navigateForward('tabs/favorites/shuttle/' + shuttle.id);
+  async itemTapped(event: { shuttleId: string }) {
+    await this.navCtrl.navigateForward(
+      `tabs/favorites/shuttle/${event.shuttleId}`
+    );
   }
 
-  public addClicked() {
-    this.navCtrl.navigateForward('tabs/favorites/add');
+  async removeFavoriteTapped(event: { shuttle: Shuttle; action: ListAction }) {
+    await this.localDataService.removeFavoriteShuttle(event.shuttle);
+    await this.listsService.removeListElement(
+      event.shuttle.id,
+      ElementType.Favorites
+    );
   }
 
-  private async removeFavorite(shuttle: Shuttle, event) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.localDataService.removeFavoriteShuttle(shuttle);
-    this.listsService.removeListElement(shuttle.id, ElementType.Favorites);
+  async addClicked() {
+    await this.navCtrl.navigateForward('tabs/favorites/add');
   }
 }
