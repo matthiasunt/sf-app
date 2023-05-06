@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar
-    color="{{shuttle | shuttleColor}}"
-    [ngStyle]="shuttle | shuttleColor | colorStyling"
+    color="{{shuttle$ | async | shuttleColor}}"
+    [ngStyle]="shuttle$ | async | shuttleColor | colorStyling"
   >
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title> {{shuttle?.name}} </ion-title>
+    <ion-title> {{(shuttle$ | async)?.name}} </ion-title>
     <!--<ion-buttons slot="end">-->
     <!--<ion-button (click)="presentPopover($event)">-->
     <!--<ion-icon name="more" slot="icon-only"></ion-icon>-->
@@ -16,192 +16,204 @@
 </ion-header>
 
 <!-- TODO: Confirmed badge, Services, report Shuttle -->
-<ion-content *ngIf="shuttle" class="ion-padding">
+<ion-content class="ion-padding">
   <ion-fab vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button
-      *ngIf="!isFavorite"
-      (click)="addToFavorites()"
-      color="secondary"
-      type="button"
-    >
-      <ion-icon name="heart"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button
-      *ngIf="isFavorite"
-      (click)="removeFromFravorites()"
-      color="danger"
-      type="button"
-    >
-      <ion-icon name="close"></ion-icon>
-    </ion-fab-button>
+    <ng-container *ngIf="shuttle$ | async as shuttle">
+      <ng-container *ngIf="isFavorite$ | async as isFavorite">
+        <ion-fab-button
+          (click)="isFavorite ? removeFromFavorites(shuttle) : addToFavorites(shuttle)"
+          [color]="isFavorite ? 'danger' : 'secondary'"
+          type="button"
+        >
+          <ion-icon [name]="isFavorite ? 'close' : 'heart'"></ion-icon>
+        </ion-fab-button>
+      </ng-container>
+    </ng-container>
   </ion-fab>
 
   <div id="avatar-div">
     <ion-avatar>
-      <app-sf-shuttle-icon [color]="shuttle | shuttleColor">
+      <app-sf-shuttle-icon [color]="shuttle$ | async | shuttleColor">
       </app-sf-shuttle-icon>
     </ion-avatar>
   </div>
   <ion-row class="button-row">
     <ion-col>
-      <ion-button
-        (click)="callClicked()"
-        expand="block"
-        color="secondary"
-        size="large"
-      >
-        <ion-icon name="call" slot="start"></ion-icon>
-        {{"shuttle.CALL" | translate}}
-      </ion-button>
+      <ng-container *ngIf="shuttle$ | async as shuttle">
+        <ion-button
+          (click)="callClicked(shuttle)"
+          expand="block"
+          color="secondary"
+          size="large"
+        >
+          <ion-icon name="call" slot="start"></ion-icon>
+          {{"shuttle.CALL" | translate}}
+        </ion-button>
+      </ng-container>
     </ion-col>
     <ion-col>
-      <ion-button
-        (click)="rateClicked()"
-        expand="block"
-        color="tertiary"
-        size="large"
-      >
-        <ion-icon name="star" slot="start"></ion-icon>
-        {{"shuttle.RATE" | translate}}
-      </ion-button>
+      <ng-container *ngIf="shuttle$ | async as shuttle">
+        <ion-button
+          (click)="rateClicked(shuttle.id)"
+          expand="block"
+          color="tertiary"
+          size="large"
+        >
+          <ion-icon name="star" slot="start"></ion-icon>
+          {{"shuttle.RATE" | translate}}
+        </ion-button>
+      </ng-container>
     </ion-col>
   </ion-row>
-  <ion-card id="main-card">
+  <ion-card id="main-card" *ngIf="shuttle$ | async as shuttle">
     <ion-card-header>
       <ion-card-title
-        >{{shuttle?.name}}
-        <ion-badge *ngIf="shuttle?.avgRating?.totalAvg" color="tertiary">
-          ★ {{shuttle?.avgRating?.totalAvg}}
+        >{{shuttle.name}}
+        <ion-badge *ngIf="shuttle.avgRating?.totalAvg" color="tertiary">
+          ★ {{shuttle.avgRating?.totalAvg}}
         </ion-badge>
       </ion-card-title>
-      <ion-card-subtitle>{{shuttle?.phone | phoneNumber}}</ion-card-subtitle>
+      <ion-card-subtitle>{{shuttle.phone | phoneNumber}}</ion-card-subtitle>
     </ion-card-header>
 
     <!-- Districts Chips -->
     <ion-card-content>
       <ion-chip
-        *ngFor="let d of shuttleDistricts"
+        *ngFor="let d of districts$ | async"
         [style.background-color]="d.id | districtColor"
         [style.color]="d.id | districtColor | contrastColor"
       >
-        <ion-label>{{d.name | districtName: lang}}</ion-label>
+        <ion-label
+          >{{d.name | districtName: (localDataService.lang | async)}}</ion-label
+        >
       </ion-chip>
     </ion-card-content>
   </ion-card>
 
-  <ion-card
-    *ngIf="shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
-  >
-    <!--<ion-item lines="full" type="button">-->
-    <!--<ion-icon name="mail" slot="start"></ion-icon>-->
-    <!--<ion-label text-wrap>-->
-    <!--<ion-text>-->
-    <!--<a href="mailto:{{shuttle?.email}}">{{shuttle?.email}}</a></ion-text>-->
-    <!--</ion-label>-->
-    <!--</ion-item>-->
-    <!--<ion-item lines="full">-->
-    <!--<ion-icon name="person" slot="start"></ion-icon>-->
-    <!--<ion-label text-wrap>-->
-    <!--<ion-text>{{shuttle?.firstName}} {{shuttle?.lastName}}</ion-text>-->
-    <!--</ion-label>-->
-    <!--</ion-item>-->
-    <ion-item lines="full">
-      <ion-icon name="pin" slot="start"></ion-icon>
-      <ion-label class="ion-text-wrap">
-        <ion-text>{{shuttle?.address.locality | localityName: lang}}</ion-text>
-      </ion-label>
-    </ion-item>
-  </ion-card>
-
-  <ng-container *ngIf="userRating">
-    <ion-card class="rating-card" (click)="rateClicked()">
-      <ion-card-header>
-        <ion-card-subtitle>
-          {{"shuttle.MY_RATINGS" | translate}}</ion-card-subtitle
-        >
-      </ion-card-header>
-      <ion-card-content>
-        <p>
-          <span>Service</span>
-          <ion-badge color="tertiary"
-            >{{userRating?.service}} {{"rate.OF" | translate}} 5</ion-badge
+  <ng-container *ngIf="shuttle$ | async as shuttle">
+    <ion-card
+      *ngIf="shuttle.address?.locality?.de && shuttle.address?.locality?.it"
+    >
+      <!--<ion-item lines="full" type="button">-->
+      <!--<ion-icon name="mail" slot="start"></ion-icon>-->
+      <!--<ion-label text-wrap>-->
+      <!--<ion-text>-->
+      <!--<a href="mailto:{{shuttle?.email}}">{{shuttle?.email}}</a></ion-text>-->
+      <!--</ion-label>-->
+      <!--</ion-item>-->
+      <!--<ion-item lines="full">-->
+      <!--<ion-icon name="person" slot="start"></ion-icon>-->
+      <!--<ion-label text-wrap>-->
+      <!--<ion-text>{{shuttle?.firstName}} {{shuttle?.lastName}}</ion-text>-->
+      <!--</ion-label>-->
+      <!--</ion-item>-->
+      <ion-item lines="full">
+        <ion-icon name="pin" slot="start"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <ion-text
+            >{{shuttle.address.locality | localityName: (localDataService.lang |
+            async)}}</ion-text
           >
-        </p>
-        <p>
-          <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-          <ion-badge color="tertiary"
-            >{{userRating?.reliabilityAndPunctuality}} {{"rate.OF" | translate}}
-            5
-          </ion-badge>
-        </p>
-        <p>
-          <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-          <ion-badge color="tertiary"
-            >{{userRating?.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
-          </ion-badge>
-        </p>
-        <p>
-          <span>{{"rate.PRICE" | translate}}</span>
-          <ion-badge color="tertiary"
-            >{{userRating?.price}} {{"rate.OF" | translate}} 5</ion-badge
-          >
-        </p>
-        <ng-container *ngIf="userRating?.review">
-          <hr />
-          <p class="review-p"><i>"{{userRating?.review}}"</i></p>
-        </ng-container>
-      </ion-card-content>
+        </ion-label>
+      </ion-item>
     </ion-card>
   </ng-container>
 
-  <ng-container *ngIf="shuttle?.avgRating?.ratingsCount > 0">
-    <ion-card class="rating-card" (click)="toRatingsPage()">
-      <ion-card-header>
-        <ion-card-title
-          >{{"ratings.RATINGS" | translate}}
-          ({{shuttle?.avgRating?.ratingsCount}})
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>
-          <span><b>{{"shuttle.OVERALL" | translate}}</b></span>
-          <ion-badge color="tertiary">
-            <b>{{shuttle?.avgRating?.totalAvg}} {{"rate.OF" | translate}} 5</b>
-          </ion-badge>
-        </p>
-        <hr />
-        <p>
-          <span>Service</span>
-          <ion-badge color="tertiary">
-            {{shuttle?.avgRating?.service}} {{"rate.OF" | translate}} 5
-          </ion-badge>
-        </p>
-        <p>
-          <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
-          <ion-badge color="tertiary">
-            {{shuttle?.avgRating?.reliabilityAndPunctuality}} {{"rate.OF" |
-            translate}} 5
-          </ion-badge>
-        </p>
-        <p>
-          <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
-          <ion-badge color="tertiary">
-            {{shuttle?.avgRating?.drivingStyleAndSecurity}} {{"rate.OF" |
-            translate}} 5
-          </ion-badge>
-        </p>
-        <p>
-          <span>{{"rate.PRICE" | translate}}</span>
-          <ion-badge color="tertiary">
-            {{shuttle?.avgRating?.price}} {{"rate.OF" | translate}} 5
-          </ion-badge>
-        </p>
-        <hr />
-        <p *ngFor="let review of reviewsToDisplay" class="review-p">
-          <i>"{{review}}"</i>
-        </p>
-      </ion-card-content>
-    </ion-card>
+  <!-- User rating -->
+  <ng-container *ngIf="shuttle$ | async as shuttle">
+    <ng-container *ngIf="userRating$ | async as rating">
+      <ion-card class="rating-card" (click)="rateClicked(shuttle.id)">
+        <ion-card-header>
+          <ion-card-subtitle>
+            {{"shuttle.MY_RATINGS" | translate}}</ion-card-subtitle
+          >
+        </ion-card-header>
+        <ion-card-content>
+          <p>
+            <span>Service</span>
+            <ion-badge color="tertiary"
+              >{{rating.service}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+            <ion-badge color="tertiary"
+              >{{rating.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+            <ion-badge color="tertiary"
+              >{{rating.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.PRICE" | translate}}</span>
+            <ion-badge color="tertiary"
+              >{{rating.price}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <ng-container *ngIf="rating.review">
+            <hr />
+            <p class="review-p"><i>"{{rating.review}}"</i></p>
+          </ng-container>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ng-container>
+
+  <!-- Aggregated rating -->
+  <ng-container *ngIf="shuttle$ | async as shuttle">
+    <ng-container *ngIf="shuttle.avgRating as rating">
+      <ion-card
+        *ngIf="rating.ratingsCount > 0"
+        class="rating-card"
+        (click)="toRatingsPage(shuttle.id)"
+      >
+        <ion-card-header>
+          <ion-card-title
+            >{{"ratings.RATINGS" | translate}} ({{rating.ratingsCount}})
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>
+            <span><b>{{"shuttle.OVERALL" | translate}}</b></span>
+            <ion-badge color="tertiary">
+              <b>{{rating.totalAvg}} {{"rate.OF" | translate}} 5</b>
+            </ion-badge>
+          </p>
+          <hr />
+          <p>
+            <span>Service</span>
+            <ion-badge color="tertiary">
+              {{rating.service}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.RELIABILITY_AND_PUNCTUALITY" | translate}}</span>
+            <ion-badge color="tertiary">
+              {{rating.reliabilityAndPunctuality}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.DRIVING_STYLE_AND_SECURITY" | translate}}</span>
+            <ion-badge color="tertiary">
+              {{rating.drivingStyleAndSecurity}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <p>
+            <span>{{"rate.PRICE" | translate}}</span>
+            <ion-badge color="tertiary">
+              {{rating.price}} {{"rate.OF" | translate}} 5
+            </ion-badge>
+          </p>
+          <!--        <hr />-->
+          <!--        <p *ngFor="let review of reviewsToDisplay" class="review-p">-->
+          <!--          <i>"{{review}}"</i>-->
+          <!--        </p>-->
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
   </ng-container>
   <!--<ion-card>-->
   <!--<ion-card-content>-->

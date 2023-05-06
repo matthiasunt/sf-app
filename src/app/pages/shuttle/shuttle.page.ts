@@ -20,8 +20,8 @@ import { GeoService } from '@services/geo.service';
 import { Rating } from '@models/rating';
 import { RatingsService } from '@services/data/ratings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { District } from '@models/district';
 import { DistrictsService } from '@services/data/districts.service';
 
@@ -31,18 +31,38 @@ import { DistrictsService } from '@services/data/districts.service';
   styleUrls: ['./shuttle.page.scss'],
   providers: [CallNumber],
 })
-export class ShuttlePage implements OnInit, OnDestroy {
+export class ShuttlePage {
   private unsubscribe$ = new Subject<void>();
 
-  shuttle: Shuttle;
-  isFavorite: boolean;
-  lang: string;
+  shuttle$: Observable<Shuttle> = this.shuttlesService.getShuttle(
+    this.activatedRoute.snapshot.paramMap.get('id')
+  );
+  districts$: Observable<District[]> = this.shuttle$.pipe(
+    withLatestFrom(this.districtsService.districts$),
+    map(([shuttle, districts]) =>
+      districts.filter((d) => shuttle.districtIds.indexOf(d.id) > -1)
+    )
+  );
 
-  shuttleDistricts: District[];
+  shuttleRatings$ = this.shuttle$.pipe(
+    switchMap((shuttle) => this.ratingsService.getRatings(shuttle.id))
+  );
 
-  userRating: Rating;
-  reviewsToDisplay: string[];
-  ratingsFromShuttle: Rating[];
+  userRating$: Observable<Rating> = this.shuttleRatings$.pipe(
+    switchMap((ratings) =>
+      this.authService.userId$.pipe(
+        map((userId) => ratings.find((r) => r.userId === userId))
+      )
+    )
+  );
+
+  isFavorite$: Observable<boolean> = this.shuttle$.pipe(
+    withLatestFrom(this.localDataService.favoriteShuttles),
+    map(
+      ([shuttle, favorites]) =>
+        favorites.findIndex((s) => s.id === shuttle.id) > -1
+    )
+  );
 
   constructor(
     private zone: NgZone,
@@ -55,104 +75,48 @@ export class ShuttlePage implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private localDataService: LocalDataService,
+    public localDataService: LocalDataService,
     private listsService: ListsService,
     private shuttlesService: ShuttlesService,
     private districtsService: DistrictsService,
     public callsService: CallsService,
     private ratingsService: RatingsService
-  ) {
-    this.isFavorite = false;
-    this.ratingsFromShuttle = [];
-    this.reviewsToDisplay = [];
-  }
+  ) {}
 
-  async ngOnInit() {
-    this.localDataService.lang
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((lang: string) => (this.lang = lang));
-
-    const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
-
-    combineLatest([
-      this.authService.userId$,
-      this.shuttlesService.getShuttle(shuttleId),
-      this.ratingsService.getRatings(shuttleId),
-      this.localDataService.favoriteShuttles,
-      this.districtsService.districts$,
-    ])
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(([userId, shuttle, ratings, favoriteShuttles, districts]) => {
-        if (shuttle) {
-          this.zone.run(() => {
-            this.shuttle = shuttle;
-            // User Rating
-            this.userRating = ratings.find(
-              (rating) => rating.userId === userId
-            );
-            // Reviews
-            if (shuttle.avgRating && shuttle.avgRating.reviews) {
-              let reviews = shuttle.avgRating.reviews;
-              if (this.userRating) {
-                reviews = reviews.filter((r) => r !== this.userRating.review);
-              }
-              this.reviewsToDisplay = reviews.slice(0, 1);
-            }
-          });
-
-          // Districts
-          this.shuttleDistricts = districts.filter(
-            (d) => shuttle.districtIds.indexOf(d.id) > -1
-          );
-
-          // Is Shuttle Favorites?
-          this.isFavorite =
-            favoriteShuttles.findIndex((s: Shuttle) => s.id === shuttleId) > -1;
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this.userRating = undefined;
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  public async callClicked() {
+  public async callClicked(shuttle: Shuttle) {
     const callOrigin = await this.getCallOrigin();
-    await this.callsService.setCallHandlerData(this.shuttle.id, callOrigin);
-    await this.callNumber.callNumber(this.shuttle.phone, true);
+    await this.callsService.setCallHandlerData(shuttle.id, callOrigin);
+    await this.callNumber.callNumber(shuttle.phone, true);
     await this.localDataService.addToHistory({
-      shuttle: this.shuttle,
+      shuttle: shuttle,
       date: new Date(),
     });
   }
 
-  public rateClicked() {
+  public rateClicked(shuttleId: string) {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/rate/' + this.shuttle.id);
+    this.navCtrl.navigateForward(currentUrl + '/rate/' + shuttleId);
   }
 
-  public toRatingsPage() {
+  public toRatingsPage(shuttleId: string) {
     const currentUrl = this.router.url;
-    this.navCtrl.navigateForward(currentUrl + '/ratings/' + this.shuttle.id);
+    this.navCtrl.navigateForward(currentUrl + '/ratings/' + shuttleId);
   }
 
-  public async addToFavorites() {
+  public async addToFavorites(shuttle: Shuttle) {
     const userId: string | undefined = await this.authService.userId$
       .pipe(take(1))
       .toPromise();
     if (userId) {
       const listElement: ListElement = {
-        id: `${userId}--${ElementType.Favorites}--${this.shuttle.id}`,
+        id: `${userId}--${ElementType.Favorites}--${shuttle.id}`,
         userId: userId,
-        shuttleId: this.shuttle.id,
+        shuttleId: shuttle.id,
         date: new Date().toISOString(),
         type: ElementType.Favorites,
       };
       this.listsService.addListElement(listElement);
-      this.localDataService.addFavoriteShuttle(this.shuttle);
-      this.isFavorite = true;
+      this.localDataService.addFavoriteShuttle(shuttle);
       this.presentAddedToFavoritesToast();
     }
   }
@@ -174,13 +138,12 @@ export class ShuttlePage implements OnInit, OnDestroy {
     toast.present();
   }
 
-  public removeFromFravorites() {
-    this.localDataService.removeFavoriteShuttle(this.shuttle);
+  public removeFromFavorites(shuttle: Shuttle) {
+    this.localDataService.removeFavoriteShuttle(shuttle);
     this.listsService.removeListElement(
-      this.shuttle.id,
+      shuttle.id,
       this.addToFavorites ? ElementType.Favorites : ElementType.Blacklisted
     );
-    this.isFavorite = false;
     this.presentRemovedFromFavoritesToast();
   }
 

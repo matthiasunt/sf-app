@@ -5,7 +5,10 @@ import { MultiLangName } from '@models/district';
   name: 'localityName',
 })
 export class LocalityNamePipe implements PipeTransform {
-  transform(value: MultiLangName, lang: string): string {
+  transform(value: MultiLangName | undefined, lang: string): string {
+    if (!value) {
+      return '';
+    }
     let ret: string;
     if (lang === 'it') {
       ret = value.it;

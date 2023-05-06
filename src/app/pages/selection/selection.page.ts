@@ -26,9 +26,8 @@ import { DeviceService } from '@services/device.service';
   styleUrls: ['./selection.page.scss'],
   providers: [CallNumber],
 })
-export class SelectionPage implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
-  shuttles$: Observable<Shuttle[]> = new Observable<Shuttle[]>();
+export class SelectionPage implements OnInit {
+  shuttles$: Observable<Shuttle[]>;
   district$: Observable<District>;
   districtId: string;
 
@@ -36,7 +35,6 @@ export class SelectionPage implements OnInit, OnDestroy {
   currentLocality: string;
 
   noValidLocalityName: boolean;
-  lang: string;
 
   alertDismissed = false;
 
@@ -56,10 +54,6 @@ export class SelectionPage implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.localDataService.lang
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((lang: string) => (this.lang = lang));
-
     this.districtId = this.activatedRoute.snapshot.paramMap.get('id');
     this.district$ = this.districtsService.getDistrict(this.districtId);
 
@@ -67,25 +61,20 @@ export class SelectionPage implements OnInit, OnDestroy {
       this.shuttles$ = this.shuttlesService.getShuttles(this.districtId);
     } else {
       this.coordinates = await this.geoService.getCurrentPosition();
-      this.fetchShuttlesByPosition();
+      this.fetchShuttlesByPosition(this.localDataService.lang.value);
     }
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  private async fetchShuttlesByPosition() {
+  private async fetchShuttlesByPosition(lang: string) {
     this.shuttles$ = this.shuttlesService.getShuttlesFromCoords(
       this.coordinates
     );
 
     // Get Locality Name
-    const lang = this.lang === 'it' ? 'it' : 'de';
+    const langForLocality = lang === 'it' ? 'it' : 'de';
     this.currentLocality = await this.geoService.getLocalityName(
       this.coordinates,
-      lang
+      langForLocality
     );
     if (!this.currentLocality || this.currentLocality.length < 1) {
       this.noValidLocalityName = true;

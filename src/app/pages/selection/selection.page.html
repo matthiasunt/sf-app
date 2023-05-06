@@ -8,7 +8,7 @@
     </ion-buttons>
     <ion-title>
       <ng-container *ngIf="(district$ | async) as district"
-        >{{ district.name | districtName: lang }}
+        >{{ district.name | districtName: (localDataService.lang | async) }}
         <ng-container *ngIf="(shuttles$ | async)?.length > 0">
           ({{(shuttles$ | async)?.length}})
         </ng-container>
@@ -66,13 +66,15 @@
                   *ngIf="coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
                   color="secondary"
                 >
-                  {{ shuttle.address.locality | localityName: lang}}
+                  {{ shuttle.address.locality | localityName:
+                  (localDataService.lang | async)}}
                 </ion-badge>
                 <ion-badge
                   *ngIf="!coordinates && shuttle?.address?.locality?.de && shuttle?.address?.locality?.it"
                   [ngStyle]="(district$ | async)?.id | districtColor | colorStyling"
                 >
-                  {{ shuttle.address.locality | localityName: lang }}
+                  {{ shuttle.address.locality | localityName:
+                  (localDataService.lang | async) }}
                 </ion-badge>
                 <!--                            <ion-badge>Nur tagsüber</ion-badge>-->
               </p>
