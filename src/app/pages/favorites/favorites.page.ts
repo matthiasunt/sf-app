@@ -4,8 +4,6 @@ import { NavController } from '@ionic/angular';
 import { ListsService } from '@services/data/lists.service';
 import { ShuttlesService } from '@services/data/shuttles.service';
 import { ElementType } from '@models/list-element';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { LocalDataService } from '@services/data/local-data.service';
 
 @Component({
@@ -14,8 +12,6 @@ import { LocalDataService } from '@services/data/local-data.service';
   styleUrls: ['favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
-  public favoriteShuttles$: Observable<Shuttle[]>;
-
   constructor(
     private navCtrl: NavController,
     public shuttlesService: ShuttlesService,
@@ -37,9 +33,6 @@ export class FavoritesPage implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     this.localDataService.removeFavoriteShuttle(shuttle);
-    this.listsService.removeListElementByShuttleId(
-      shuttle.id,
-      ElementType.Favorites
-    );
+    this.listsService.removeListElement(shuttle.id, ElementType.Favorites);
   }
 }

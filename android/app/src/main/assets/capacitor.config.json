@@ -5,7 +5,9 @@
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
-      "scaleType": "CENTER_CROP"
+      "launchAutoHide": false,
+      "androidScaleType": "CENTER_CROP",
+      "backgroundColor": "#99cc33"
     }
   }
 }

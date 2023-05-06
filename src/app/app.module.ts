@@ -12,15 +12,39 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { PipesModule } from '@pipes/pipes.module';
 import { environment } from '@env';
-import { initializeApp } from 'firebase/app';
-import { initializeFirestore, persistentLocalCache } from 'firebase/firestore';
 
-const app = initializeApp(environment.firebase);
-initializeFirestore(app, { localCache: persistentLocalCache() });
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {
+  provideAnalytics,
+  getAnalytics,
+  ScreenTrackingService,
+  UserTrackingService,
+} from '@angular/fire/analytics';
+import { provideAuth, initializeAuth } from '@angular/fire/auth';
+import {
+  initializeFirestore,
+  provideFirestore,
+  persistentLocalCache,
+  persistentSingleTabManager,
+  CACHE_SIZE_UNLIMITED,
+} from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() =>
+      initializeFirestore(getApp(), {
+        experimentalForceLongPolling: true,
+        localCache: persistentLocalCache({
+          cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+          tabManager: persistentSingleTabManager({ forceOwnership: true }),
+        }),
+      })
+    ),
+    provideAnalytics(() => getAnalytics()),
+    provideAuth(() => initializeAuth(getApp())),
     BrowserModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
@@ -34,10 +58,13 @@ initializeFirestore(app, { localCache: persistentLocalCache() });
       },
     }),
     PipesModule,
+    ScrollingModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     NativeGeocoder,
+    ScreenTrackingService,
+    UserTrackingService,
   ],
   exports: [],
   bootstrap: [AppComponent],

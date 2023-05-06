@@ -12,9 +12,8 @@ import { Shuttle } from '@models/shuttle';
 @Injectable({
   providedIn: 'root',
 })
-/**
- *
- */
+
+// TODO: Move to Firestore.
 export class LocalDataService {
   private _lang: BehaviorSubject<string> = new BehaviorSubject(
     this.translate.getBrowserLang()

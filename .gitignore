@@ -59,3 +59,8 @@ src/environments/*
 
 # Include exceptions
 !ios/App/App/AppDelegate.swift
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

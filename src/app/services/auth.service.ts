@@ -1,37 +1,22 @@
-import { Injectable } from '@angular/core';
-import { getAuth, signInAnonymously } from 'firebase/auth';
-import { getApp } from 'firebase/app';
+import { inject, Injectable } from '@angular/core';
 import {
-  setPersistence,
-  indexedDBLocalPersistence,
-  onAuthStateChanged,
-} from '@firebase/auth';
-import { BehaviorSubject } from 'rxjs';
+  Auth,
+  signInAnonymously,
+  browserLocalPersistence,
+  authState,
+} from '@angular/fire/auth';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private auth = getAuth(getApp());
-
-  private _userId: BehaviorSubject<string | undefined> = new BehaviorSubject(
-    undefined
-  );
-
-  get userId() {
-    return this._userId;
-  }
+  private auth: Auth = inject(Auth);
+  private authState$ = authState(this.auth);
+  public userId$ = this.authState$.pipe(map((state) => state?.uid));
 
   constructor() {
-    setPersistence(this.auth, indexedDBLocalPersistence);
+    this.auth.setPersistence(browserLocalPersistence);
     signInAnonymously(this.auth);
-
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this._userId.next(user.uid);
-      } else {
-        this._userId.next(undefined);
-      }
-    });
   }
 }

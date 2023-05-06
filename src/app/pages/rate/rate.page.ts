@@ -46,7 +46,7 @@ export class RatePage implements OnInit, OnDestroy {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
     this.shuttle$ = this.shuttlesService.getShuttle(shuttleId);
     combineLatest([
-      this.authService.userId,
+      this.authService.userId$,
       this.shuttlesService.getShuttle(shuttleId),
       this.ratingsService.getRatings(shuttleId),
     ])
@@ -76,7 +76,7 @@ export class RatePage implements OnInit, OnDestroy {
         this.ratingForm.price) /
       4;
 
-    const userId: string | undefined = await this.authService.userId
+    const userId: string | undefined = await this.authService.userId$
       .pipe(take(1))
       .toPromise();
     if (userId) {

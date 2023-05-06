@@ -33,9 +33,6 @@ export class BlacklistPage implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     this.localDataService.removeBlacklistedShuttle(shuttle);
-    this.listsService.removeListElementByShuttleId(
-      shuttle.id,
-      ElementType.Blacklisted
-    );
+    this.listsService.removeListElement(shuttle.id, ElementType.Blacklisted);
   }
 }

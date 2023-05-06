@@ -73,7 +73,7 @@ export class GeoService {
 
   // tool
   private static checkPosition(pos) {
-    if (
+    return (
       pos &&
       pos.latitude &&
       pos.longitude &&
@@ -81,11 +81,7 @@ export class GeoService {
       pos.longitude.toString().length > 0 &&
       pos.latitude.toString().indexOf('.') !== -1 &&
       pos.longitude.toString().indexOf('.') !== -1
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   public static getBeatifulCityName(name: string): string {

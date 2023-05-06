@@ -19,12 +19,6 @@
           ({{(shuttles$ | async)?.length}})
         </ng-container>
       </ng-container>
-      <ion-spinner
-        color="light"
-        *ngIf="coordinates && !currentLocality && !noValidLocalityName && !outOfRange"
-        name="dots"
-        duration="900"
-      ></ion-spinner>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -97,16 +91,8 @@
     </ion-list>
   </div>
   <ng-template #noData>
-    <div *ngIf="coordinates && outOfRange; else loading">
+    <div *ngIf="coordinates">
       <p padding class="no-data-p">{{ "NO_SHUTTLE_FOUND" | translate }}</p>
     </div>
-    <ng-template #loading>
-      <ion-spinner
-        id="big-spinner"
-        *ngIf="!outOfRange && !disableLoading"
-        color="tertiary"
-        name="crescent"
-      ></ion-spinner>
-    </ng-template>
   </ng-template>
 </ion-content>

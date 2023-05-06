@@ -43,8 +43,8 @@ export class RatingsPage implements OnInit, OnDestroy {
       .subscribe((lang) => (this.locale = lang === 'de_st' ? 'de' : lang));
 
     combineLatest([
-      this.authService.userId,
-      this.shuttlesService.allShuttles,
+      this.authService.userId$,
+      this.shuttlesService.shuttles$,
       from(this.ratingsService.getRatings(shuttleId)),
     ])
       .pipe(takeUntil(this.unsubscribe$))

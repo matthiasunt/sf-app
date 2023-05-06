@@ -1,29 +1,25 @@
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { App, AppState } from '@capacitor/app';
 import { AuthService } from '@services/auth.service';
 import { DeviceService } from '@services/device.service';
 
 import { Call, CallOrigin } from '@models/call';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
-import { getApp } from 'firebase/app';
+import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CallsService {
-  private db = getFirestore(getApp());
+  private firestore: Firestore = inject(Firestore);
+  private authService = inject(AuthService);
 
   /* To handle Call times */
   private afterCall: boolean;
   private lastCallShuttleId: string;
   private lastCallOrigin: CallOrigin;
 
-  constructor(
-    private deviceService: DeviceService,
-    private authService: AuthService,
-    public zone: NgZone
-  ) {
+  constructor(private deviceService: DeviceService, public zone: NgZone) {
     this.handleCalls();
   }
 
@@ -32,7 +28,7 @@ export class CallsService {
     this.lastCallOrigin = origin;
     /* Only for testing */
     if (!(await this.deviceService.isDevice())) {
-      const userId: string | undefined = await this.authService.userId
+      const userId: string | undefined = await this.authService.userId$
         .pipe(take(1))
         .toPromise();
       await this.addCall({
@@ -51,7 +47,7 @@ export class CallsService {
   private async handleCalls() {
     let callStartDate: Date;
     let callEndDate: Date;
-    const userId: string | undefined = await this.authService.userId
+    const userId: string | undefined = await this.authService.userId$
       .pipe(take(1))
       .toPromise();
     if (userId && (await this.deviceService.isDevice())) {
@@ -93,10 +89,16 @@ export class CallsService {
   }
 
   private async addCall(call: Call) {
-    const res = await setDoc(
-      doc(this.db, `shuttles/${call.shuttleId}/calls/${call.id}`),
-      call
-    );
-    console.info(res);
+    try {
+      await addDoc(
+        collection(
+          this.firestore,
+          `shuttles/${call.shuttleId}/calls/${call.id}`
+        ),
+        call
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

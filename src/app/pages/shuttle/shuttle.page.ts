@@ -75,11 +75,11 @@ export class ShuttlePage implements OnInit, OnDestroy {
     const shuttleId = this.activatedRoute.snapshot.paramMap.get('id');
 
     combineLatest([
-      this.authService.userId,
+      this.authService.userId$,
       this.shuttlesService.getShuttle(shuttleId),
       this.ratingsService.getRatings(shuttleId),
       this.localDataService.favoriteShuttles,
-      this.districtsService.districts,
+      this.districtsService.districts$,
     ])
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(([userId, shuttle, ratings, favoriteShuttles, districts]) => {
@@ -139,7 +139,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
   }
 
   public async addToFavorites() {
-    const userId: string | undefined = await this.authService.userId
+    const userId: string | undefined = await this.authService.userId$
       .pipe(take(1))
       .toPromise();
     if (userId) {
@@ -176,7 +176,7 @@ export class ShuttlePage implements OnInit, OnDestroy {
 
   public removeFromFravorites() {
     this.localDataService.removeFavoriteShuttle(this.shuttle);
-    this.listsService.removeListElementByShuttleId(
+    this.listsService.removeListElement(
       this.shuttle.id,
       this.addToFavorites ? ElementType.Favorites : ElementType.Blacklisted
     );

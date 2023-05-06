@@ -15,8 +15,8 @@ import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
 import { MyCoordinates } from '@models/my-coordinates';
 
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { DeviceService } from '@services/device.service';
 
@@ -36,11 +36,7 @@ export class SelectionPage implements OnInit, OnDestroy {
   currentLocality: string;
 
   noValidLocalityName: boolean;
-  outOfRange: boolean;
   lang: string;
-
-  timer: any;
-  disableLoading: boolean;
 
   alertDismissed = false;
 
@@ -68,7 +64,7 @@ export class SelectionPage implements OnInit, OnDestroy {
     this.district$ = this.districtsService.getDistrict(this.districtId);
 
     if (this.districtId) {
-      this.fetchShuttlesByDistrict(this.districtId);
+      this.shuttles$ = this.shuttlesService.getShuttles(this.districtId);
     } else {
       this.coordinates = await this.geoService.getCurrentPosition();
       this.fetchShuttlesByPosition();
@@ -80,73 +76,13 @@ export class SelectionPage implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  ionViewDidEnter() {
-    this.timer = setTimeout(() => {
-      this.shuttles$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((shuttles) => {
-          if (!this.disableLoading && shuttles.length < 1) {
-            this.presentShuttleFinderUnavailableAlert();
-          }
-        });
-    }, 10000);
-  }
-
-  ionViewWillLeave() {
-    clearTimeout(this.timer);
-  }
-
-  private fetchShuttlesByDistrict(districtId: string) {
-    this.shuttles$ = combineLatest([
-      this.shuttlesService.getShuttlesByDistrict(districtId),
-      this.localDataService.favoriteShuttles,
-      this.localDataService.blacklistedShuttles,
-    ]).pipe(
-      map(([shuttles, favoriteShuttles, blacklistedShuttles]) => {
-        return this.shuttlesService.mergeShuttles(
-          shuttles,
-          favoriteShuttles,
-          blacklistedShuttles
-        );
-      })
-    );
-  }
-
   private async fetchShuttlesByPosition() {
-    this.shuttles$ = combineLatest([
-      this.shuttlesService.allShuttles,
-      this.localDataService.favoriteShuttles,
-      this.localDataService.blacklistedShuttles,
-    ]).pipe(
-      map(([allShuttles, favoriteShuttles, blacklistedShuttles]) => {
-        let shuttles = this.shuttlesService.filterShuttlesByPosition(
-          allShuttles,
-          this.coordinates,
-          22000
-        );
-        if (shuttles.length < 3) {
-          shuttles = this.shuttlesService.filterShuttlesByPosition(
-            allShuttles,
-            this.coordinates,
-            27000
-          );
-        }
-        if (!shuttles || shuttles.length < 1) {
-          this.outOfRange = true;
-        } else {
-          return this.shuttlesService.mergeShuttles(
-            shuttles,
-            favoriteShuttles,
-            blacklistedShuttles
-          );
-        }
-      })
+    this.shuttles$ = this.shuttlesService.getShuttlesFromCoords(
+      this.coordinates
     );
 
     // Get Locality Name
     const lang = this.lang === 'it' ? 'it' : 'de';
-
-    // TODO: Refactor to rxjs
     this.currentLocality = await this.geoService.getLocalityName(
       this.coordinates,
       lang
@@ -179,31 +115,5 @@ export class SelectionPage implements OnInit, OnDestroy {
     this.callsService.setCallHandlerData(shuttle.id, callOrigin);
     this.callNumber.callNumber(shuttle.phone, true);
     this.localDataService.addToHistory({ shuttle, date: new Date() });
-  }
-
-  /* Alerts */
-  private async presentShuttleFinderUnavailableAlert() {
-    const alert = await this.alertCtrl.create({
-      header: this.translate.instant('NOT_AVAILABLE'),
-      buttons: [
-        {
-          text: this.translate.instant('OK'),
-          handler: () => {
-            this.navCtrl.pop();
-          },
-        },
-      ],
-    });
-    // Dismass if data here
-    this.shuttles$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(async (shuttles) => {
-        if (shuttles.length > 0 && !this.alertDismissed) {
-          await alert.dismiss();
-          this.alertDismissed = true;
-        }
-      });
-    await alert.present();
-    this.disableLoading = true;
   }
 }

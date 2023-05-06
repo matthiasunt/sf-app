@@ -1,53 +1,51 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Rating } from '@models/rating';
 import { Observable } from 'rxjs';
-import { getApp } from 'firebase/app';
 import {
   collection,
+  collectionData,
   deleteDoc,
   doc,
-  getFirestore,
-  onSnapshot,
-  query,
+  Firestore,
   setDoc,
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RatingsService {
-  private db = getFirestore(getApp());
+  private firestore: Firestore = inject(Firestore);
 
   // Subscribe to rating changes
   public getRatings(shuttleId: string): Observable<Rating[]> {
-    return new Observable<Rating[]>((observer) => {
-      const unsubscribe = onSnapshot(
-        query(collection(this.db, 'shuttles', shuttleId, 'ratings')),
-        (querySnapshot) => {
-          const ratings: Rating[] = [];
-          querySnapshot.forEach((doc) => ratings.push(doc.data() as Rating));
-          observer.next(ratings);
-        }
-      );
-      return unsubscribe;
-    });
+    const shuttleRatingsRef = collection(
+      this.firestore,
+      `shuttles/${shuttleId}/ratings`
+    );
+    return collectionData(shuttleRatingsRef) as Observable<Rating[]>;
   }
 
   public async setRating(rating: Rating) {
-    console.log(rating);
+    const shuttleRatingsRef = collection(
+      this.firestore,
+      `shuttles/${rating.shuttleId}/ratings`
+    );
     try {
-      const res = await setDoc(
-        doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id),
-        rating
-      );
+      await setDoc(doc(shuttleRatingsRef, rating.id), rating);
     } catch (err) {
       console.error(err);
     }
   }
 
   public async deleteRating(rating: Rating) {
-    return await deleteDoc(
-      doc(this.db, 'shuttles', rating.shuttleId, 'ratings', rating.id)
+    const shuttleRatingsRef = collection(
+      this.firestore,
+      `shuttles/${rating.shuttleId}/ratings`
     );
+    try {
+      await deleteDoc(doc(shuttleRatingsRef, rating.id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
