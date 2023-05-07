@@ -21,54 +21,46 @@ export class GeoService {
     private nativeGeocoder: NativeGeocoder
   ) {}
 
-  getCurrentPosition(): Observable<MyCoordinates> {
+  async getCurrentPosition(): Promise<MyCoordinates> {
     if (
       !this.position ||
       (new Date().getTime() - this.position.time.getTime()) / 1000 > 60 * 2
     ) {
       if (Capacitor.isNativePlatform()) {
-        return from(
-          Geolocation.getCurrentPosition({
-            enableHighAccuracy: true,
-          })
-        ).pipe(
-          map((res) => ({
-            latitude: res.coords.latitude,
-            longitude: res.coords.longitude,
-          })),
-          tap((coordinates) => {
-            this.position = { coordinates, time: new Date() };
-          })
-        );
+        const position = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+        });
+        const coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
+        this.position = { coordinates: coords, time: new Date() };
       } else {
-        return of(null);
+        return undefined;
       }
     } else {
-      return of(this.position.coordinates);
+      return this.position.coordinates;
     }
   }
 
-  getLocalityName(
+  async getLocalityName(
     coordinates: MyCoordinates,
     lang: string
-  ): Observable<string> {
+  ): Promise<string> {
     if (Capacitor.isNativePlatform()) {
-      return from(
-        this.nativeGeocoder.reverseGeocode(
+      try {
+        const res = await this.nativeGeocoder.reverseGeocode(
           coordinates.latitude,
           coordinates.longitude,
           { useLocale: true, defaultLocale: lang, maxResults: 5 }
-        )
-      ).pipe(
-        map((res: any[]) => res[0].locality),
-        catchError((err) => {
-          console.error(err);
-          return of('');
-        })
-      );
-    } else {
-      return of('');
+        );
+        return res[0].locality;
+      } catch (err) {
+        console.error(err);
+      }
     }
+    return '';
   }
 
   /*

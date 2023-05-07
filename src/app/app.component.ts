@@ -13,6 +13,7 @@ import {
 } from '@angular/fire/analytics';
 import { Device } from '@capacitor/device';
 import { Capacitor } from '@capacitor/core';
+import { ShuttlesService } from '@services/data/shuttles.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ export class AppComponent {
   constructor(
     private authService: AuthService,
     private translate: TranslateService,
-    private localDataService: LocalDataService
+    private localDataService: LocalDataService,
+    private shuttlesService: ShuttlesService
   ) {
     this.initializeApp();
     this.setLang();

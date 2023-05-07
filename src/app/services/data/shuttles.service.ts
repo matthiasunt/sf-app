@@ -1,10 +1,10 @@
 import { inject, Injectable, NgZone } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 
 import { GeoService } from '@services/geo.service';
 import { MyCoordinates } from '@models/my-coordinates';
 import { Shuttle } from '@models/shuttle';
-import { map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { LocalDataService } from '@services/data/local-data.service';
 
@@ -12,7 +12,7 @@ import { LocalDataService } from '@services/data/local-data.service';
   providedIn: 'root',
 })
 export class ShuttlesService {
-  shuttles$: Observable<Shuttle[]>;
+  private _shuttles: BehaviorSubject<Shuttle[]> = new BehaviorSubject([]);
   private firestore: Firestore = inject(Firestore);
 
   constructor(
@@ -20,19 +20,29 @@ export class ShuttlesService {
     private localDataService: LocalDataService,
     public zone: NgZone
   ) {
-    this.shuttles$ = collectionData(
-      collection(this.firestore, 'shuttles')
-    ) as Observable<Shuttle[]>;
+    collectionData(collection(this.firestore, 'shuttles'))
+      .pipe(
+        filter((shuttles) => shuttles?.length > 1),
+        first(),
+        map((docs) => {
+          this._shuttles.next(docs as Shuttle[]);
+        })
+      )
+      .subscribe();
+  }
+
+  get shuttles$(): BehaviorSubject<Shuttle[]> {
+    return this._shuttles;
   }
 
   public getShuttle(shuttleId: string): Observable<Shuttle> {
-    return this.shuttles$.pipe(
+    return this._shuttles.pipe(
       map((shuttles) => shuttles.find((s) => s.id === shuttleId))
     );
   }
 
   public getShuttlesByDistrict(districtId: string): Observable<Shuttle[]> {
-    return this.shuttles$.pipe(
+    return this._shuttles.pipe(
       map((shuttles) =>
         shuttles.filter(
           (shuttle: Shuttle) => shuttle.districtIds.indexOf(districtId) > -1
@@ -62,7 +72,7 @@ export class ShuttlesService {
     coordinates: MyCoordinates
   ): Observable<Shuttle[]> {
     return combineLatest([
-      this.shuttles$,
+      this._shuttles,
       this.localDataService.favoriteShuttles,
       this.localDataService.blacklistedShuttles,
     ]).pipe(

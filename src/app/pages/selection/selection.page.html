@@ -7,18 +7,20 @@
       <ion-back-button defaultHref="tabs/find"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <ng-container *ngIf="(district$ | async) as district"
+      <ng-container *ngIf="(district$ | async) as district; else localityTitle;"
         >{{ district.name | districtName: (localDataService.lang | async) }}
         <ng-container *ngIf="(shuttles$ | async)?.length > 0">
           ({{(shuttles$ | async)?.length}})
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="localityName$ | async as locality"
-        >{{locality}}
-        <ng-container *ngIf="(shuttles$ | async)?.length > 0">
-          ({{(shuttles$ | async)?.length}})
+      <ng-template #localityTitle>
+        <ng-container *ngIf="localityName$ | async as locality"
+          >{{locality}}
+          <ng-container *ngIf="(shuttles$ | async)?.length > 0">
+            ({{(shuttles$ | async)?.length}})
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </ng-template>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -45,7 +47,7 @@
     </ion-list>
   </div>
   <ng-template #noData>
-    <div *ngIf="coordinates$ | async">
+    <div *ngIf="!(district$ | async)">
       <p padding class="no-data-p">{{ "NO_SHUTTLE_FOUND" | translate }}</p>
     </div>
   </ng-template>
