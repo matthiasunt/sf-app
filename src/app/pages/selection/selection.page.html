@@ -47,7 +47,7 @@
     </ion-list>
   </div>
   <ng-template #noData>
-    <div *ngIf="!(district$ | async)">
+    <div *ngIf="!(district$ | async) && (coords$ | async)">
       <p padding class="no-data-p">{{ "NO_SHUTTLE_FOUND" | translate }}</p>
     </div>
   </ng-template>

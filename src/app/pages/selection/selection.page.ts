@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { LocalDataService } from '@services/data/local-data.service';
 import { GeoService } from '@services/geo.service';
 import { AlertController, NavController } from '@ionic/angular';
@@ -20,9 +15,8 @@ import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
 import { MyCoordinates } from '@models/my-coordinates';
 
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { trackShuttleById } from '../../utils/track-by-id.utils';
-import { map, switchMap } from 'rxjs/operators';
 import { Capacitor } from '@capacitor/core';
 import { HistoryElement } from '@models/history-element';
 import { Districts } from '../../../assets/data/districts';
@@ -70,12 +64,15 @@ export class SelectionPage implements OnInit {
 
   private async populateGpsResult() {
     const coords = await this.geoService.getCurrentPosition();
-    this.coords$.next(coords);
-    const locale = await this.localDataService.locale$.toPromise();
-    this.localityName$.next(
-      await this.geoService.getLocalityName(coords, locale)
-    );
-    this.shuttles$ = this.shuttlesService.getShuttlesFromCoords(coords);
+    if (coords) {
+      this.shuttles$ = this.shuttlesService.getShuttlesFromCoords(coords);
+      this.coords$.next(coords);
+      const locality = await this.geoService.getLocalityName(
+        coords,
+        this.translate.getBrowserLang()
+      );
+      this.localityName$.next(locality);
+    }
   }
 
   calledLately(history: HistoryElement[], shuttleId: string): boolean {

@@ -6,59 +6,44 @@ import getDistance from 'geolib/es/getDistance';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { Geolocation } from '@capacitor/geolocation';
 import { MyCoordinates } from '@models/my-coordinates';
-import { from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeoService {
-  private position: { coordinates: MyCoordinates; time: Date };
-
   constructor(
     private http: HttpClient,
     private nativeGeocoder: NativeGeocoder
   ) {}
 
   async getCurrentPosition(): Promise<MyCoordinates> {
-    if (
-      !this.position ||
-      (new Date().getTime() - this.position.time.getTime()) / 1000 > 60 * 2
-    ) {
-      if (Capacitor.isNativePlatform()) {
-        const position = await Geolocation.getCurrentPosition({
-          enableHighAccuracy: true,
-        });
-        const coords = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-
-        this.position = { coordinates: coords, time: new Date() };
-      } else {
-        return undefined;
-      }
-    } else {
-      return this.position.coordinates;
+    if (Capacitor.isNativePlatform()) {
+      const position = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 30 * 60 * 1000,
+      });
+      return {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
     }
+    return undefined;
   }
 
   async getLocalityName(
     coordinates: MyCoordinates,
     lang: string
   ): Promise<string> {
-    if (Capacitor.isNativePlatform()) {
-      try {
-        const res = await this.nativeGeocoder.reverseGeocode(
-          coordinates.latitude,
-          coordinates.longitude,
-          { useLocale: true, defaultLocale: lang, maxResults: 5 }
-        );
-        return res[0].locality;
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const res = await this.nativeGeocoder.reverseGeocode(
+        coordinates.latitude,
+        coordinates.longitude,
+        { useLocale: true, defaultLocale: lang, maxResults: 5 }
+      );
+      return res[0].locality;
+    } catch (err) {
+      console.error(err);
     }
     return '';
   }
