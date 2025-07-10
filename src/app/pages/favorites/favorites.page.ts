@@ -12,6 +12,7 @@ import { ListAction } from '@components/sf-shuttle-item/sf-shuttle-item.componen
   templateUrl: 'favorites.page.html',
   styleUrls: ['favorites.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FavoritesPage {
   trackById = trackShuttleById;

@@ -19,6 +19,7 @@ import { trackShuttleById } from '../../utils/track-by-id.utils';
   styleUrls: ['history.page.scss'],
   providers: [CallNumber],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class HistoryPage {
   history$: Observable<HistoryElement[]> = this.localDataService.history;

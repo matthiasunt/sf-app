@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'districtColor',
+  standalone: false,
 })
 export class DistrictColorPipe implements PipeTransform {
   transform(districtId: string): string {

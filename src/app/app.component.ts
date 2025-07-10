@@ -18,6 +18,7 @@ import { ShuttlesService } from '@services/data/shuttles.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  standalone: false,
 })
 export class AppComponent {
   constructor(

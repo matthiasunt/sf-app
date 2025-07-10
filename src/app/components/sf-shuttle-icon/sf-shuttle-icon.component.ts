@@ -10,6 +10,7 @@ import {
   templateUrl: './sf-shuttle-icon.component.html',
   styleUrls: ['./sf-shuttle-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SfShuttleIconComponent implements OnInit {
   @Input() color = '#99CC33';

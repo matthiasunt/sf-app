@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './sf-toolbar.component.html',
   styleUrls: ['./sf-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SfToolbarComponent {
   constructor(private router: Router) {}

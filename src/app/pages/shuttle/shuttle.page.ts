@@ -37,6 +37,7 @@ import { DistrictsService } from '@services/data/districts.service';
   styleUrls: ['./shuttle.page.scss'],
   providers: [CallNumber],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ShuttlePage {
   private unsubscribe$ = new Subject<void>();

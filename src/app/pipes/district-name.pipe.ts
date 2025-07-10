@@ -3,6 +3,7 @@ import { DistrictName } from '@models/district';
 
 @Pipe({
   name: 'districtName',
+  standalone: false,
 })
 export class DistrictNamePipe implements PipeTransform {
   transform(value: DistrictName, lang: string): string {

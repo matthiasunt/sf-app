@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'shadeColor',
+  standalone: false,
 })
 export class ShadeColorPipe implements PipeTransform {
   transform(value: any, percent: number): any {

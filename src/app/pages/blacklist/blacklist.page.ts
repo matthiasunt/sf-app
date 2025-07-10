@@ -12,6 +12,7 @@ import { ListAction } from '@components/sf-shuttle-item/sf-shuttle-item.componen
   templateUrl: './blacklist.page.html',
   styleUrls: ['./blacklist.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BlacklistPage {
   trackById = trackShuttleById;

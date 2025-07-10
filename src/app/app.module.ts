@@ -37,20 +37,6 @@ import {
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    provideFirebaseApp(() => initializeApp((environment as any).firebase)),
-    provideFirestore(() =>
-      initializeFirestore(getApp(), {
-        experimentalForceLongPolling: true,
-        localCache: persistentLocalCache({
-          cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-          tabManager: persistentSingleTabManager({ forceOwnership: true }),
-        }),
-      })
-    ),
-    provideAnalytics(() => getAnalytics()),
-    provideAuth(() =>
-      initializeAuth(getApp(), { persistence: browserLocalPersistence })
-    ),
     BrowserModule,
     IonicModule.forRoot(),
 
@@ -67,6 +53,20 @@ import {
     ScrollingModule,
   ],
   providers: [
+    provideFirebaseApp(() => initializeApp((environment as any).firebase)),
+    provideFirestore(() =>
+      initializeFirestore(getApp(), {
+        experimentalForceLongPolling: true,
+        localCache: persistentLocalCache({
+          cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+          tabManager: persistentSingleTabManager({ forceOwnership: true }),
+        }),
+      })
+    ),
+    provideAnalytics(() => getAnalytics()),
+    provideAuth(() =>
+      initializeAuth(getApp(), { persistence: browserLocalPersistence })
+    ),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     NativeGeocoder,
     ScreenTrackingService,

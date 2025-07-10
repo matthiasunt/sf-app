@@ -22,6 +22,7 @@ import { AnalyticsEvent } from '../../logging/analytics-event';
   templateUrl: './rate.page.html',
   styleUrls: ['./rate.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RatePage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();

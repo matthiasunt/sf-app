@@ -8,6 +8,7 @@ import { Capacitor } from '@capacitor/core';
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AboutPage implements OnInit {
   public appVersionNumber: string;

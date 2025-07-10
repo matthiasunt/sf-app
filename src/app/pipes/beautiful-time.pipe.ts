@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'beautifulTime',
+  standalone: false,
 })
 export class BeautifulTimePipe implements PipeTransform {
   transform(dateString: string, locale: string): string {

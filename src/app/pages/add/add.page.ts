@@ -29,6 +29,7 @@ import { ListAction } from '@components/sf-shuttle-item/sf-shuttle-item.componen
   templateUrl: './add.page.html',
   styleUrls: ['./add.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddPage implements OnInit {
   trackById = trackShuttleById;

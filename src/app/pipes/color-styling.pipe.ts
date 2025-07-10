@@ -3,6 +3,7 @@ import { ContrastColorPipe } from '@pipes/contrast-color.pipe';
 
 @Pipe({
   name: 'colorStyling',
+  standalone: false,
 })
 export class ColorStylingPipe implements PipeTransform {
   transform(colorHexCode: string): any {

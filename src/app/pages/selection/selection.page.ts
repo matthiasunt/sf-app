@@ -27,6 +27,7 @@ import { Districts } from '../../../assets/data/districts';
   styleUrls: ['./selection.page.scss'],
   providers: [CallNumber],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionPage implements OnInit {
   trackById = trackShuttleById;

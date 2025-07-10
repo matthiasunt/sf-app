@@ -7,6 +7,7 @@ import { LocalDataService } from '@services/data/local-data.service';
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SettingsPage implements OnInit {
   selectedLang: string;

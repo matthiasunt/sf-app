@@ -3,6 +3,7 @@ import { Shuttle } from '@models/shuttle';
 
 @Pipe({
   name: 'shuttleColor',
+  standalone: false,
 })
 export class ShuttleColorPipe implements PipeTransform {
   private DEFAULT_PALETTE = [

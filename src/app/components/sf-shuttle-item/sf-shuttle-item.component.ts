@@ -15,6 +15,7 @@ import { AnalyticsEvent } from '../../logging/analytics-event';
   templateUrl: './sf-shuttle-item.component.html',
   styleUrls: ['./sf-shuttle-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SfShuttleItemComponent {
   @Input() shuttle: Shuttle;

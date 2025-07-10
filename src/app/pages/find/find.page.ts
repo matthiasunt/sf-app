@@ -25,6 +25,7 @@ import { AnalyticsEvent } from '../../logging/analytics-event';
   styleUrls: ['find.page.scss'],
   providers: [CallNumber],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FindPage {
   public districts: District[] = Districts;

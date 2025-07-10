@@ -19,6 +19,7 @@ import { trackShuttleById } from '../../utils/track-by-id.utils';
   templateUrl: './ratings.page.html',
   styleUrls: ['./ratings.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RatingsPage {
   private unsubscribe$ = new Subject<void>();

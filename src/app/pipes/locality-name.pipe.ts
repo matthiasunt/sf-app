@@ -3,6 +3,7 @@ import { MultiLangName } from '@models/district';
 
 @Pipe({
   name: 'localityName',
+  standalone: false,
 })
 export class LocalityNamePipe implements PipeTransform {
   transform(value: MultiLangName | undefined, lang: string): string {
