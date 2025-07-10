@@ -42,3 +42,11 @@
 ion-footer {
   background-color: white;
 }
+
+ion-tab-bar {
+  margin-bottom: calc(var(--safe-area-inset-bottom) + 10px) !important;
+}
+
+ion-toolbar {
+  padding-top: calc(var(--safe-area-inset-top) + 10px) !important;
+}

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { SafeArea } from '@capacitor-community/safe-area';
 
 import { LocalDataService } from '@services/data/local-data.service';
 import { AuthService } from '@services/auth.service';
@@ -48,6 +49,17 @@ export class AppComponent {
         await StatusBar.setStyle({ style: Style.Dark });
         await StatusBar.setBackgroundColor({ color: 'black' });
       }
+
+      SafeArea.enable({
+        config: {
+          customColorsForSystemBars: true,
+          statusBarColor: '#000000', // transparent
+          statusBarContent: 'light',
+          navigationBarColor: '#000000', // transparent
+          navigationBarContent: 'light',
+          offset: 0,
+        },
+      });
     }
     setUserProperties(getAnalytics(), { device_info: await Device.getInfo() });
   }
