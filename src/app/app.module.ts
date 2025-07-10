@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -71,6 +72,7 @@ import {
     NativeGeocoder,
     ScreenTrackingService,
     UserTrackingService,
+    Storage,
   ],
   exports: [],
   bootstrap: [AppComponent],
