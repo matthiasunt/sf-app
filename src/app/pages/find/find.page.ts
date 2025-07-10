@@ -13,7 +13,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { LocalDataService } from '@services/data/local-data.service';
 import { District } from '@models/district';
 import { Shuttle } from '@models/shuttle';
-import { environment } from '@env';
+import { ENV as environment } from '@env';
 import { Districts } from '../../../assets/data/districts';
 import { Subject } from 'rxjs';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';

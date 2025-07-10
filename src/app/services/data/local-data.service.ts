@@ -35,6 +35,7 @@ export class LocalDataService {
     private platform: Platform,
     private storage: Storage
   ) {
+    this.storage.create();
     this.fetchData();
   }
 
@@ -55,8 +56,6 @@ export class LocalDataService {
   }
 
   private async fetchData() {
-    await this.storage.ready();
-
     // Language Setting
     let val = await this.getItem('lang');
     if (val) {
@@ -138,12 +137,10 @@ export class LocalDataService {
   }
 
   private async getItem(key: string): Promise<any> {
-    await this.storage.ready();
     return await this.storage.get(key);
   }
 
   private async saveItem(key: string, item: any): Promise<any> {
-    await this.storage.ready();
     return await this.storage.set(key, item);
   }
 }

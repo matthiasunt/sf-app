@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { IonicStorageModule } from '@ionic/storage';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,7 +10,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { PipesModule } from '@pipes/pipes.module';
-import { environment } from '@env';
+import { ENV as environment } from '@env';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -38,7 +37,7 @@ import {
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirebaseApp(() => initializeApp((environment as any).firebase)),
     provideFirestore(() =>
       initializeFirestore(getApp(), {
         experimentalForceLongPolling: true,
@@ -54,7 +53,7 @@ import {
     ),
     BrowserModule,
     IonicModule.forRoot(),
-    IonicStorageModule.forRoot(),
+
     AppRoutingModule,
     HttpClientModule,
     TranslateModule.forRoot({
